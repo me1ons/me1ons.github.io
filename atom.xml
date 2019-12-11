@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-11T08:25:31.575Z</updated>
+  <updated>2019-12-11T08:53:13.332Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://yoursite.com/2019/12/11/JSshell/"/>
     <id>http://yoursite.com/2019/12/11/JSshell/</id>
     <published>2019-12-11T07:50:11.000Z</published>
-    <updated>2019-12-11T08:25:31.575Z</updated>
+    <updated>2019-12-11T08:53:13.332Z</updated>
     
     <summary type="html">
     
@@ -30,6 +30,12 @@
     </summary>
     
     
+      <category term="webshell" scheme="http://yoursite.com/categories/webshell/"/>
+    
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
     
   </entry>
   
@@ -38,7 +44,7 @@
     <link href="http://yoursite.com/2019/04/19/BadUsb/"/>
     <id>http://yoursite.com/2019/04/19/BadUsb/</id>
     <published>2019-04-19T09:28:54.000Z</published>
-    <updated>2019-12-11T08:32:56.120Z</updated>
+    <updated>2019-12-11T08:52:03.626Z</updated>
     
     <summary type="html">
     
@@ -47,6 +53,12 @@
     </summary>
     
     
+      <category term="硬件安全" scheme="http://yoursite.com/categories/%E7%A1%AC%E4%BB%B6%E5%AE%89%E5%85%A8/"/>
+    
+    
+      <category term="USB" scheme="http://yoursite.com/tags/USB/"/>
+    
+      <category term="钓鱼" scheme="http://yoursite.com/tags/%E9%92%93%E9%B1%BC/"/>
     
   </entry>
   

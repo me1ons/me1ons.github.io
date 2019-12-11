@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-10T03:32:17.306Z</updated>
+  <updated>2019-12-11T08:18:53.454Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,23 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JsWebshell</title>
+    <link href="http://yoursite.com/2019/12/11/JSshell/"/>
+    <id>http://yoursite.com/2019/12/11/JSshell/</id>
+    <published>2019-12-11T07:50:11.000Z</published>
+    <updated>2019-12-11T08:18:53.454Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在目标站有可写的html点时可以使用&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>BadUsb</title>

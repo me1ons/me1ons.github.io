@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-12T10:45:01.396Z</updated>
+  <updated>2019-12-12T10:49:38.800Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,11 +21,11 @@
     <link href="http://yoursite.com/2019/12/12/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
     <id>http://yoursite.com/2019/12/12/渗透测试之信息收集/</id>
     <published>2019-12-12T03:50:11.000Z</published>
-    <updated>2019-12-12T10:45:01.396Z</updated>
+    <updated>2019-12-12T10:49:38.800Z</updated>
     
     <summary type="html">
     
-      &lt;p&gt;拿到一个待检测的站。你觉得应该先做什么。（信息收集篇）&lt;/p&gt;
+      &lt;p&gt;搞渗透的人应该都清楚，给一个目标站点做测试，第一步就是信息收集，通过各种渠道和手段尽可能收集到多的关于这个站点的信息，帮助我们更多的去找到渗透点。而信息收集的方式有很多，大致有搜索引擎、域名注册网站、shodan、github信息收集工具、网站公告等等，甚至还有社工的方式。&lt;/p&gt;
     
     </summary>
     
@@ -34,6 +34,8 @@
     
     
       <category term="信息收集" scheme="http://yoursite.com/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"/>
+    
+      <category term="端口" scheme="http://yoursite.com/tags/%E7%AB%AF%E5%8F%A3/"/>
     
   </entry>
   

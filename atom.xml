@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-12T10:49:38.800Z</updated>
+  <updated>2019-12-13T15:36:41.636Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,43 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>渗透测试之漏洞挖掘</title>
+    <link href="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    <id>http://yoursite.com/2019/12/13/渗透测试之漏洞挖掘/</id>
+    <published>2019-12-13T05:23:58.000Z</published>
+    <updated>2019-12-13T15:36:41.636Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;漏洞：通常情况下不影响软件的正常功能，但如果被攻击者利用，有可能驱使软件去执行一些额外的恶意代码，从而引发严重的后果。最常见的漏洞有缓冲区溢出漏洞、整数溢出漏洞、指针覆盖漏洞等。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
+    
+    
+      <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="泄露" scheme="http://yoursite.com/tags/%E6%B3%84%E9%9C%B2/"/>
+    
+      <category term="注入" scheme="http://yoursite.com/tags/%E6%B3%A8%E5%85%A5/"/>
+    
+      <category term="webshll" scheme="http://yoursite.com/tags/webshll/"/>
+    
+      <category term="sql" scheme="http://yoursite.com/tags/sql/"/>
+    
+      <category term="中间件" scheme="http://yoursite.com/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+    
+      <category term="未授权" scheme="http://yoursite.com/tags/%E6%9C%AA%E6%8E%88%E6%9D%83/"/>
+    
+      <category term="包含" scheme="http://yoursite.com/tags/%E5%8C%85%E5%90%AB/"/>
+    
+      <category term="命令执行" scheme="http://yoursite.com/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"/>
+    
+  </entry>
   
   <entry>
     <title>渗透测试之信息收集</title>

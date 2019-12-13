@@ -216,8 +216,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:8888/file.php?file=data://text/plain,&lt;?php phpinfo()?&gt;</span><br><span class="line">http://127.0.0.1:8888/file.php?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=</span><br></pre></td></tr></table></figure>
 
 <p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/phpdata.png" alt="html">    </p>
-<p>###6.任意文件读取</p>
-<p><strong>XXE（有回显）</strong></p>
+<h3 id="6-任意文件读取"><a href="#6-任意文件读取" class="headerlink" title="6.任意文件读取"></a>6.任意文件读取</h3><p><strong>XXE（有回显）</strong></p>
 <p>PHP代码：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">xxe.php文件</span><br><span class="line">&lt;?php</span><br><span class="line">    libxml_disable_entity_loader (false);</span><br><span class="line">    $xmlfile = file_get_contents(&apos;php://input&apos;);</span><br><span class="line">    $dom = new DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD); </span><br><span class="line">    $creds = simplexml_import_dom($dom);</span><br><span class="line">    echo $creds;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
 
@@ -369,7 +368,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ck44ba0nt0002mguv0vth8dhj"
+      <a data-url="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ck44bopxu00056guvf8zsdagc"
          class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshll/" rel="tag">webshll</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag">中间件</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8C%85%E5%90%AB/" rel="tag">包含</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="tag">命令执行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%AA%E6%8E%88%E6%9D%83/" rel="tag">未授权</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%84%E9%9C%B2/" rel="tag">泄露</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li></ul>

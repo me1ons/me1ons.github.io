@@ -145,8 +145,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http://127.0.0.1:8888/file.php?file=data://text/plain,&lt;?php phpinfo()?&gt;</span><br><span class="line">http://127.0.0.1:8888/file.php?file=data://text/plain;base64,PD9waHAgcGhwaW5mbygpPz4=</span><br></pre></td></tr></table></figure>
 
 <p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/phpdata.png" alt="html">    </p>
-<p>###6.任意文件读取</p>
-<p><strong>XXE（有回显）</strong></p>
+<h3 id="6-任意文件读取"><a href="#6-任意文件读取" class="headerlink" title="6.任意文件读取"></a>6.任意文件读取</h3><p><strong>XXE（有回显）</strong></p>
 <p>PHP代码：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">xxe.php文件</span><br><span class="line">&lt;?php</span><br><span class="line">    libxml_disable_entity_loader (false);</span><br><span class="line">    $xmlfile = file_get_contents(&apos;php://input&apos;);</span><br><span class="line">    $dom = new DOMDocument();</span><br><span class="line">    $dom-&gt;loadXML($xmlfile, LIBXML_NOENT | LIBXML_DTDLOAD); </span><br><span class="line">    $creds = simplexml_import_dom($dom);</span><br><span class="line">    echo $creds;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
 

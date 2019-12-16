@@ -183,6 +183,12 @@
 <p>此时查看Apache日志：</p>
 <p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/apachelog.png" alt="html">    </p>
 <p>利用：<code>http://url/file.php?file=/var/log/apache2/access.log?melon=phpinfo();</code></p>
+<p><strong>利用本地包含配合ssh获取shell的思路</strong></p>
+<p>首先ssh的登陆日志放在了<code>/var/log/auth.log</code>中</p>
+<p>我们让用户名等于php一句话<code>&lt;?php @eval($_GET(&#39;melon&#39;));?&gt;</code></p>
+<p>然后查看ssh的日志 利用包含实现getshell</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/sshlogin.png" alt="html"></p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/sshlog.png" alt="html">    </p>
 <p><strong>php伪协议</strong></p>
 <p>php://filter 读取源代码并进行base64编码输出，不然会直接当做php代码执行就看不到源代码内容了。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">php://filter在双off的情况下也可以正常使用；</span><br><span class="line">allow_url_fopen ：off/on</span><br><span class="line">allow_url_include：off/on</span><br></pre></td></tr></table></figure>
@@ -368,7 +374,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ck476zfcc000a98uv8fai57lv"
+      <a data-url="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ck48h6iik0008wwuv4qe95x44"
          class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshll/" rel="tag">webshll</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag">中间件</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8C%85%E5%90%AB/" rel="tag">包含</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="tag">命令执行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%AA%E6%8E%88%E6%9D%83/" rel="tag">未授权</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%84%E9%9C%B2/" rel="tag">泄露</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li></ul>

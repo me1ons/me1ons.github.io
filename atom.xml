@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-15T15:56:37.632Z</updated>
+  <updated>2019-12-16T13:41:50.524Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>跨站脚本攻击(XSS)</title>
+    <link href="http://yoursite.com/2019/12/16/%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%BC%8F%E6%B4%9E(XSS)/"/>
+    <id>http://yoursite.com/2019/12/16/跨站脚本漏洞(XSS)/</id>
+    <published>2019-12-16T00:23:59.000Z</published>
+    <updated>2019-12-16T13:41:50.524Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;XSS漏洞是Web应用程序中最常见的漏洞之一。如果您的站点没有预防XSS漏洞的固定方法，那么很可能就存在XSS漏洞。文章讲会从代码层面讲解XSS还有一些Payload。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
+    
+    
+      <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="xss" scheme="http://yoursite.com/tags/xss/"/>
+    
+      <category term="html" scheme="http://yoursite.com/tags/html/"/>
+    
+  </entry>
   
   <entry>
     <title>SSRF总结</title>
@@ -72,7 +97,7 @@
     <link href="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
     <id>http://yoursite.com/2019/12/13/渗透测试之漏洞挖掘/</id>
     <published>2019-12-13T05:23:58.000Z</published>
-    <updated>2019-12-13T15:44:31.941Z</updated>
+    <updated>2019-12-16T07:53:43.360Z</updated>
     
     <summary type="html">
     

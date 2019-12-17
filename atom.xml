@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-16T13:41:50.524Z</updated>
+  <updated>2019-12-17T01:37:13.083Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>CSRF总结</title>
+    <link href="http://yoursite.com/2019/12/17/CSRF/"/>
+    <id>http://yoursite.com/2019/12/17/CSRF/</id>
+    <published>2019-12-17T00:37:11.000Z</published>
+    <updated>2019-12-17T01:37:13.083Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;CSRF跨站点请求伪造(Cross—Site Request Forgery)，跟XSS攻击一样，存在巨大的危害性，你可以这样来理解：&lt;br&gt;攻击者盗用了你的身份，以你的名义发送恶意请求，对服务器来说这个请求是完全合法的，但是却完成了攻击者所期望的一个操作，比如以你的名义发送邮件、发消息，盗取你的账号，添加系统管理员，甚至于购买商品、虚拟货币转账等。 如下：其中Web A为存在CSRF漏洞的网站，Web B为攻击者构建的恶意网站，User C为Web A网站的合法用户。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
+    
+    
+      <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="CSRF" scheme="http://yoursite.com/tags/CSRF/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
+    
+  </entry>
+  
+  <entry>
     <title>跨站脚本攻击(XSS)</title>
     <link href="http://yoursite.com/2019/12/16/%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%BC%8F%E6%B4%9E(XSS)/"/>
     <id>http://yoursite.com/2019/12/16/跨站脚本漏洞(XSS)/</id>
     <published>2019-12-16T00:23:59.000Z</published>
-    <updated>2019-12-16T13:41:50.524Z</updated>
+    <updated>2019-12-17T00:34:51.075Z</updated>
     
     <summary type="html">
     
@@ -58,9 +83,9 @@
       <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
     
     
-      <category term="php" scheme="http://yoursite.com/tags/php/"/>
-    
       <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
     
       <category term="SSRF" scheme="http://yoursite.com/tags/SSRF/"/>
     
@@ -84,9 +109,9 @@
       <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
     
     
-      <category term="php" scheme="http://yoursite.com/tags/php/"/>
-    
       <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
     
       <category term="序列化" scheme="http://yoursite.com/tags/%E5%BA%8F%E5%88%97%E5%8C%96/"/>
     
@@ -97,7 +122,7 @@
     <link href="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
     <id>http://yoursite.com/2019/12/13/渗透测试之漏洞挖掘/</id>
     <published>2019-12-13T05:23:58.000Z</published>
-    <updated>2019-12-16T07:53:43.360Z</updated>
+    <updated>2019-12-17T00:36:50.644Z</updated>
     
     <summary type="html">
     
@@ -169,9 +194,9 @@
       <category term="webshell" scheme="http://yoursite.com/categories/webshell/"/>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="php" scheme="http://yoursite.com/tags/php/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
   </entry>
   

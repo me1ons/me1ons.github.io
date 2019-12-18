@@ -36,9 +36,9 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>php</tag>
         <tag>漏洞挖掘</tag>
         <tag>CSRF</tag>
+        <tag>php</tag>
       </tags>
   </entry>
   <entry>
@@ -272,9 +272,41 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>php</tag>
         <tag>漏洞挖掘</tag>
+        <tag>php</tag>
         <tag>SSRF</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>序列化与反序列化</title>
+    <url>/2019/12/14/%E5%85%B3%E4%BA%8EDocker%E5%8F%AF%E8%A7%86%E5%8C%96/</url>
+    <content><![CDATA[<p>Docker 是一个<a href="https://baike.baidu.com/item/开源/246339" target="_blank" rel="noopener">开源</a>的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的 <a href="https://baike.baidu.com/item/Linux" target="_blank" rel="noopener">Linux</a>或Windows 机器上，也可以实现<a href="https://baike.baidu.com/item/虚拟化/547949" target="_blank" rel="noopener">虚拟化</a>。容器是完全使用<a href="https://baike.baidu.com/item/沙箱/393318" target="_blank" rel="noopener">沙箱</a>机制，相互之间不会有任何接口。</p>
+<a id="more"></a>
+
+<h1 id="Docker可视化管理工具"><a href="#Docker可视化管理工具" class="headerlink" title="Docker可视化管理工具"></a>Docker可视化管理工具</h1><p>Docker常见的几款web工具：</p>
+<ul>
+<li>docker UI</li>
+<li>shipyard</li>
+<li>portainer</li>
+</ul>
+<p><strong>本次是在Centos7上安装portainer</strong><br>首先搜索一下Docker Hub上的portainer镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# docker search portainer</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apaa4odfj317s0i3mz3.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apaa4odfj317s0i3mz3.jpg" alt="img"></a><br>然后下载官方portainer镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@localhost ~]# docker pull portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbdqnw2j30ue04qq36.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbdqnw2j30ue04qq36.jpg" alt="img"></a><br>在后台运行portainer容器，端口映射成9000，–restart=always表示开机自启动</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -d -p 9000:9000 --restart=always --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v /Users/lee/dev/docker_file/portainer/data:/data docker.io/portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbwfaknj317z02qdfy.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbwfaknj317z02qdfy.jpg" alt="img"></a><br><a href="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apeg4xyxj317t03ft8r.jpg" target="_blank" rel="noopener"><img src="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apeg4xyxj317t03ft8r.jpg" alt="img"></a><br>启动成功，浏览器访问ip:9000，初次访问需要设置密码，8位以上<br><a href="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apeqzav0j31hc0scgnh.jpg" target="_blank" rel="noopener"><img src="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apeqzav0j31hc0scgnh.jpg" alt="img"></a><br>然后选择Local(本地模式)<br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apjkuqpzj31hc0scn0g.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apjkuqpzj31hc0scn0g.jpg" alt="img"></a><br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apkghmtbj31hc0scgog.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apkghmtbj31hc0scgog.jpg" alt="img"></a><br><a href="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apl30k8uj31hc0sc0vv.jpg" target="_blank" rel="noopener"><img src="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apl30k8uj31hc0sc0vv.jpg" alt="img"></a><br>功能区<br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5appmkxx0j31hc0scdjr.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5appmkxx0j31hc0scdjr.jpg" alt="img"></a><br>我们可以在images功能处直接pull一个新镜像(必须是Docker Hub上有的)<br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apst92gcj31hc0sctd4.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apst92gcj31hc0sctd4.jpg" alt="img"></a><br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apt4r0qqj31hc0sc79j.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apt4r0qqj31hc0sc79j.jpg" alt="img"></a><br>添加容器<br><a href="https://tva4.sinaimg.cn/large/007DFXDhgy1g5aptws77mj31hc0scadi.jpg" target="_blank" rel="noopener"><img src="https://tva4.sinaimg.cn/large/007DFXDhgy1g5aptws77mj31hc0scadi.jpg" alt="img"></a><br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apud185pj31hc0sc442.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apud185pj31hc0sc442.jpg" alt="img"></a><br>可以将容器内的端口全部随机映射到本机，也可以手动添加需要映射的端口，本次是将容器的80端口映射到本机的8080端口<br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apwr4faxj313x0aegmo.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apwr4faxj313x0aegmo.jpg" alt="img"></a><br>启动成功<br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apxivmzgj31hc0scwj8.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apxivmzgj31hc0scwj8.jpg" alt="img"></a><br><a href="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apzvg8pdj31hc0sc7bj.jpg" target="_blank" rel="noopener"><img src="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apzvg8pdj31hc0sc7bj.jpg" alt="img"></a><br><a href="https://linuz.me/2019/07/24/Docker-portainer/" target="_blank" rel="noopener">文章转自</a></p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>漏洞挖掘</tag>
+        <tag>php</tag>
+        <tag>序列化</tag>
       </tags>
   </entry>
   <entry>
@@ -344,8 +376,8 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>php</tag>
         <tag>漏洞挖掘</tag>
+        <tag>php</tag>
         <tag>序列化</tag>
       </tags>
   </entry>
@@ -355,7 +387,7 @@
     <content><![CDATA[<p>漏洞：通常情况下不影响软件的正常功能，但如果被攻击者利用，有可能驱使软件去执行一些额外的恶意代码，从而引发严重的后果。最常见的漏洞有缓冲区溢出漏洞、整数溢出漏洞、指针覆盖漏洞等。</p>
 <a id="more"></a>
 
-<h2 id="黑盒测试"><a href="#黑盒测试" class="headerlink" title="黑盒测试"></a>黑盒测试</h2><h3 id="1-敏感目录文件扫描"><a href="#1-敏感目录文件扫描" class="headerlink" title="1.敏感目录文件扫描"></a>1.敏感目录文件扫描</h3><h4 id="1-查找目标各类web入口"><a href="#1-查找目标各类web入口" class="headerlink" title="1.查找目标各类web入口"></a>1.查找目标各类web入口</h4><p>普通网站后台，其他web控制台，碰到任何入口的第一反应就是顺手测试弱口令如果没有结果记录下来可以进行爆破，没有验证码的可以尝试爆破。限制登陆次数尝试伪造IP绕过。</p>
+<h2 id="传统WEB查找利用阶段"><a href="#传统WEB查找利用阶段" class="headerlink" title="传统WEB查找利用阶段"></a>传统WEB查找利用阶段</h2><h3 id="1-敏感目录文件扫描"><a href="#1-敏感目录文件扫描" class="headerlink" title="1.敏感目录文件扫描"></a>1.敏感目录文件扫描</h3><h4 id="1-查找目标各类web入口"><a href="#1-查找目标各类web入口" class="headerlink" title="1.查找目标各类web入口"></a>1.查找目标各类web入口</h4><p>普通网站后台，其他web控制台，碰到任何入口的第一反应就是顺手测试弱口令如果没有结果记录下来可以进行爆破，没有验证码的可以尝试爆破。限制登陆次数尝试伪造IP绕过。</p>
 <h4 id="2-各类敏感文件泄露"><a href="#2-各类敏感文件泄露" class="headerlink" title="2.各类敏感文件泄露"></a>2.各类敏感文件泄露</h4><h5 id="版本管理软件造成的泄露"><a href="#版本管理软件造成的泄露" class="headerlink" title="版本管理软件造成的泄露"></a>版本管理软件造成的泄露</h5><p><strong>.git/git</strong> 利用工具：<a href="https://github.com/lijiejie/GitHack" target="_blank" rel="noopener">GitHack</a> 手动利用：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wget -r --no-parent --mirror http://www.example.com/.git</span><br><span class="line">cd www.example.com &amp;&amp; git reset --hard</span><br></pre></td></tr></table></figure>
 
@@ -649,7 +681,17 @@
 <p><strong>linux中直接查看文件内容的工具</strong></p>
 <p>cat、tac、more、less、head、tail、nl、sed、sort、uniq</p>
 <h3 id="9-其他的一些注入问题"><a href="#9-其他的一些注入问题" class="headerlink" title="9.其他的一些注入问题"></a>9.其他的一些注入问题</h3><p>soap注入 邮件头注入 ldap注入 xpath注入 xml实体注入</p>
-]]></content>
+<h3 id="10-手工分析HTTP请求"><a href="#10-手工分析HTTP请求" class="headerlink" title="10.手工分析HTTP请求"></a>10.手工分析HTTP请求</h3><p>Burpsuite Fiddler Wireshark Tcpdump</p>
+<h3 id="11-防护不严格的情况下直接用漏扫"><a href="#11-防护不严格的情况下直接用漏扫" class="headerlink" title="11.防护不严格的情况下直接用漏扫"></a>11.防护不严格的情况下直接用漏扫</h3><p>Burp WebcruiserWVS Awvs Netsparker Appcsan Owasp_zap Vega Nessus Openvas Nmap的漏洞检测脚本 Wpscan</p>
+<h2 id="关于WAF对抗"><a href="#关于WAF对抗" class="headerlink" title="关于WAF对抗"></a>关于WAF对抗</h2><p>Bypass  waf分布式扫描 Bypass  waf进行注入 Bypass  waf进行上传 Bypass  waf脚本执行代码 Webshell免杀 Webshell 隐藏</p>
+<h2 id="各类WEB访问日志的处理-对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。"><a href="#各类WEB访问日志的处理-对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。" class="headerlink" title="各类WEB访问日志的处理 对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。"></a>各类WEB访问日志的处理 对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。</h2><h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="1-提权信息收集"><a href="#1-提权信息收集" class="headerlink" title="1.提权信息收集"></a>1.提权信息收集</h3><p>1.当前机器具体跑了哪些我们可与i直接利用到的服务端口</p>
+<p>2.尽可能找到目标机的所有账号密码：数据库 VPN FTP 其他第三方工具各种密码hash或明文。</p>
+<p>3.当前系统装的什么杀软，防护套装是什么，有什么样的限制策略。</p>
+<p>4.装了哪些可以利用的第三方工具</p>
+<p>5.特殊权限的查找入suid</p>
+<h3 id="2-溢出exp"><a href="#2-溢出exp" class="headerlink" title="2.溢出exp"></a>2.溢出exp</h3><p>win linux exp免杀</p>
+<h3 id="3-各类数据库提权"><a href="#3-各类数据库提权" class="headerlink" title="3.各类数据库提权"></a>3.各类数据库提权</h3><p>mysql mssql oracle</p>
+<h3 id="4-其他的非主流提权法"><a href="#4-其他的非主流提权法" class="headerlink" title="4.其他的非主流提权法"></a>4.其他的非主流提权法</h3><h3 id="5-dump数据-打包文件-权限维持-处理痕迹（日志）"><a href="#5-dump数据-打包文件-权限维持-处理痕迹（日志）" class="headerlink" title="5.dump数据 打包文件 权限维持 处理痕迹（日志）"></a>5.dump数据 打包文件 权限维持 处理痕迹（日志）</h3>]]></content>
       <categories>
         <category>渗透测试</category>
       </categories>
@@ -791,8 +833,8 @@
         <category>webshell</category>
       </categories>
       <tags>
-        <tag>js</tag>
         <tag>php</tag>
+        <tag>js</tag>
       </tags>
   </entry>
   <entry>

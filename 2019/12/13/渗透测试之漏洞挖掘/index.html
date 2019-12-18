@@ -77,7 +77,7 @@
         <p>漏洞：通常情况下不影响软件的正常功能，但如果被攻击者利用，有可能驱使软件去执行一些额外的恶意代码，从而引发严重的后果。最常见的漏洞有缓冲区溢出漏洞、整数溢出漏洞、指针覆盖漏洞等。</p>
 <a id="more"></a>
 
-<h2 id="黑盒测试"><a href="#黑盒测试" class="headerlink" title="黑盒测试"></a>黑盒测试</h2><h3 id="1-敏感目录文件扫描"><a href="#1-敏感目录文件扫描" class="headerlink" title="1.敏感目录文件扫描"></a>1.敏感目录文件扫描</h3><h4 id="1-查找目标各类web入口"><a href="#1-查找目标各类web入口" class="headerlink" title="1.查找目标各类web入口"></a>1.查找目标各类web入口</h4><p>普通网站后台，其他web控制台，碰到任何入口的第一反应就是顺手测试弱口令如果没有结果记录下来可以进行爆破，没有验证码的可以尝试爆破。限制登陆次数尝试伪造IP绕过。</p>
+<h2 id="传统WEB查找利用阶段"><a href="#传统WEB查找利用阶段" class="headerlink" title="传统WEB查找利用阶段"></a>传统WEB查找利用阶段</h2><h3 id="1-敏感目录文件扫描"><a href="#1-敏感目录文件扫描" class="headerlink" title="1.敏感目录文件扫描"></a>1.敏感目录文件扫描</h3><h4 id="1-查找目标各类web入口"><a href="#1-查找目标各类web入口" class="headerlink" title="1.查找目标各类web入口"></a>1.查找目标各类web入口</h4><p>普通网站后台，其他web控制台，碰到任何入口的第一反应就是顺手测试弱口令如果没有结果记录下来可以进行爆破，没有验证码的可以尝试爆破。限制登陆次数尝试伪造IP绕过。</p>
 <h4 id="2-各类敏感文件泄露"><a href="#2-各类敏感文件泄露" class="headerlink" title="2.各类敏感文件泄露"></a>2.各类敏感文件泄露</h4><h5 id="版本管理软件造成的泄露"><a href="#版本管理软件造成的泄露" class="headerlink" title="版本管理软件造成的泄露"></a>版本管理软件造成的泄露</h5><p><strong>.git/git</strong> 利用工具：<a href="https://github.com/lijiejie/GitHack" target="_blank" rel="noopener">GitHack</a> 手动利用：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget -r --no-parent --mirror http://www.example.com/.git</span><br><span class="line">cd www.example.com &amp;&amp; git reset --hard</span><br></pre></td></tr></table></figure>
 
@@ -371,11 +371,21 @@
 <p><strong>linux中直接查看文件内容的工具</strong></p>
 <p>cat、tac、more、less、head、tail、nl、sed、sort、uniq</p>
 <h3 id="9-其他的一些注入问题"><a href="#9-其他的一些注入问题" class="headerlink" title="9.其他的一些注入问题"></a>9.其他的一些注入问题</h3><p>soap注入 邮件头注入 ldap注入 xpath注入 xml实体注入</p>
-
+<h3 id="10-手工分析HTTP请求"><a href="#10-手工分析HTTP请求" class="headerlink" title="10.手工分析HTTP请求"></a>10.手工分析HTTP请求</h3><p>Burpsuite Fiddler Wireshark Tcpdump</p>
+<h3 id="11-防护不严格的情况下直接用漏扫"><a href="#11-防护不严格的情况下直接用漏扫" class="headerlink" title="11.防护不严格的情况下直接用漏扫"></a>11.防护不严格的情况下直接用漏扫</h3><p>Burp WebcruiserWVS Awvs Netsparker Appcsan Owasp_zap Vega Nessus Openvas Nmap的漏洞检测脚本 Wpscan</p>
+<h2 id="关于WAF对抗"><a href="#关于WAF对抗" class="headerlink" title="关于WAF对抗"></a>关于WAF对抗</h2><p>Bypass  waf分布式扫描 Bypass  waf进行注入 Bypass  waf进行上传 Bypass  waf脚本执行代码 Webshell免杀 Webshell 隐藏</p>
+<h2 id="各类WEB访问日志的处理-对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。"><a href="#各类WEB访问日志的处理-对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。" class="headerlink" title="各类WEB访问日志的处理 对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。"></a>各类WEB访问日志的处理 对于WEB日志，直接删掉，主要是带有敏感特征请求的删掉，加大溯源难度。</h2><h2 id="提权"><a href="#提权" class="headerlink" title="提权"></a>提权</h2><h3 id="1-提权信息收集"><a href="#1-提权信息收集" class="headerlink" title="1.提权信息收集"></a>1.提权信息收集</h3><p>1.当前机器具体跑了哪些我们可与i直接利用到的服务端口</p>
+<p>2.尽可能找到目标机的所有账号密码：数据库 VPN FTP 其他第三方工具各种密码hash或明文。</p>
+<p>3.当前系统装的什么杀软，防护套装是什么，有什么样的限制策略。</p>
+<p>4.装了哪些可以利用的第三方工具</p>
+<p>5.特殊权限的查找入suid</p>
+<h3 id="2-溢出exp"><a href="#2-溢出exp" class="headerlink" title="2.溢出exp"></a>2.溢出exp</h3><p>win linux exp免杀</p>
+<h3 id="3-各类数据库提权"><a href="#3-各类数据库提权" class="headerlink" title="3.各类数据库提权"></a>3.各类数据库提权</h3><p>mysql mssql oracle</p>
+<h3 id="4-其他的非主流提权法"><a href="#4-其他的非主流提权法" class="headerlink" title="4.其他的非主流提权法"></a>4.其他的非主流提权法</h3><h3 id="5-dump数据-打包文件-权限维持-处理痕迹（日志）"><a href="#5-dump数据-打包文件-权限维持-处理痕迹（日志）" class="headerlink" title="5.dump数据 打包文件 权限维持 处理痕迹（日志）"></a>5.dump数据 打包文件 权限维持 处理痕迹（日志）</h3>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ck499qxhn000f54uvd4j4a0i6"
+      <a data-url="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" data-id="ck4b2gbet001744uve06eblz7"
          class="article-share-link">分享</a>
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sql/" rel="tag">sql</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webshll/" rel="tag">webshll</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" rel="tag">中间件</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8C%85%E5%90%AB/" rel="tag">包含</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="tag">命令执行</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%AA%E6%8E%88%E6%9D%83/" rel="tag">未授权</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%84%E9%9C%B2/" rel="tag">泄露</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B3%A8%E5%85%A5/" rel="tag">注入</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" rel="tag">漏洞挖掘</a></li></ul>

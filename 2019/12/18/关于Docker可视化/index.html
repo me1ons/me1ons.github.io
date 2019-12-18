@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    关于Docker的可视化 |
+    
+    Melon</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+
+<body>
+<main class="content">
+  <section class="outer">
+  
+
+<article id="post-关于Docker可视化" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于Docker的可视化
+    </h1>
+  
+  
+
+
+
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/12/18/%E5%85%B3%E4%BA%8EDocker%E5%8F%AF%E8%A7%86%E5%8C%96/" class="article-date">
+  <time datetime="2019-12-18T05:50:11.000Z" itemprop="datePublished">2019-12-18</time>
+</a>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Docker/">Docker</a>
+  </div>
+
+      </div>
+    
+
+    
+      
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+        <p>Docker 是一个<a href="https://baike.baidu.com/item/开源/246339" target="_blank" rel="noopener">开源</a>的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的 <a href="https://baike.baidu.com/item/Linux" target="_blank" rel="noopener">Linux</a>或Windows 机器上，也可以实现<a href="https://baike.baidu.com/item/虚拟化/547949" target="_blank" rel="noopener">虚拟化</a>。容器是完全使用<a href="https://baike.baidu.com/item/沙箱/393318" target="_blank" rel="noopener">沙箱</a>机制，相互之间不会有任何接口。</p>
+<a id="more"></a>
+
+<h1 id="Docker可视化管理工具"><a href="#Docker可视化管理工具" class="headerlink" title="Docker可视化管理工具"></a>Docker可视化管理工具</h1><p>Docker常见的几款web工具：</p>
+<ul>
+<li>docker UI</li>
+<li>shipyard</li>
+<li>portainer</li>
+</ul>
+<p><strong>本次是在Centos7上安装portainer</strong><br>首先搜索一下Docker Hub上的portainer镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# docker search portainer</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apaa4odfj317s0i3mz3.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apaa4odfj317s0i3mz3.jpg" alt="img"></a><br>然后下载官方portainer镜像</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# docker pull portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbdqnw2j30ue04qq36.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbdqnw2j30ue04qq36.jpg" alt="img"></a><br>在后台运行portainer容器，端口映射成9000，–restart=always表示开机自启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 9000:9000 --restart=always --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v /Users/lee/dev/docker_file/portainer/data:/data docker.io/portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbwfaknj317z02qdfy.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apbwfaknj317z02qdfy.jpg" alt="img"></a><br><a href="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apeg4xyxj317t03ft8r.jpg" target="_blank" rel="noopener"><img src="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apeg4xyxj317t03ft8r.jpg" alt="img"></a><br>启动成功，浏览器访问ip:9000，初次访问需要设置密码，8位以上<br><a href="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apeqzav0j31hc0scgnh.jpg" target="_blank" rel="noopener"><img src="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apeqzav0j31hc0scgnh.jpg" alt="img"></a><br>然后选择Local(本地模式)<br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apjkuqpzj31hc0scn0g.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apjkuqpzj31hc0scn0g.jpg" alt="img"></a><br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apkghmtbj31hc0scgog.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apkghmtbj31hc0scgog.jpg" alt="img"></a><br><a href="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apl30k8uj31hc0sc0vv.jpg" target="_blank" rel="noopener"><img src="https://tva4.sinaimg.cn/large/007DFXDhgy1g5apl30k8uj31hc0sc0vv.jpg" alt="img"></a><br>功能区<br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5appmkxx0j31hc0scdjr.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5appmkxx0j31hc0scdjr.jpg" alt="img"></a><br>我们可以在images功能处直接pull一个新镜像(必须是Docker Hub上有的)<br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apst92gcj31hc0sctd4.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apst92gcj31hc0sctd4.jpg" alt="img"></a><br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apt4r0qqj31hc0sc79j.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apt4r0qqj31hc0sc79j.jpg" alt="img"></a><br>添加容器<br><a href="https://tva4.sinaimg.cn/large/007DFXDhgy1g5aptws77mj31hc0scadi.jpg" target="_blank" rel="noopener"><img src="https://tva4.sinaimg.cn/large/007DFXDhgy1g5aptws77mj31hc0scadi.jpg" alt="img"></a><br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apud185pj31hc0sc442.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apud185pj31hc0sc442.jpg" alt="img"></a><br>可以将容器内的端口全部随机映射到本机，也可以手动添加需要映射的端口，本次是将容器的80端口映射到本机的8080端口<br><a href="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apwr4faxj313x0aegmo.jpg" target="_blank" rel="noopener"><img src="https://tva2.sinaimg.cn/large/007DFXDhgy1g5apwr4faxj313x0aegmo.jpg" alt="img"></a><br>启动成功<br><a href="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apxivmzgj31hc0scwj8.jpg" target="_blank" rel="noopener"><img src="https://tva1.sinaimg.cn/large/007DFXDhgy1g5apxivmzgj31hc0scwj8.jpg" alt="img"></a><br><a href="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apzvg8pdj31hc0sc7bj.jpg" target="_blank" rel="noopener"><img src="https://tva3.sinaimg.cn/large/007DFXDhgy1g5apzvg8pdj31hc0sc7bj.jpg" alt="img"></a><br><a href="https://linuz.me/2019/07/24/Docker-portainer/" target="_blank" rel="noopener">文章转自</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/18/%E5%85%B3%E4%BA%8EDocker%E5%8F%AF%E8%A7%86%E5%8C%96/" data-id="ck4b2ytjx000czguv9zb356xv"
+         class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8F%AF%E8%A7%86%E5%8C%96/" rel="tag">可视化</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2019/12/17/CSRF/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">CSRF总结</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2019 Melon</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+
+<aside class="sidebar sidebar-specter">
+  
+    <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Melon"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+  </aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+  <script src="/js/tocbot.min.js"></script>
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

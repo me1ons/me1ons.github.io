@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-18T09:15:11.078Z</updated>
+  <updated>2019-12-20T16:19:05.904Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Docker的一些使用</title>
+    <link href="http://yoursite.com/2019/12/20/Docker%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BD%BF%E7%94%A8/"/>
+    <id>http://yoursite.com/2019/12/20/Docker的一些使用/</id>
+    <published>2019-12-19T23:50:11.000Z</published>
+    <updated>2019-12-20T16:19:05.904Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Docker 是一个开源的应用容器引擎，基于 &lt;a href=&quot;https://www.runoob.com/go/go-tutorial.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Go 语言&lt;/a&gt; 并遵从 Apache2.0 协议开源。&lt;/p&gt;
+&lt;p&gt;Docker 可以让开发者打包他们的应用以及依赖包到一个轻量级、可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。&lt;/p&gt;
+&lt;p&gt;容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）,更重要的是容器性能开销极低。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Docker" scheme="http://yoursite.com/categories/Docker/"/>
+    
+    
+      <category term="shell" scheme="http://yoursite.com/tags/shell/"/>
+    
+  </entry>
   
   <entry>
     <title>关于Docker的可视化</title>

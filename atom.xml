@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-20T16:19:05.904Z</updated>
+  <updated>2019-12-21T16:50:19.055Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>序列化与反序列化</title>
+    <link href="http://yoursite.com/2019/12/21/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98/"/>
+    <id>http://yoursite.com/2019/12/21/渗透测试面试试题/</id>
+    <published>2019-12-21T07:37:11.000Z</published>
+    <updated>2019-12-21T16:50:19.055Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;关于面试的一些总结。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
+    
+    
+      <category term="面试" scheme="http://yoursite.com/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>Docker的一些使用</title>
@@ -77,11 +98,11 @@
       <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
     
     
-      <category term="php" scheme="http://yoursite.com/tags/php/"/>
-    
       <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
     
       <category term="CSRF" scheme="http://yoursite.com/tags/CSRF/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
     
   </entry>
   
@@ -127,9 +148,9 @@
       <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
     
     
-      <category term="php" scheme="http://yoursite.com/tags/php/"/>
-    
       <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
     
       <category term="SSRF" scheme="http://yoursite.com/tags/SSRF/"/>
     
@@ -153,9 +174,9 @@
       <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
     
     
-      <category term="php" scheme="http://yoursite.com/tags/php/"/>
-    
       <category term="漏洞挖掘" scheme="http://yoursite.com/tags/%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
+    
+      <category term="php" scheme="http://yoursite.com/tags/php/"/>
     
       <category term="序列化" scheme="http://yoursite.com/tags/%E5%BA%8F%E5%88%97%E5%8C%96/"/>
     
@@ -238,9 +259,9 @@
       <category term="webshell" scheme="http://yoursite.com/categories/webshell/"/>
     
     
-      <category term="js" scheme="http://yoursite.com/tags/js/"/>
-    
       <category term="php" scheme="http://yoursite.com/tags/php/"/>
+    
+      <category term="js" scheme="http://yoursite.com/tags/js/"/>
     
   </entry>
   

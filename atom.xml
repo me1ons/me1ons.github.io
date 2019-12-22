@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-12-21T16:51:42.550Z</updated>
+  <updated>2019-12-22T11:42:06.671Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>渗透测试面试总结(二)</title>
+    <link href="http://yoursite.com/2019/12/22/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%BA%8C)/"/>
+    <id>http://yoursite.com/2019/12/22/渗透测试面试试题(二)/</id>
+    <published>2019-12-22T05:00:11.000Z</published>
+    <updated>2019-12-22T11:42:06.671Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;关于面试的一些总结。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="渗透测试" scheme="http://yoursite.com/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/"/>
+    
+    
+      <category term="面试" scheme="http://yoursite.com/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
+  
+  <entry>
     <title>渗透测试面试总结(一)</title>
-    <link href="http://yoursite.com/2019/12/21/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98/"/>
-    <id>http://yoursite.com/2019/12/21/渗透测试面试试题/</id>
+    <link href="http://yoursite.com/2019/12/21/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%B8%80)/"/>
+    <id>http://yoursite.com/2019/12/21/渗透测试面试试题(一)/</id>
     <published>2019-12-21T07:37:11.000Z</published>
-    <updated>2019-12-21T16:51:42.550Z</updated>
+    <updated>2019-12-22T04:59:34.679Z</updated>
     
     <summary type="html">
     
@@ -187,7 +208,7 @@
     <link href="http://yoursite.com/2019/12/13/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B9%8B%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/"/>
     <id>http://yoursite.com/2019/12/13/渗透测试之漏洞挖掘/</id>
     <published>2019-12-13T05:23:58.000Z</published>
-    <updated>2019-12-18T03:01:00.814Z</updated>
+    <updated>2019-12-22T11:42:08.040Z</updated>
     
     <summary type="html">
     

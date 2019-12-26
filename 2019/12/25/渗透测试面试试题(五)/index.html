@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>
+    渗透测试面试总结(五) |
+    
+    Melon</title>
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  
+  <script src="/js/pace.min.js"></script>
+</head>
+
+<body>
+<main class="content">
+  <section class="outer">
+  
+
+<article id="post-渗透测试面试试题(五)" class="article article-type-post" itemscope itemprop="blogPost" data-scroll-reveal>
+  
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      渗透测试面试总结(五)
+    </h1>
+  
+  
+
+
+
+
+      </header>
+    
+
+    
+      <div class="article-meta">
+        <a href="/2019/12/25/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%BA%94)/" class="article-date">
+  <time datetime="2019-12-25T00:00:11.000Z" itemprop="datePublished">2019-12-25</time>
+</a>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>
+  </div>
+
+      </div>
+    
+
+    
+      
+
+
+
+
+    
+
+    <div class="article-entry" itemprop="articleBody">
+      
+
+
+      
+
+      
+        <p>关于面试的一些总结。</p>
+<a id="more"></a>
+
+<p><strong>1.内网穿透?</strong> </p>
+<p>即 NAT 穿透，采用端口映射，让外网的电脑找到处于内网的电脑，同时也可基于 HTTP/2 实现 web 内网穿透。</p>
+<p><strong>2.虚拟专用网络?</strong></p>
+<p>功能是：在公用网络上建立专用网络，进行加密通讯。在企业网络中有广泛应用。</p>
+<p>VPN 网关通过对数据包的加密和数据包目标地址的转换实现远程访问。例如某公司员工出差到外地，他想访问企业内网的服务器资源，这种访问就属于远程访问。</p>
+<p>让外地员工访问到内网资源，利用 VPN 的解决方法就是在内网中架设一台 VPN服务器。外地员工在当地连上互联网后，通过互联网连接 VPN 服务器，然后通过 VPN 服务器进入企业内网。为了保证数据安全，VPN 服务器和客户机之间的通讯数据都进行了加密处理。有了数据加密，就可以认为数据是在一条专用的数据链路上进行安全传输，就如同专门架设了一个专用网络一样，但实际上 VPN使用的是互联网上的公用链路，因此 VPN 称为虚拟专用网络，其实质上就是利用加密技术在公网上封装出一个数据通讯隧道。有了 VPN 技术，用户无论是在外地出差还是在家中办公，只要能上互联网就能利用 VPN 访问内网资源，这就是 VPN 在企业中应用得如此广泛的原因。</p>
+<p><strong>3.二层交换机?</strong></p>
+<p>二层交换机工作于 OSI 模型的第 2 层（数据链路层），故而称为二层交换机。二层交换技术的发展已经比较成熟，二层交换机属数据链路层设备，可以识别数据包中的 MAC 地址信息，根据 MAC 地址进行转发，并将这些 MAC 地址与对应的端口记录在自己内部的一个地址表中。</p>
+<p>过程</p>
+<p>（1） 当交换机从某个端口收到一个数据包，它先读取包头中的源 MAC 地址，这样它就知道源 MAC 地址的机器是连在哪个端口上的；</p>
+<p>（2） 再去读取包头中的目的 MAC 地址，并在地址表中查找应的端口；</p>
+<p>（3）如表中有与这目的 MAC 地址对应的端口，把数据包直接复制到这端口上；</p>
+<p>（4） 如表中找不到相应的端口则把数据包广播到所有端口上，当目的机器对源机器回应时，交换机又可以学习一目的 MAC 地址与哪个端口对应，在下次传送数据时就不再需要对所有端口进行广播了。不断的循环这个过程，对于全网的 MAC 地址信息都可以学习到，二层交换机就是这样建立和维护它自己的地址表。</p>
+<p><strong>4.路由技术?</strong></p>
+<p>路由器工作在 OSI 模型的第三层—网络层操作，其工作模式与二层交换相似，但路由器工作在第三层，这个区别决定了路由和交换在传递包时使用不同的控制信息，实现功能的方式就不同。工作原理是在路由器的内部也有一个表，这个表所标示的是如果要去某一个地方，下一步应该向哪里走，如果能从路由表中找到数据包下一步往哪里走，把链路层信息加上转发出去；如果不能知道下一步走向哪里，则将此包丢弃，然后返回一个信息交给源地址。路由技术实质上来说不过两种功能：决定最优路由和转发数据包。</p>
+<p><strong>5.三层交换机?</strong></p>
+<p>三层交换机就是具有部分路由器功能的交换机，三层交换机的最重要目的是加快大型局域网内部的数据交换，所具有的路由功能也是为这目的服务的，能够做到一次路由，多次转发。对于数据包转发等规律性的过程由硬件高速实现，而像路由信息更新、路由表维护、路由计算、路由确定等功能，由软件实现。三层交换技术就是二层交换技术+三层转发技术。传统交换技术是在 OSI 网络标准模型第二层——数据链路层进行操作的，而三层交换技术是在网络模型中的第三层实现了数据包的高速转发，既可实现网络路由功能，又可根据不同网络状况做到最优网络性能。</p>
+<p><strong>6.IPv6 地址表示?</strong></p>
+<p>IPv6 的 128 位地址通常写成 8 组，每组为四个十六进制数的形式。比如：AD80:0000:0000:0000:ABAA:0000:00C2:0002 是一个合法的 IPv6 地址。这个地址比较长，看起来不方便也不易于书写。零压缩法可以用来缩减其长度。如果几个连续段位的值都是 0，那么这些 0 就可以简单的以::来表示，上述地址就可写成 AD80::ABAA:0000:00C2:0002。同时前导的零可以省略，因此2001:0DB8:02de::0e13 等价于 2001:DB8:2de::e13。</p>
+<p><strong>7.如果子域名和顶级域名不同源，在哪里可以设置叫他们同源?</strong> </p>
+<p>在 IP 绑定域名的位置，将同一个主机 IP 指向解析子域名和顶级域名</p>
+<p><strong>8.如何设置可以跨域请求数据？</strong></p>
+<p>使用一个新的 Origin 请求头和一个新的 Access-Control-Allow-Origin 响应头扩展了 HTTP。允许服务端设置 Access-Control-Allow-Origin 头标识哪些站点可以请求文件，或者设置 Access-Control-Allow-Origin 头为”*”，允许任意站点访问文件。浏览器，例如 Firefox3.5，Safari4，IE10 使用这个头允许跨域 HTTP请求。</p>
+<p><strong>9.jsonp 是做什么的？</strong></p>
+<p>JOSNP 允许页面接受另一个域的 JSON 数据，通过在页面增加一个可以从其它域加载带有回调的 JSON 响应的<code>&lt;script&gt;</code> 标签。</p>
+<p><strong>10.Ajax 是什么？</strong></p>
+<p>AJAX = 异步 JavaScript 和 XML。AJAX 是一种用于创建快速动态网页的技术。通过在后台与服务器进行少量数据交换，AJAX 可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新。</p>
+<p><strong>11.Ajax 是否遵循同源策略？</strong></p>
+<p>是,同源策略的本质是一种约定，可以说 web 的行为就是构建在这种约定之上的。就好比我们人类的行为必须受到法律的约束一样。同源策略的目的就是限制不同源的 document 或者脚本之间的相互访问，以免造成干扰和混乱。ajax 太灵活了，各种请求说发就发，如果没有同源策略的限制，发到哪里都行，只要你构造好参数和请求路径，那人人都是黑客了，这样会导致各种敏感数据的泄露。</p>
+<p><strong>12.宽字符注入的原理？如何利用宽字符注入漏洞，payload 如何构造？</strong></p>
+<p>GB2312、GBK、GB18030、BIG5、Shift_JIS 等这些都是常说的宽字节，实际上只有两字节。宽字节带来的安全问题主要是吃 ASCII 字符（一字节）的现象。</p>
+<p>MYSQL 的字符集转换过程</p>
+<p>1.MySQL Server 收到请求时将请求数据从 character_set_client 转换为character_set_connection；</p>
+<p>2.进行内部操作前将请求数据从 character_set_connection 转换为内部操作字符集，其确定方法如下：</p>
+<p>3.使用每个数据字段的 CHARACTER SET 设定值；</p>
+<p>4.若上述值不存在，则使用对应数据表的 DEFAULT CHARACTER SET 设定值(MySQL 扩展，非 SQL 标准)；</p>
+<p>5.若上述值不存在，则使用对应数据库的 DEFAULT CHARACTER SET 设定值；</p>
+<p>6.若上述值不存在，则使用 character_set_server 设定值。将操作结果从内部操作字符集转换为 character_set_results。宽字节注入发生的位置就是 PHP 发送请求到 MYSQL 时字符集使用character_set_client 设置值进行了一次编码。</p>
+<p>注入点：<a href="http://x.x.x.x/index.php?id=1" target="_blank" rel="noopener">http://x.x.x.x/index.php?id=1</a> </p>
+<p>提交 %bf’ 出现错误，由此可见存在宽字节注入。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://x.x.x.x/index.php?id=1%df&apos; order by 2%23</span><br><span class="line">http://x.x.x.x/index.php?id=-10%df&apos; union select 1,databases()%23</span><br></pre></td></tr></table></figure>
+
+<p><strong>13.CRLF 注入的原理？</strong></p>
+<p>HTTP 协议是依靠两个 CRLF，即\ r\n 来分割 HTTP 头部及响应体。基于这个认知，可以推出，HRS 问题是由于服务端程序没有过滤掉头部中的特殊字符<code>％0D  0A％</code>，直接输出到了返回的数据中，导致错误的解析。而在日常开发中，最常见的莫过于有以下的两种功能 URL 跳转和 Cookie 的设置中出现。一旦我们能够控制 http 头，通过注入一些 CRLF 这样就可以控制头和身体的分割线，这样我们就可以向身或是头中注入些东西了。所以 CRLF Injection 又叫 HTTP Response Splitting，简称 HRS</p>
+<p><strong>14.如果给你一个 XSS 漏洞，你还需要哪些条件可以构造一个蠕虫？</strong></p>
+<p>存储型的 xss，并且需要访问量大的页面或者关注按钮，如微博，论坛等</p>
+<p><strong>15.在社交类的网站中，哪些地方可能会出现蠕虫？</strong></p>
+<p>微博关注，社交报告调查，贴吧评论等</p>
+<p><strong>16.如果叫你来防御蠕虫，你有哪些方法？</strong></p>
+<p>对输入(和 URL 参数)进行过滤，对输出进行编码。</p>
+<p><strong>17.如果给你一个 XSS 盲打漏洞，但是返回来的信息显示，他的后台是在内网，并且只能使用内网访问，那么你怎么利用这个 XSS？</strong></p>
+<p>必须是 self xss + csrf +ssrf 到 getshell</p>
+<p><strong>18.php 的 LFI，本地包含漏洞原理是什么？写一段带有漏洞的代码。</strong></p>
+<p>如果允许客户端用户输入控制动态包含在服务器端的文件，会导致恶意代码的执行及敏感信息泄露，主要包括本地文件包含和远程文件包含两种形式。常见包含函数有：include()、require()</p>
+<p>区别：</p>
+<p>include 是当代码执行到它的时候才加载文件,发生错误的时候只是给一个警告,然后继续往下执行require 是只要程序一执行就会立即调用文件,发生错误的时候会输出错误信息,并且终止脚本的运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">include($_GET[&apos;f&apos;]); </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>19.CSRF 漏洞的本质是什么？</strong></p>
+<p>本质就是 xss</p>
+<p><strong>20.你都了解哪些 java 框架？</strong></p>
+<p>spring 和 struts2 框架</p>
+<p><strong>21.ibats 的参数化查询能不能有效的控制 sql 注入？有没有危险的方法可以造成 sql 注入？</strong></p>
+<p>SQL 注入主要的是因为文本框的内容和 SQL 连接以后会改变 SQL 的语义，例如文本框包含单引号什么的参数化查询就可以将这些内容独立作为参数，本身的语句不会改变。</p>
+<p><strong>22.ongl 在这个 payload 中起了什么作用？</strong></p>
+<p>Ognl 表达式语言，Struts 标签默认支持的表达式语言，必须配置 Struts 标签用，不能离开 Struts 标签直接使用，就是说 Ognl 必须在 Struts 中使</p>
+<p><strong>23.\u0023 是什么字符的 16 进制编码？为什么在 payload 中要用他？</strong></p>
+<p># ，在 S2-005 中可通过\u0023 绕过过滤执行</p>
+<p><strong>24.xss filter 在 java 程序的哪里设置？</strong></p>
+<p>在 web.xml 里面配置</p>
+<p><strong>25.说下 java 的类反射在安全上可能存在哪些问题？</strong></p>
+<p>可能会导致 JAVA 反序化漏洞</p>
+<p><strong>26.tomcat 要做哪些安全加固？</strong></p>
+<p>升级到最新稳定版 从监听端口上加固 仅在本地监听</p>
+<p>如果 Tomcat 不需要对外提供服务，则监听在本地回环，前面放 Nginx。如果需要对外提供访问，比如一个 Nginx 挂多个 Tomcat，那么在服务器上用iptables 只允许负载均衡器的 IP 来访问 关闭 8009 端口现在我们一般不用 Apache 通过 AJP 协议来调用 Tomcat 了，所以 AJP 端口可以关闭。</p>
+<p>8005 端口查看端口占用情况自定义错误页面，隐藏 Tomcat 信息编辑 conf/web.xml，在标签上添加以下内容：禁用 Tomcat 管理页面删除 webapps 目录下 Tomcat 原有的所有内容删除 conf/Catalina/localhost/下的 host-manager.xml 和 manager.xml 这两个文件</p>
+<p>用普通用户启动 Tomcat 禁止 Tomcat 列目录</p>
+<p>如果 tomcat 重启的话，webapps 下，你删除的后台会不会又回来？你只是删除了后台，并没有删除 webaspps 下 war 包</p>
+<p><strong>27.mysql 数据库默认有哪些库？说出库的名字？</strong></p>
+<p>1.mysql 库，存储用户等信息 </p>
+<p>2.information_schema，存储表、锁等性能信息</p>
+<p>3.test，mysql 自建测试库</p>
+<p>4.performance_schema，互斥锁等信息（5.6 之前需要手动开启，从 5.6 开始默认开启）</p>
+<p><strong>28.mysql 的用户名密码是存放在那张表里面？mysql 密码采用哪种加密方式？</strong></p>
+<p>mysql.user 表</p>
+<p>MySQL 4.1 版本之前是 MySQL323 加密，MySQL 4.1 和之后的版本都是MySQLSHA1 加密MYSQL323 加密中生成的是 16 位字符串，而在 MySQLSHA1 中生存的是 41位字符串，其中<em>是不加入实际的密码运算中，通过观察在很多用户中都携带了”</em>“，在实际破解过程中去掉”*”，也就是说 MySQLSHA1 加密的密码的实际位数是 40 位。</p>
+<p><strong>29.mysql 表权限里面，除了增删改查，文件读写，还有哪些权限？</strong></p>
+<p>排序，查询，索引等</p>
+<p><strong>30.mysql 安全要如何做？</strong></p>
+<p>Mysql 账户权限安全</p>
+<p>Mysql 数据的网络安全配置</p>
+<p>密码策略安全</p>
+<p>Mysql 日志</p>
+<p>Mysql 数据库服务所在主机安全配置部署 SQL 注入检测、防御模块</p>
+<p>mysqld 安全相关启动选项</p>
+<p>mysql 备份策略</p>
+<p><strong>31.简述 Linux 系统安全加固需要做哪些方面？</strong></p>
+<p>1.密码安全策略</p>
+<p>2.关闭不必要的端口和服务</p>
+<p>3.文件权限的设置等</p>
+<p><strong>32.你使用什么工具来判断系统是否存在后门？</strong></p>
+<p>pchunter 攻击查看进程和服务</p>
+<p><strong>33.Linux 的 Selinux 是什么？如何设置 Selinux？</strong></p>
+<p>SELinux 是一种安全子系统，它能控制程序只能访问特定文件使用 setup 工具进入图形化关闭搜索或者修改/etc/sysconfig/selinux 文件SELINUX=disabled防火墙打开使用 service iptables start 或则/etc/init.d/iptables start</p>
+<p><strong>34.iptables 工作在 TCP/IP 模型中的哪层？</strong></p>
+<p>网络层</p>
+<p><strong>35.syslog 里面都有哪些日志？安装软件的日志去哪找？</strong></p>
+<p>如何查询 ssh 的登录日志？</p>
+<p>cd /var/log </p>
+<p>less secure </p>
+<p><strong>36.syslog 可不可以使用 vi 等工具直接查看？是二进制文件吗？</strong></p>
+<p>不能，只能使用 cat 之类的命令攻击查看，属于二进制文件</p>
+<p><strong>37.DNS 在渗透中的作用？</strong></p>
+<p>通过 DNS 可以查询对应的 IP 主机名，也可以查询出是否存在域传输漏洞</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/12/25/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E4%BA%94)/" data-id="ck4mde2jk0020eguvg3ke9kyy"
+         class="article-share-link">分享</a>
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+
+  </div>
+
+  
+    
+  <nav class="article-nav">
+    
+    
+      <a href="/2019/12/24/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E9%9D%A2%E8%AF%95%E8%AF%95%E9%A2%98(%E5%9B%9B)/" class="article-nav-link">
+        <strong class="article-nav-caption">后一篇</strong>
+        <div class="article-nav-title">渗透测试面试总结(四)</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+    
+  
+
+</article>
+
+
+
+</section>
+  <footer class="footer">
+  <div class="outer">
+    <div class="float-right">
+      <ul class="list-inline">
+  
+    <li><i class="fe fe-smile-alt"></i> <span id="busuanzi_value_site_uv"></span></li>
+  
+</ul>
+    </div>
+    <ul class="list-inline">
+      <li>&copy; 2019 Melon</li>
+      <li>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></li>
+      <li>Theme  <a href="https://github.com/zhwangart/hexo-theme-ocean" target="_blank" rel="noopener">Ocean</a></li>
+    </ul>
+  </div>
+</footer>
+
+</main>
+
+<aside class="sidebar sidebar-specter">
+  
+    <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+    <div class="logo">
+      <a href="/"><img src="/images/hexo.svg" alt="Melon"></a>
+    </div>
+  
+  <ul class="nav nav-main">
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/">Home</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/archives">Archives</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/gallery">Gallery</a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-item-link" href="/about">About</a>
+      </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link nav-item-search" title="Search">
+        <i class="fe fe-search"></i>
+        Search
+      </a>
+    </li>
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      <div class="totop" id="totop">
+  <i class="fe fe-rocket"></i>
+</div>
+    </li>
+    <li class="nav-item">
+      
+        <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+          <i class="fe fe-feed"></i>
+        </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+  </aside>
+  <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+  <script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+  <script src="/js/tocbot.min.js"></script>
+  <script>
+    // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+    tocbot.init({
+      tocSelector: '.tocbot',
+      contentSelector: '.article-entry',
+      headingSelector: 'h1, h2, h3, h4, h5, h6',
+      hasInnerContainers: true,
+      scrollSmooth: true,
+      positionFixedSelector: '.tocbot',
+      positionFixedClass: 'is-position-fixed',
+      fixedSidebarOffset: 'auto',
+    });
+  </script>
+
+
+<script src="/js/ocean.js"></script>
+
+</body>
+</html>

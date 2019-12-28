@@ -937,9 +937,9 @@
         <category>渗透测试</category>
       </categories>
       <tags>
+        <tag>php</tag>
         <tag>漏洞挖掘</tag>
         <tag>CSRF</tag>
-        <tag>php</tag>
       </tags>
   </entry>
   <entry>
@@ -1173,8 +1173,8 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>漏洞挖掘</tag>
         <tag>php</tag>
+        <tag>漏洞挖掘</tag>
         <tag>SSRF</tag>
       </tags>
   </entry>
@@ -1245,8 +1245,8 @@
         <category>渗透测试</category>
       </categories>
       <tags>
-        <tag>漏洞挖掘</tag>
         <tag>php</tag>
+        <tag>漏洞挖掘</tag>
         <tag>序列化</tag>
       </tags>
   </entry>
@@ -1702,8 +1702,8 @@
         <category>webshell</category>
       </categories>
       <tags>
-        <tag>php</tag>
         <tag>js</tag>
+        <tag>php</tag>
       </tags>
   </entry>
   <entry>

